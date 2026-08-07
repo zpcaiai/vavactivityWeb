@@ -1,0 +1,45 @@
+{
+  "evidence": [
+    {
+      "checksum_sha256": "79134642880c8993c60bc6db2402b2ed8c9277bbe4a5660ac0c4b74440af6a58",
+      "name": "token-check.json",
+      "status": "PASS"
+    },
+    {
+      "checksum_sha256": "9de1d1a72027cecb71241a686c878f3bcb706b46b85ba4d52b99136da19534f8",
+      "name": "page-audit.json",
+      "status": "PASS"
+    },
+    {
+      "checksum_sha256": "3a427b5e9cfcffa1bb8ad4146f9911153a6138ca88bdfa6e38a860b0b43072e3",
+      "name": "accessibility.json",
+      "status": "PASS"
+    },
+    {
+      "checksum_sha256": "d561236c8c06fb12942f671c0069811aa186fafaaa846ccf877ef31ee24874ee",
+      "name": "responsive.json",
+      "status": "PASS"
+    },
+    {
+      "checksum_sha256": "97c9d7ddb3fc97a4cb578371caa30f8a238af85a51f706eeb80424a4a4fa1c5c",
+      "name": "visual.json",
+      "status": "PASS"
+    },
+    {
+      "checksum_sha256": "5a518d5ebf0da4f92c81c8b376ea82f628fd5daa5b2e144fe46d4d56693dc55d",
+      "name": "storybook.json",
+      "status": "PASS"
+    }
+  ],
+  "generated_at": "2026-08-06T13:20:39.699078+00:00",
+  "git_commit": "a8cb78564515abdb1f5a280aa8afbb967fa647d5",
+  "manual_gates": {
+    "assistive_technology_review": "NOT_RUN",
+    "real_device_review": "NOT_RUN",
+    "visual_baseline_approval": "NOT_RUN"
+  },
+  "production_certification": "NOT_CERTIFIED",
+  "release_allowed": false,
+  "schema_version": "1.0.0",
+  "technical_status": "PASS"
+}

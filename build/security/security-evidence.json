@@ -1,0 +1,58 @@
+{
+  "admin_e2e": "NOT_RUN",
+  "backend_tests": "NOT_RUN",
+  "batch": 30,
+  "critical_findings": 0,
+  "evidence": {
+    "ai_safety": "PASS",
+    "api_controls": {
+      "auth": "PASS",
+      "authorization": "PASS",
+      "authorization_matrix": "PASS",
+      "injection": "PASS",
+      "privacy": "PASS",
+      "ssrf": "PASS",
+      "upload": "PASS",
+      "webhook": "PASS"
+    },
+    "api_security": "PASS",
+    "attack_surfaces": "PASS",
+    "penetration": "PASS",
+    "skill_sandbox": "PASS",
+    "static_scans": {
+      "container": "PASS",
+      "iac": "PASS",
+      "sast": "PASS",
+      "sca": "PASS",
+      "secret": "PASS"
+    },
+    "threat_models": "PASS",
+    "threat_text_evidence": {
+      "sample_size": 4,
+      "signals": {
+        "account_takeover_signal": 0,
+        "active_restriction_count": 0,
+        "classifier_confidence_bps": 10000,
+        "contact_information_bypass": 0,
+        "distinct_target_count": 3,
+        "external_payment_link_detected": 1,
+        "invitation_rate": 0,
+        "like_rate": 0,
+        "money_request_detected": 1,
+        "pair_blocked": 0,
+        "post_decline_contact_count": 0,
+        "repeated_contact_count": 0,
+        "staff_impersonation_detected": 1,
+        "threat_detected": 1
+      },
+      "status": "PASS"
+    }
+  },
+  "frontend_security": "NOT_RUN",
+  "generated_at": "2026-08-07T05:56:47.867666+00:00",
+  "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109",
+  "production_certification": "NOT_CERTIFIED",
+  "release_allowed": false,
+  "schema_version": "1.0.0",
+  "technical_status": "PASS"
+}

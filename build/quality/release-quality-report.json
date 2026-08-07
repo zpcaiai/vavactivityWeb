@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "api_operations": 919,
+    "complete_flows": 1,
+    "complete_traces": 21,
+    "critical_gaps": 0,
+    "modules": 23,
+    "pages": 41,
+    "requirements": 21,
+    "tests": 287
+  },
+  "external_evidence": {
+    "penetration_test": "NOT_RUN",
+    "production_approval": "NOT_RUN",
+    "restore_drill": "NOT_RUN",
+    "uat_approval": "NOT_RUN"
+  },
+  "generated_at": "2026-08-06T13:20:50.151654+00:00",
+  "git_commit": "a8cb78564515abdb1f5a280aa8afbb967fa647d5",
+  "production_certification": "NOT_CERTIFIED",
+  "release_allowed": false,
+  "schema_version": "1.0.0",
+  "technical_status": "PASS"
+}

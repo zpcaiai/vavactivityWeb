@@ -1,0 +1,170 @@
+{
+  "batch": 24,
+  "git_commit": "a8cb78564515abdb1f5a280aa8afbb967fa647d5",
+  "technical_gate": {
+    "processes": 16,
+    "business_domains": [
+      "activity",
+      "ai",
+      "authentication",
+      "commerce",
+      "counseling",
+      "course",
+      "dating_profile",
+      "interaction",
+      "membership",
+      "notification",
+      "privacy",
+      "quality_release",
+      "recommendation",
+      "relationship",
+      "safety",
+      "skill_lifecycle"
+    ],
+    "state_machines": 6,
+    "compensations": 6,
+    "simulations": 8,
+    "skills": 12,
+    "process_findings": {
+      "authentication-session": [],
+      "membership-purchase": [],
+      "activity-registration": [],
+      "course-enrollment": [],
+      "counseling-booking": [],
+      "ai-human-referral": [],
+      "notification-delivery": [],
+      "privacy-erasure": [],
+      "dating-profile-approval": [],
+      "recommendation-generation": [],
+      "reciprocal-like": [],
+      "relationship-transition": [],
+      "membership-renewal": [],
+      "safety-case-resolution": [],
+      "skill-installation": [],
+      "quality-release": []
+    },
+    "state_machine_findings": {
+      "order": [],
+      "activity-registration": [],
+      "counseling-appointment": [],
+      "matchmaking-interaction": [],
+      "privacy-request": [],
+      "relationship-journey": []
+    },
+    "simulation_results": {
+      "membership-provider-timeout": {
+        "status": "pass",
+        "outcome": "compensating",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "activity-last-seat-race": {
+        "status": "pass",
+        "outcome": "one_success",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "counseling-worker-restart": {
+        "status": "pass",
+        "outcome": "resume_without_duplicate",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "duplicate-payment-webhook": {
+        "status": "pass",
+        "outcome": "one_entitlement",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "out-of-order-reciprocal-like": {
+        "status": "pass",
+        "outcome": "buffered_until_gap_closed",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "privacy-erasure-during-recommendation": {
+        "status": "pass",
+        "outcome": "no_new_processing",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "safety-block-during-relationship": {
+        "status": "pass",
+        "outcome": "safety_frozen",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      },
+      "compensation-command-failure": {
+        "status": "pass",
+        "outcome": "manual_intervention",
+        "invariants": {
+          "nonnegative_quota": true,
+          "unique_mutual_match": true,
+          "payment_backed_entitlement": true,
+          "mutual_contact_consent": true,
+          "block_enforcement": true,
+          "no_processing_during_erasure": true,
+          "no_fabricated_success": true
+        }
+      }
+    },
+    "manifest_checksum_sha256": "954f30586906ab58b018a3564857a2461892d7a892c2c0b32cfdba32ef255417",
+    "status": "PASS"
+  },
+  "database_migration": "PASS_IF_RECORDED_BY_CI",
+  "backend_tests": "PASS_IF_JUNIT_PRESENT",
+  "admin_e2e": "NOT_RUN",
+  "external_provider_recovery": "NOT_RUN",
+  "business_owner_acceptance": "NOT_RUN",
+  "production_observation": "NOT_RUN",
+  "production_certification": "NOT_CERTIFIED"
+}

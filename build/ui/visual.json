@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "kind": "visual",
+  "source": "build/ui/playwright-report/index.html",
+  "checksum_sha256": "aafc88b5a007d4fe61ab58e521da12b802e61b121096ef876f04a03134e812e0",
+  "generated_at": "2026-08-06T11:49:19.152Z"
+}

@@ -1,0 +1,320 @@
+{
+  "checks": [
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "system",
+      "requirement_code": "REQ-VAV-PROJECT-001"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "identity",
+      "requirement_code": "REQ-VAV-BATCH-001"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "major",
+      "module": "content",
+      "requirement_code": "REQ-VAV-BATCH-002"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "major",
+      "module": "catalog",
+      "requirement_code": "REQ-VAV-BATCH-003"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "commerce",
+      "requirement_code": "REQ-VAV-BATCH-004"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "activities",
+      "requirement_code": "REQ-VAV-BATCH-005"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "major",
+      "module": "courses",
+      "requirement_code": "REQ-VAV-BATCH-006"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "counseling",
+      "requirement_code": "REQ-VAV-BATCH-007"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "major",
+      "module": "knowledge",
+      "requirement_code": "REQ-VAV-BATCH-008"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "ai_assistant",
+      "requirement_code": "REQ-VAV-BATCH-009"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "major",
+      "module": "notifications",
+      "requirement_code": "REQ-VAV-BATCH-010"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "privacy",
+      "requirement_code": "REQ-VAV-BATCH-011"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "matchmaking_profiles",
+      "requirement_code": "REQ-VAV-BATCH-012"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "recommendations",
+      "requirement_code": "REQ-VAV-BATCH-013"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "matchmaking_interactions",
+      "requirement_code": "REQ-VAV-BATCH-014"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "relationships",
+      "requirement_code": "REQ-VAV-BATCH-015"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "critical",
+      "module": "relationships",
+      "requirement_code": "REQ-VAV-BATCH-016"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "memberships",
+      "requirement_code": "REQ-VAV-BATCH-017"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "trust_safety",
+      "requirement_code": "REQ-VAV-BATCH-018"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "system",
+      "requirement_code": "REQ-VAV-BATCH-019"
+    },
+    {
+      "checks": {
+        "api_entry": true,
+        "application_service": true,
+        "database_revision": true,
+        "health_contract": true,
+        "module_contract": true,
+        "permission_owner": true,
+        "tests": true
+      },
+      "complete": true,
+      "criticality": "blocker",
+      "module": "skills_platform",
+      "requirement_code": "REQ-VAV-BATCH-020"
+    }
+  ],
+  "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109"
+}

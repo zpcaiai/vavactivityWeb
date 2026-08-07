@@ -1,0 +1,60 @@
+{
+  "artifact_checksums": {
+    "apps/admin-web/src/pages/SkillManagementPage.vue": "fe8c2755c6c135ca9d7f0c0987166f6986506880f788ecba5c5fa4ba527ca41c",
+    "extensions/vav-skills-vscode/package.json": "9b619b5aab21f4f218d97abbce564922afadc3fee69849024aea95829a7512db",
+    "packages/skill-cli/pyproject.toml": "d18b2a316bfda53be6c9796c208bea9cd3b03455e6a5352d4770a383d59b64cb",
+    "packages/skill-sdk-python/pyproject.toml": "f5623e7b81b975af56eee3a77b9419c88904ac466b6f2483734db79687007dd6",
+    "packages/skill-sdk-typescript/package.json": "08ad974c99f735b18581b4b94f4c63cb79f2cb45deb819400a3eb1e44f4c2402",
+    "packages/skill-ui-sdk/package.json": "89c22b5316e0567410d647839729e40c3abe4d6cbac218a47a86365ca079c2e9",
+    "registry/revoked-signatures.json": "a7633511399db27ced2dded12009ee4af5e036c21433d15cbb65756004c5167e",
+    "registry/trust-roots.json": "2cbf873f4e8586430f3e41c53ecc54648b5c288e8f76ec47bd99b96d9e01adf0",
+    "schemas/skill-manifest.schema.json": "edfecd34b2990618816acee9d8abcb7e9a9149ec5fcab492d85b2197e79ffbea",
+    "services/api/migrations/versions/20260806_0086_skill_registry_governance.py": "d57bee5ffae23e14e3edb5007564f2675d89a1b827913e1e79c7f4dffa7db256",
+    "services/api/src/vav/modules/skills_platform/registry_ingestion.py": "68e34c6d51dc048b5ef60746458c8847a228959ab36c987a67783755b32a4f43",
+    "services/api/src/vav/modules/skills_platform/service.py": "44e2625d4f6b83f10b5b19b8241e9dd5830041f77076bd4ff79a79cf9f68949d",
+    "services/skill-runtime/pyproject.toml": "f197edac0d813d4489bd640f9f03c0da5d4334b26de91f8bc61fa7a810f728a7"
+  },
+  "certification_level": "tested",
+  "evidence": {
+    "human-review": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "production-approval": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "production-run": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "publisher-verification": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "restore-drill": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "sandbox-escape": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    },
+    "signed-package": {
+      "reason": "external evidence not supplied",
+      "status": "NOT_EVALUATED"
+    }
+  },
+  "generated_at": "2026-08-06T10:07:25.476616+00:00",
+  "git_commit": "6588346b05ee47b8561ce4f06aa13850551cf855",
+  "production_certification": "NOT_CERTIFIED",
+  "registry_checksums": {
+    "builtin-index.json": "dcd519fcc6de454b3bd9dd1d8aa44aa77ff4546fe3ee49aa79cceb2515d12cf7",
+    "compatibility-matrix.json": "d422439d87acd59126e3d246025124dd300308f941b440e5e51ad9c2ba30c905",
+    "revoked-signatures.json": "a7633511399db27ced2dded12009ee4af5e036c21433d15cbb65756004c5167e",
+    "trust-roots.json": "2cbf873f4e8586430f3e41c53ecc54648b5c288e8f76ec47bd99b96d9e01adf0"
+  },
+  "release_allowed": false,
+  "schema_version": "1.0.0",
+  "technical_status": "PASS"
+}

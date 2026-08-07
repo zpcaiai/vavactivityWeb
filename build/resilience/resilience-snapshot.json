@@ -1,0 +1,252 @@
+{
+  "api_ha_tests": {
+    "failover_time_seconds": 58.0,
+    "findings": [],
+    "readiness_time_seconds": 3.1,
+    "required_failover_threshold_seconds": 75.0,
+    "required_readiness_threshold_seconds": 15.0,
+    "status": "PASS"
+  },
+  "backup_restore_tests": {
+    "backup_window_minutes": 20.0,
+    "consistency_checks_passed": true,
+    "findings": [],
+    "restore_tested": true,
+    "restore_time_minutes": 35.0,
+    "status": "PASS"
+  },
+  "batch": 31,
+  "chaos_tests": {
+    "allowed": true,
+    "approved": true,
+    "findings": [],
+    "max_duration_seconds": 780,
+    "status": "PASS",
+    "tests": {
+      "failed": 0,
+      "items": [
+        {
+          "name": "pod-kill-api",
+          "severity": "medium",
+          "status": "passed"
+        },
+        {
+          "name": "cpu-spike-worker",
+          "severity": "high",
+          "status": "passed"
+        },
+        {
+          "name": "region-partition",
+          "severity": "critical",
+          "status": "passed"
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "database_ha_tests": {
+    "failover_time_seconds": 95.0,
+    "findings": [],
+    "read_after_write_time_ms": 430.0,
+    "required_read_after_write_threshold_ms": 800.0,
+    "status": "PASS",
+    "wal_replay_seconds": 72.0
+  },
+  "degradation_tests": {
+    "findings": [],
+    "max_feature_blackout_ratio": 0.25,
+    "max_latency_increase_ratio": 1.4,
+    "min_user_task_throughput_ratio": 0.8,
+    "quality_graceful_delay_ms": 120,
+    "queue_retries_cap": 5,
+    "reduced_feature_set": true,
+    "status": "PASS"
+  },
+  "disaster_recovery_tests": {
+    "data_integrity_verified": true,
+    "exercise_executed": true,
+    "findings": [],
+    "rpo_minutes": 7.0,
+    "rto_minutes": 115.0,
+    "status": "PASS"
+  },
+  "error_budget_tests": {
+    "count": 2,
+    "failures": [],
+    "items": [
+      {
+        "budget_ms": 15.0,
+        "burn_rate": 0.92,
+        "code": "ERR-API",
+        "observed_error_rate": 0.0018,
+        "status": "PASS",
+        "target_error_rate": 0.003
+      },
+      {
+        "budget_ms": 20.0,
+        "burn_rate": 0.84,
+        "code": "ERR-WORKER",
+        "observed_error_rate": 0.0042,
+        "status": "PASS",
+        "target_error_rate": 0.005
+      }
+    ],
+    "status": "PASS"
+  },
+  "generated_at": "2026-08-07T06:01:01.077903+00:00",
+  "git_commit": "a839d33612a25761b6acf19f989e387e8844988d",
+  "incident_management_tests": {
+    "findings": [],
+    "postmortem_examples": [
+      {
+        "completed": true,
+        "severity": "sev2"
+      },
+      {
+        "completed": true,
+        "severity": "sev1"
+      },
+      {
+        "completed": true,
+        "severity": "sev0"
+      }
+    ],
+    "requires_postmortem_sev0": true,
+    "requires_postmortem_sev1": true,
+    "status": "PASS"
+  },
+  "manifest_checksum": "39707f40a0e3da192fda5acaff2eac25403af86d2f8085aa774ede6195f2c4da",
+  "observability_tests": {
+    "canary": {
+      "critical_test_count": 0,
+      "enabled": true,
+      "test_count": 3
+    },
+    "findings": [],
+    "logs": {
+      "pii_fields_present": [],
+      "required_fields": [
+        "trace_id",
+        "event_name",
+        "tenant_id",
+        "severity"
+      ]
+    },
+    "metrics": {
+      "expected_coverage_ratio": 0.96,
+      "observed_coverage_ratio": 0.98,
+      "sensitive_data_redacted_ratio": 1.0,
+      "traces_per_minute_min": 1000.0,
+      "traces_per_minute_observed": 1200.0
+    },
+    "status": "PASS"
+  },
+  "provider_resilience_tests": {
+    "failure_count": 0,
+    "findings": [],
+    "provider_count": 3,
+    "providers": [
+      {
+        "circuit_breaker_failure_ratio": 0.12,
+        "circuit_breaker_window": 30,
+        "fallback_enabled": true,
+        "findings": [],
+        "provider": "sms-gateway",
+        "retry_budget": 3,
+        "status": "PASS",
+        "timeout_seconds": 2.0
+      },
+      {
+        "circuit_breaker_failure_ratio": 0.14,
+        "circuit_breaker_window": 40,
+        "fallback_enabled": true,
+        "findings": [],
+        "provider": "map-service",
+        "retry_budget": 2,
+        "status": "PASS",
+        "timeout_seconds": 1.8
+      },
+      {
+        "circuit_breaker_failure_ratio": 0.03,
+        "circuit_breaker_window": 30,
+        "fallback_enabled": false,
+        "findings": [],
+        "provider": "payment-provider",
+        "retry_budget": 4,
+        "status": "PASS",
+        "timeout_seconds": 1.6
+      }
+    ],
+    "status": "PASS"
+  },
+  "redis_worker_ha_tests": {
+    "failover_time_seconds": 40.0,
+    "findings": [],
+    "queue_recover_time_seconds": 150.0,
+    "queue_replay_lag_seconds": 45.0,
+    "status": "PASS"
+  },
+  "resilience_test_status": {
+    "chaos_exit_codes": {
+      "db-lag": 0,
+      "pod-kill": 0,
+      "provider-delay": 0
+    },
+    "findings": [],
+    "status": "PASS"
+  },
+  "schema_version": "1.0.0",
+  "security_integration_tests": {
+    "auth_bypass_detected": false,
+    "critical_findings": 0,
+    "findings": [],
+    "open_incidents": 0,
+    "secrets_in_logs_detected": 0,
+    "status": "PASS"
+  },
+  "skill_count": 12,
+  "slo_checks": {
+    "count": 3,
+    "failures": [],
+    "items": [
+      {
+        "burn_rate_threshold": 14.0,
+        "category": "reliability",
+        "code": "SLO-API-P95",
+        "objective": 0.995,
+        "status": "PASS",
+        "window_hours": 1.0,
+        "window_minutes": 30
+      },
+      {
+        "burn_rate_threshold": 12.0,
+        "category": "throughput",
+        "code": "SLO-INGEST-THROUGHPUT",
+        "objective": 0.99,
+        "status": "PASS",
+        "window_hours": 1.0,
+        "window_minutes": 30
+      },
+      {
+        "burn_rate_threshold": 10.0,
+        "category": "availability",
+        "code": "SLO-REGISTER-RATE",
+        "objective": 0.998,
+        "status": "PASS",
+        "window_hours": 1.0,
+        "window_minutes": 30
+      }
+    ],
+    "status": "PASS"
+  },
+  "synthetic_monitor_tests": {
+    "cadence_minutes": 3,
+    "critical_not_covered": 0,
+    "enabled": true,
+    "failures": [],
+    "status": "PASS",
+    "tests": 5
+  },
+  "technical_status": "PASS"
+}

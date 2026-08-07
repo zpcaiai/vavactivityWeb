@@ -1,0 +1,21 @@
+{
+  "batch": 28,
+  "critical_failures": 0,
+  "evidence": {
+    "api_contract": "PASS",
+    "contracts": true,
+    "flaky": "PASS",
+    "frontend": "NOT_EVALUATED",
+    "integration": "PASS",
+    "pyramid": "passed",
+    "registry": "PASS",
+    "selection": "PASS",
+    "visual_regression": "NOT_EVALUATED"
+  },
+  "generated_at": "2026-08-07T06:00:58.959281+00:00",
+  "git_commit": "a839d33612a25761b6acf19f989e387e8844988d",
+  "production_certification": "NOT_CERTIFIED",
+  "schema_version": "1.0.0",
+  "snapshot": "82cc066e5f51860e579e9e04efefd012ded600d240a98056810630c527ff550d",
+  "technical_status": "PASS"
+}

@@ -1,0 +1,12 @@
+{
+  "checked_files": 19,
+  "generated": {
+    "css": "b6fb8e022505a70202393cd3dcab66f12a44be04b000ae804319955cbefffde0",
+    "json": "6cd697feac1317be1f708af84efa3e058e890e29df2dd8db8f0c4b77d766c846",
+    "scss": "2043f877e9063406c01dd7c7ccc238beef70e881b14ae89786a50d4dfce5b9e3",
+    "ts": "119ae178c906c7e84b362e630d327a1c719a5796894cdcb2eb7bc5862d9248f1"
+  },
+  "skills": 12,
+  "status": "PASS",
+  "violations": []
+}

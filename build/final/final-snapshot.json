@@ -1,0 +1,146 @@
+{
+  "approval": {
+    "approvals": {
+      "data_governance_owner": {
+        "approved": true,
+        "approved_at": "2026-08-06T09:50:00Z",
+        "approver": "DPO",
+        "required": true
+      },
+      "production_owner": {
+        "approved": true,
+        "approved_at": "2026-08-06T09:20:00Z",
+        "approver": "VP Engineering",
+        "required": true
+      },
+      "security_owner": {
+        "approved": true,
+        "approved_at": "2026-08-06T09:30:00Z",
+        "approver": "Security Lead",
+        "required": true
+      }
+    },
+    "findings": [],
+    "status": "PASS"
+  },
+  "batch": 32,
+  "evidence_check": {
+    "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109",
+    "path": "/Users/stephen/Documents/Projects/python/vavactivity/build/security/security-evidence.json",
+    "status": "PASS",
+    "technical_status": "PASS"
+  },
+  "generated_at": "2026-08-07T05:56:48.336189+00:00",
+  "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109",
+  "go_no_go": {
+    "critical_findings": 0.0,
+    "critical_findings_max": 0.0,
+    "external_pen_test_last": "2026-08-01",
+    "findings": [],
+    "required_dims": [
+      "security_privacy",
+      "resilience",
+      "project_governance"
+    ],
+    "status": "PASS",
+    "threshold": 0.94,
+    "unresolved_sev1_findings": 0.0
+  },
+  "launch": {
+    "findings": [],
+    "gate_checks": [
+      "final_score_verified",
+      "go_no_go_positive",
+      "approvals_valid",
+      "observation_policy_confirmed"
+    ],
+    "preconditions": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "status": "PASS"
+  },
+  "manifest_checksum": "bdbcb562a21339dc53aa4342892cd55adab303bf01684e4dda8e1bed870e412f",
+  "observation": {
+    "24h": {
+      "critical_events_detected": 0.0,
+      "current_production_time": "2026-08-06T11:30:00+00:00",
+      "expected_ends_at": "2026-08-06T10:00:00+00:00",
+      "findings": [],
+      "policy": "allow_stable_rollover",
+      "status": "PASS"
+    },
+    "30d": {
+      "critical_events_detected": 0.0,
+      "current_production_time": "2026-08-06T11:30:00+00:00",
+      "expected_ends_at": "2026-08-06T10:00:00+00:00",
+      "findings": [],
+      "policy": "stable_certification_hold",
+      "status": "PASS"
+    },
+    "7d": {
+      "critical_events_detected": 0.0,
+      "current_production_time": "2026-08-06T11:30:00+00:00",
+      "expected_ends_at": "2026-08-06T10:00:00+00:00",
+      "findings": [],
+      "policy": "gated_review",
+      "status": "PASS"
+    }
+  },
+  "release_manifest": {
+    "findings": [],
+    "missing_artifacts": [],
+    "missing_non_waivable_gates": [
+      "BATCH-28-REGRESSION",
+      "BATCH-29-PERFORMANCE",
+      "BATCH-30-SECURITY",
+      "BATCH-31-RESILIENCE"
+    ],
+    "required_artifacts": [
+      "build/quality/release-quality-report.json",
+      "build/ui/accessibility.json",
+      "build/process/process-evidence.json",
+      "build/data/data-integrity-evidence.json",
+      "build/admin/admin-completeness-evidence.json",
+      "build/regression/regression-evidence.json",
+      "build/performance/performance-evidence.json",
+      "build/security/security-evidence.json",
+      "build/resilience/resilience-evidence.json"
+    ],
+    "status": "PASS"
+  },
+  "schema_version": "1.0.0",
+  "score": {
+    "insufficient": [],
+    "minimum_overall_threshold": 0.94,
+    "missing": [],
+    "required_dims": [
+      "security_privacy",
+      "resilience",
+      "project_governance"
+    ],
+    "scores": {
+      "admin_operability": 0.93,
+      "data_integrity": 0.99,
+      "functional": 0.97,
+      "minimum_overall_threshold": 0.94,
+      "observability": 0.98,
+      "performance": 0.92,
+      "project_governance": 0.94,
+      "resilience": 0.95,
+      "security_privacy": 0.96,
+      "usability": 0.94
+    },
+    "status": "PASS"
+  },
+  "security_evidence": {
+    "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109",
+    "path": "/Users/stephen/Documents/Projects/python/vavactivity/build/security/security-evidence.json",
+    "status": "PASS",
+    "technical_status": "PASS"
+  },
+  "skill_count": 12,
+  "technical_status": "PASS"
+}

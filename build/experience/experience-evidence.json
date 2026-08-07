@@ -1,0 +1,43 @@
+{
+  "external_gates": {
+    "production_observation": "NOT_RUN",
+    "role_uat": "NOT_RUN",
+    "support_review": "NOT_RUN"
+  },
+  "generated_at": "2026-08-06T13:18:47.605465+00:00",
+  "git_commit": "a8cb78564515abdb1f5a280aa8afbb967fa647d5",
+  "inventory": {
+    "critical_dead_ends": 0,
+    "handoffs": 10,
+    "help_articles": 16,
+    "ia_nodes": 18,
+    "journeys": 15,
+    "manifest_checksum_sha256": "6cd2b647246ec0e660fcbc7b35f39c26b4630c6179c0a5caed70c8e4238b2479",
+    "routes": 24,
+    "skills": 12,
+    "tasks": 10
+  },
+  "production_certification": "NOT_CERTIFIED",
+  "release_allowed": false,
+  "schema_version": "1.0.0",
+  "technical_gates": {
+    "admin_e2e": {
+      "status": "NOT_RUN"
+    },
+    "backend_tests": {
+      "artifact": "build/experience/backend-junit.xml",
+      "status": "PASS"
+    },
+    "manifest": {
+      "checksum_sha256": "6cd2b647246ec0e660fcbc7b35f39c26b4630c6179c0a5caed70c8e4238b2479",
+      "status": "PASS"
+    },
+    "route_graph": {
+      "critical_dead_ends": 0,
+      "status": "PASS"
+    },
+    "user_e2e": {
+      "status": "NOT_RUN"
+    }
+  }
+}

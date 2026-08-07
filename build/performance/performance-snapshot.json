@@ -1,0 +1,528 @@
+{
+  "baseline": {
+    "baseline": {
+      "max_ms": 1400,
+      "p50_ms": 130,
+      "p90_ms": 250,
+      "p95_ms": 430,
+      "p99_ms": 900,
+      "sample_count": 64
+    },
+    "candidate": {
+      "max_ms": 1530,
+      "p50_ms": 135,
+      "p90_ms": 272,
+      "p95_ms": 455,
+      "p99_ms": 980,
+      "sample_count": 70
+    },
+    "insufficient_samples": false,
+    "issues": [],
+    "metrics": [
+      {
+        "baseline": 130.0,
+        "candidate": 135.0,
+        "delta_ms": 5.0,
+        "metric": "p50_ms",
+        "relative_change": 0.038462,
+        "verdict": "stable"
+      },
+      {
+        "baseline": 250.0,
+        "candidate": 272.0,
+        "delta_ms": 22.0,
+        "metric": "p90_ms",
+        "relative_change": 0.088,
+        "verdict": "stable"
+      },
+      {
+        "baseline": 430.0,
+        "candidate": 455.0,
+        "delta_ms": 25.0,
+        "metric": "p95_ms",
+        "relative_change": 0.05814,
+        "verdict": "stable"
+      },
+      {
+        "baseline": 900.0,
+        "candidate": 980.0,
+        "delta_ms": 80.0,
+        "metric": "p99_ms",
+        "relative_change": 0.088889,
+        "verdict": "stable"
+      },
+      {
+        "baseline": 1400.0,
+        "candidate": 1530.0,
+        "delta_ms": 130.0,
+        "metric": "max_ms",
+        "relative_change": 0.092857,
+        "verdict": "stable"
+      }
+    ],
+    "minimum_samples": 30,
+    "noise_band_ms": 20.0,
+    "regressed_metrics": [],
+    "regression_status": "stable",
+    "status": "PASS",
+    "tolerance_ratio": 0.1
+  },
+  "batch": 29,
+  "budgets": [
+    {
+      "breach_count": 0,
+      "breaches": [],
+      "checked_metrics": 8,
+      "criticality": "critical",
+      "endpoint_code": "api.notifications.send",
+      "status": "passed_with_warnings",
+      "warning_count": 3,
+      "warnings": [
+        {
+          "budget": 170.0,
+          "metric": "p50_ms",
+          "observed": 150.0,
+          "ratio": 0.882353
+        },
+        {
+          "budget": 290.0,
+          "metric": "p90_ms",
+          "observed": 250.0,
+          "ratio": 0.862069
+        },
+        {
+          "budget": 420.0,
+          "metric": "p95_ms",
+          "observed": 360.0,
+          "ratio": 0.857143
+        }
+      ],
+      "workload_code": "VAV-SCALE-PRODUCTION"
+    },
+    {
+      "breach_count": 1,
+      "breaches": [
+        {
+          "budget": 120.0,
+          "metric": "achieved_rps",
+          "observed": 116.0,
+          "ratio": 0.966667
+        }
+      ],
+      "checked_metrics": 8,
+      "criticality": "high",
+      "endpoint_code": "api.matchmaking.recommend",
+      "status": "failed",
+      "warning_count": 3,
+      "warnings": [
+        {
+          "budget": 320.0,
+          "metric": "p50_ms",
+          "observed": 310.0,
+          "ratio": 0.96875
+        },
+        {
+          "budget": 650.0,
+          "metric": "p90_ms",
+          "observed": 610.0,
+          "ratio": 0.938462
+        },
+        {
+          "budget": 980.0,
+          "metric": "p95_ms",
+          "observed": 980.0,
+          "ratio": 1.0
+        }
+      ],
+      "workload_code": "VAV-SCALE-PRODUCTION"
+    },
+    {
+      "breach_count": 0,
+      "breaches": [],
+      "checked_metrics": 8,
+      "criticality": "critical",
+      "endpoint_code": "api.security.tokens.refresh",
+      "status": "passed_with_warnings",
+      "warning_count": 4,
+      "warnings": [
+        {
+          "budget": 140.0,
+          "metric": "p50_ms",
+          "observed": 125.0,
+          "ratio": 0.892857
+        },
+        {
+          "budget": 260.0,
+          "metric": "p90_ms",
+          "observed": 240.0,
+          "ratio": 0.923077
+        },
+        {
+          "budget": 380.0,
+          "metric": "p95_ms",
+          "observed": 360.0,
+          "ratio": 0.947368
+        },
+        {
+          "budget": 700.0,
+          "metric": "p99_ms",
+          "observed": 620.0,
+          "ratio": 0.885714
+        }
+      ],
+      "workload_code": "VAV-PILOT-PROFILE"
+    }
+  ],
+  "cache": {
+    "findings": [],
+    "hot_key_distribution": {
+      "acceptable_hot_keys": 6,
+      "hot_keys": 2
+    },
+    "hot_keys": [
+      "api.notifications.send",
+      "api.security.tokens.refresh"
+    ],
+    "invalidation_coverage": "PASS",
+    "miss_rate": {
+      "baseline_ratio": 0.18,
+      "observed_ratio": 0.22,
+      "status": "PASS"
+    },
+    "registry_count": 3,
+    "stampede_guard": "PASS",
+    "status": "PASS"
+  },
+  "checksum": "ad9df1a5c805e2731954599254062ec35c6351fe6b3fd803e2456ab8648ac01e",
+  "concurrency": {
+    "critical_hotspots": 0,
+    "critical_races_failed": 0,
+    "hotspots": [
+      {
+        "concurrent_readers": 0,
+        "concurrent_writers": 6,
+        "key": "user:{user_id}",
+        "mixed_read_write": false,
+        "resource": "safety.blocks",
+        "scenarios": [
+          "BLK-001"
+        ],
+        "severity": "medium"
+      },
+      {
+        "concurrent_readers": 0,
+        "concurrent_writers": 5,
+        "key": "relation:{user_id}:{target_id}",
+        "mixed_read_write": false,
+        "resource": "relationships.edges",
+        "scenarios": [
+          "REL-010"
+        ],
+        "severity": "medium"
+      },
+      {
+        "concurrent_readers": 0,
+        "concurrent_writers": 2,
+        "key": "ranking:{bucket}",
+        "mixed_read_write": false,
+        "resource": "recommendations.cache",
+        "scenarios": [
+          "REC-101"
+        ],
+        "severity": "medium"
+      }
+    ],
+    "idempotency_coverage_issues": [],
+    "lock_cycles": [
+      [
+        "a",
+        "b",
+        "c"
+      ]
+    ],
+    "operations": 4,
+    "race_scenarios": [
+      {
+        "criticality": "critical",
+        "passed": true,
+        "scenario_code": "CURRENCY-EXCHANGE"
+      },
+      {
+        "criticality": "critical",
+        "passed": true,
+        "scenario_code": "CONTACT-REVEAL"
+      }
+    ]
+  },
+  "cost": {
+    "ai_cost_guardrail": "PASS",
+    "estimated_unit_cost_usd": 4.3526,
+    "model_count": 2,
+    "status": "PASS",
+    "total_peak_rps": 196.0527,
+    "workload_count": 2
+  },
+  "critical_budget_failures": 1,
+  "critical_failures": 2,
+  "database": {
+    "deadlock_detection": {
+      "cycles_detected": 0,
+      "status": "PASS"
+    },
+    "findings": [
+      "index-regression-regression-plan-missing"
+    ],
+    "index_regression_checks": [],
+    "lock_wait": {
+      "max_p95_ms": 220.0,
+      "observed_p95_ms": 190.0,
+      "status": "PASS"
+    },
+    "query_registry_count": 0,
+    "status": "FAIL"
+  },
+  "generated_at": "2026-08-07T05:59:50.512932+00:00",
+  "git_commit": "a839d33612a25761b6acf19f989e387e8844988d",
+  "invalid_workload_count": 0,
+  "load": {
+    "achieved_rps": 365.0,
+    "issues": [],
+    "manifest_check_status": "passed",
+    "min_p95_ms": 1500.0,
+    "observed": {
+      "achieved_rps": 365,
+      "error_rate": 0.006,
+      "max_ms": 3100,
+      "p50_ms": 360,
+      "p90_ms": 690,
+      "p95_ms": 980,
+      "p99_ms": 1500,
+      "timeout_rate": 0.001
+    },
+    "ratio": 0.960526,
+    "status": "PASS",
+    "target_rps": 380.0
+  },
+  "load_profile": {
+    "critical_budgets": [
+      {
+        "limit": 300,
+        "metric": "p95_ms"
+      },
+      {
+        "limit": 0.01,
+        "metric": "error_rate"
+      }
+    ],
+    "target_db_pool": 0.75,
+    "target_queue_wait_ms": 400,
+    "target_rps": 120,
+    "target_workers": 4
+  },
+  "queue": {
+    "background_jobs_per_hour": 0,
+    "backpressure_profile": 0,
+    "findings": [
+      "background-job-profile-missing"
+    ],
+    "load_shield": "FAIL",
+    "metrics": {
+      "allowed_oldest_unacked_seconds": 240.0,
+      "average_age_seconds": 95.0,
+      "max_age_seconds": 230.0,
+      "oldest_unacked_seconds": 110.0,
+      "target_throughput_rps": 500.0,
+      "worker_throughput_rps": 420.0
+    },
+    "priority_layers": 1,
+    "protected_classification": false,
+    "status": "FAIL"
+  },
+  "scaling": {
+    "api_scale_profile": 2,
+    "api_stateless": true,
+    "findings": [],
+    "scale_readiness": true,
+    "scales_covered": [
+      "development",
+      "medium_production"
+    ],
+    "scheduler_leadership": "PASS",
+    "scheduler_profile_count": 3,
+    "status": "PASS",
+    "worker_scale_profile": 2
+  },
+  "schema_version": "1.0.0",
+  "security": {
+    "reason": "no production load to execute, static gate only",
+    "status": "PASS"
+  },
+  "skill_count": 12,
+  "soak": {
+    "duration_hours": 16.0,
+    "duration_sufficient": true,
+    "leaking_metrics": [
+      "event_queue_depth",
+      "worker_backlog_seconds"
+    ],
+    "metrics": [
+      {
+        "first_value": 220.0,
+        "last_value": 294.0,
+        "leaking": true,
+        "metric": "event_queue_depth",
+        "relative_growth": 0.336364,
+        "slope_per_hour": 4.378947,
+        "threshold_per_hour": 0.4
+      },
+      {
+        "first_value": 520.0,
+        "last_value": 607.0,
+        "leaking": false,
+        "metric": "p95_ms",
+        "relative_growth": 0.167308,
+        "slope_per_hour": 5.775,
+        "threshold_per_hour": 12.0
+      },
+      {
+        "first_value": 16.0,
+        "last_value": 31.0,
+        "leaking": true,
+        "metric": "worker_backlog_seconds",
+        "relative_growth": 0.9375,
+        "slope_per_hour": 0.947368,
+        "threshold_per_hour": 0.2
+      }
+    ],
+    "status": "failed"
+  },
+  "spike": {
+    "blocking_reasons": [],
+    "peak_error_rate": 0.043,
+    "peak_p95_ms": 610.0,
+    "recovery_budget_seconds": 720.0,
+    "recovery_seconds": 20.0,
+    "status": "passed"
+  },
+  "stress": {
+    "blocking_reasons": [],
+    "failure_rps": null,
+    "knee_rps": 700.0,
+    "latency_budget_ms": 1000.0,
+    "max_error_rate": 0.05,
+    "max_stable_rps": 430.0,
+    "saturation_rps": null,
+    "status": "evaluated",
+    "steps": [
+      {
+        "achieved_rps": 118.0,
+        "error_rate": 0.001,
+        "healthy": true,
+        "offered_rps": 120.0,
+        "p95_ms": 430.0,
+        "throughput_gain": 118.0
+      },
+      {
+        "achieved_rps": 212.0,
+        "error_rate": 0.004,
+        "healthy": true,
+        "offered_rps": 240.0,
+        "p95_ms": 470.0,
+        "throughput_gain": 94.0
+      },
+      {
+        "achieved_rps": 290.0,
+        "error_rate": 0.008,
+        "healthy": true,
+        "offered_rps": 360.0,
+        "p95_ms": 520.0,
+        "throughput_gain": 78.0
+      },
+      {
+        "achieved_rps": 380.0,
+        "error_rate": 0.018,
+        "healthy": true,
+        "offered_rps": 500.0,
+        "p95_ms": 760.0,
+        "throughput_gain": 90.0
+      },
+      {
+        "achieved_rps": 430.0,
+        "error_rate": 0.028,
+        "healthy": true,
+        "offered_rps": 600.0,
+        "p95_ms": 900.0,
+        "throughput_gain": 50.0
+      },
+      {
+        "achieved_rps": 430.0,
+        "error_rate": 0.08,
+        "healthy": false,
+        "offered_rps": 700.0,
+        "p95_ms": 1520.0,
+        "throughput_gain": 0.0
+      }
+    ]
+  },
+  "workload_models": [
+    {
+      "findings": [],
+      "peak_events": 1,
+      "sample_profile": {
+        "active_hours_per_day": 16,
+        "daily_active_users": 25000,
+        "peak_factor": 2.0,
+        "requests_per_session": 14.4,
+        "role_weights": {
+          "administrator": 0.15,
+          "member": 0.35,
+          "partner": 0.2,
+          "staff": 0.05,
+          "visitor": 0.25
+        },
+        "session_duration_seconds": 300,
+        "sessions_per_user_per_day": 2.2
+      },
+      "scale": "development",
+      "targets": {
+        "average_rps": 13.75,
+        "concurrent_sessions": 572.9167,
+        "daily_requests": 792000.0,
+        "peak_factor": 2.0,
+        "peak_rps": 27.5,
+        "session_arrival_rate": 0.954861
+      },
+      "workload_code": "VAV-PILOT-PROFILE"
+    },
+    {
+      "findings": [],
+      "peak_events": 1,
+      "sample_profile": {
+        "active_hours_per_day": 15,
+        "daily_active_users": 98000,
+        "peak_factor": 2.8,
+        "requests_per_session": 10.7,
+        "role_weights": {
+          "administrator": 0.12,
+          "member": 0.4,
+          "partner": 0.1,
+          "staff": 0.03,
+          "visitor": 0.35
+        },
+        "session_duration_seconds": 420,
+        "sessions_per_user_per_day": 3.1
+      },
+      "scale": "medium_production",
+      "targets": {
+        "average_rps": 60.1974,
+        "concurrent_sessions": 6616.0889,
+        "daily_requests": 3250660.0,
+        "peak_factor": 2.8,
+        "peak_rps": 168.5527,
+        "session_arrival_rate": 5.625926
+      },
+      "workload_code": "VAV-SCALE-PRODUCTION"
+    }
+  ],
+  "workload_status": "PASS"
+}

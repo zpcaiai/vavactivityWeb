@@ -1,0 +1,15 @@
+{
+  "approval_policies": 2,
+  "browser_e2e": "NOT_RUN",
+  "bulk_operations": 2,
+  "capabilities": 22,
+  "command": "evidence",
+  "domains": 21,
+  "field_policies": 4,
+  "findings": [],
+  "manifest_checksum_sha256": "b925fca12967effc65810d62125edd698974e88bdf1af77d12a05b28588d8dae",
+  "production_certification": "NOT_CERTIFIED",
+  "queries": 2,
+  "skills": 12,
+  "status": "PASS"
+}

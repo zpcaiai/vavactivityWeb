@@ -1,0 +1,26 @@
+{
+  "admin_e2e": "NOT_RUN",
+  "backend_tests": "NOT_RUN",
+  "batch": 29,
+  "critical_failures": 2,
+  "evidence": {
+    "baseline": "PASS",
+    "budgets": "FAIL",
+    "cache": "PASS",
+    "concurrency": 0,
+    "database": "FAIL",
+    "load": "PASS",
+    "queue": "FAIL",
+    "scaling": "PASS",
+    "soak": "failed",
+    "spike": "passed",
+    "stress": "evaluated",
+    "workload": "PASS"
+  },
+  "generated_at": "2026-08-07T05:59:52.568095+00:00",
+  "git_commit": "a839d33612a25761b6acf19f989e387e8844988d",
+  "production_certification": "NOT_CERTIFIED",
+  "schema_version": "1.0.0",
+  "snapshot": "ad9df1a5c805e2731954599254062ec35c6351fe6b3fd803e2456ab8648ac01e",
+  "technical_status": "FAIL"
+}

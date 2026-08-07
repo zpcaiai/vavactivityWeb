@@ -1,0 +1,5 @@
+# Frontend split workspace ignore rules
+node_modules/
+coverage/
+dist/
+.DS_Store

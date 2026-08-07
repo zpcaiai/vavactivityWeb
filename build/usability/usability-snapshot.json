@@ -1,0 +1,522 @@
+{
+  "batch": 27,
+  "compatibility": {
+    "blocker_failures": [],
+    "core_browser_blockers": [],
+    "core_mobile_blockers": [],
+    "coverage_ratio": 1.0,
+    "executed_cells": 300,
+    "major_failures": [],
+    "pass_ratio": 1.0,
+    "required_cells": 300,
+    "status": "passed",
+    "tiers": {
+      "tier_1": {
+        "executed": 120,
+        "meets_requirement": true,
+        "missing": [],
+        "pass_ratio": 1.0,
+        "passed": 120,
+        "required": 120
+      },
+      "tier_2": {
+        "executed": 180,
+        "meets_requirement": true,
+        "missing": [],
+        "pass_ratio": 1.0,
+        "passed": 180,
+        "required": 180
+      },
+      "tier_3": {
+        "executed": 0,
+        "meets_requirement": true,
+        "missing": [],
+        "pass_ratio": 1.0,
+        "passed": 0,
+        "required": 0
+      }
+    },
+    "unregistered_runs": []
+  },
+  "demo": {
+    "findings": [],
+    "policy": {
+      "findings": [],
+      "status": "isolated"
+    }
+  },
+  "drafts": {
+    "items": [
+      {
+        "code": "DRAFT-DATING-PROFILE",
+        "issues": [],
+        "requires_user_choice": false,
+        "resolution": "noop",
+        "status": "resolved"
+      },
+      {
+        "code": "DRAFT-COUNSELING-INTAKE",
+        "issues": [],
+        "requires_user_choice": false,
+        "resolution": "noop",
+        "status": "resolved"
+      },
+      {
+        "code": "DRAFT-SAFETY-REPORT",
+        "issues": [],
+        "requires_user_choice": false,
+        "resolution": "noop",
+        "status": "resolved"
+      }
+    ],
+    "merged": {
+      "reason": "none",
+      "requires_user_choice": false,
+      "superseded": [],
+      "winner": null
+    },
+    "needs_user_choice": 0,
+    "total": 3,
+    "valid": 3
+  },
+  "generated_at": "2026-08-07T05:56:23.057045+00:00",
+  "git_commit": "9b1450950f26acc3114aa1a3fb5e4c6897908109",
+  "imports": {
+    "imports": 2,
+    "invalid_rows": 0,
+    "reports": [
+      {
+        "import_code": "IMPORT-CMS-CONTENT",
+        "rows": [
+          {
+            "field_errors": [],
+            "row_number": 1,
+            "status": "valid"
+          }
+        ]
+      },
+      {
+        "import_code": "IMPORT-ACTIVITY-INVITATIONS",
+        "rows": [
+          {
+            "field_errors": [],
+            "row_number": 1,
+            "status": "valid"
+          }
+        ]
+      }
+    ],
+    "rows": 2
+  },
+  "localization": {
+    "critical": 0,
+    "failed": 0,
+    "items": [
+      {
+        "critical": 0,
+        "findings": [],
+        "locale": "en",
+        "status": "passed"
+      },
+      {
+        "critical": 0,
+        "findings": [],
+        "locale": "zh-CN",
+        "status": "passed"
+      },
+      {
+        "critical": 0,
+        "findings": [],
+        "locale": "zh-TW",
+        "status": "passed"
+      }
+    ],
+    "locales": 3,
+    "passed": 3
+  },
+  "manifest": {
+    "compatibility": {
+      "browsers": [
+        "chrome-current",
+        "chrome-previous",
+        "safari-current",
+        "safari-previous",
+        "firefox-current",
+        "edge-current"
+      ],
+      "devices": [
+        "desktop-1440",
+        "desktop-1024",
+        "tablet-portrait",
+        "mobile-390",
+        "mobile-360"
+      ],
+      "inputs": [
+        "keyboard",
+        "mouse",
+        "touch",
+        "screen-reader"
+      ],
+      "networks": [
+        "broadband",
+        "4g",
+        "slow-3g",
+        "intermittent"
+      ]
+    },
+    "critical_scenarios": [
+      {
+        "code": "UAT-MEMBER-DASHBOARD",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "profiles",
+        "locales": [
+          "en",
+          "zh-CN"
+        ],
+        "persona": "member"
+      },
+      {
+        "code": "UAT-IDENTITY-REGISTRATION",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "identity",
+        "locales": [
+          "en",
+          "zh-CN",
+          "zh-TW"
+        ],
+        "persona": "visitor"
+      },
+      {
+        "code": "UAT-COMMERCE-PURCHASE",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "commerce",
+        "locales": [
+          "en",
+          "zh-CN"
+        ],
+        "persona": "purchaser"
+      },
+      {
+        "code": "UAT-ACTIVITY-REGISTRATION",
+        "devices": [
+          "desktop-chrome",
+          "mobile-chrome"
+        ],
+        "domain": "activities",
+        "locales": [
+          "en",
+          "zh-CN"
+        ],
+        "persona": "activity_participant"
+      },
+      {
+        "code": "UAT-COURSE-COMPLETION",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "courses",
+        "locales": [
+          "en",
+          "zh-CN"
+        ],
+        "persona": "learner"
+      },
+      {
+        "code": "UAT-COUNSELING-BOOKING",
+        "devices": [
+          "desktop-safari",
+          "mobile-safari"
+        ],
+        "domain": "counseling",
+        "locales": [
+          "en",
+          "zh-CN",
+          "zh-TW"
+        ],
+        "persona": "counseling_client"
+      },
+      {
+        "code": "UAT-DATING-PROFILE-REVIEW",
+        "devices": [
+          "desktop-chrome",
+          "mobile-chrome"
+        ],
+        "domain": "matchmaking_profiles",
+        "locales": [
+          "en",
+          "zh-CN",
+          "zh-TW"
+        ],
+        "persona": "dating_member"
+      },
+      {
+        "code": "UAT-SAFETY-REPORT-BLOCK",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "safety",
+        "locales": [
+          "en",
+          "zh-CN",
+          "zh-TW"
+        ],
+        "persona": "safety_reporter"
+      },
+      {
+        "code": "UAT-PRIVACY-ERASURE",
+        "devices": [
+          "desktop-chrome",
+          "mobile-safari"
+        ],
+        "domain": "privacy",
+        "locales": [
+          "en",
+          "zh-CN",
+          "zh-TW"
+        ],
+        "persona": "privacy_requester"
+      },
+      {
+        "code": "UAT-ADMIN-EXCEPTION-RECOVERY",
+        "devices": [
+          "desktop-chrome",
+          "desktop-safari"
+        ],
+        "domain": "admin_platform",
+        "locales": [
+          "en",
+          "zh-CN"
+        ],
+        "persona": "admin_operator"
+      }
+    ],
+    "drafts": [
+      {
+        "code": "DRAFT-DATING-PROFILE",
+        "conflict": "manual_merge",
+        "owner": "matchmaking_profiles",
+        "sensitive": [
+          "private_narrative",
+          "preferences"
+        ],
+        "ttl_seconds": 604800
+      },
+      {
+        "code": "DRAFT-COUNSELING-INTAKE",
+        "conflict": "reject_stale",
+        "owner": "counseling",
+        "sensitive": [
+          "intake_answers"
+        ],
+        "ttl_seconds": 86400
+      },
+      {
+        "code": "DRAFT-SAFETY-REPORT",
+        "conflict": "reject_stale",
+        "owner": "safety",
+        "sensitive": [
+          "description",
+          "evidence"
+        ],
+        "ttl_seconds": 86400
+      }
+    ],
+    "imports": [
+      {
+        "code": "IMPORT-CMS-CONTENT",
+        "command": "cms.import_content",
+        "maximum_rows": 10000,
+        "owner": "cms"
+      },
+      {
+        "code": "IMPORT-ACTIVITY-INVITATIONS",
+        "command": "activities.import_invitations",
+        "maximum_rows": 5000,
+        "owner": "activities"
+      }
+    ],
+    "locales": [
+      "en",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "personas": [
+      "visitor",
+      "member",
+      "purchaser",
+      "activity_participant",
+      "learner",
+      "counseling_client",
+      "dating_member",
+      "safety_reporter",
+      "privacy_requester",
+      "admin_operator"
+    ],
+    "schema_version": "1.0",
+    "support_playbooks": [
+      {
+        "code": "SUPPORT-PAYMENT-ENTITLEMENT",
+        "owner": "commerce",
+        "resolution": "commerce.reconcile_entitlement"
+      },
+      {
+        "code": "SUPPORT-PRIVACY-ERASURE",
+        "owner": "privacy",
+        "resolution": "privacy.retry_erasure_task"
+      },
+      {
+        "code": "SUPPORT-SKILL-INSTALL",
+        "owner": "skills",
+        "resolution": "skills.rollback_installation"
+      }
+    ]
+  },
+  "notifications": {
+    "items": [
+      {
+        "code": "SUPPORT-PAYMENT-ENTITLEMENT",
+        "owner": "commerce",
+        "resolution": "commerce.reconcile_entitlement"
+      },
+      {
+        "code": "SUPPORT-PRIVACY-ERASURE",
+        "owner": "privacy",
+        "resolution": "privacy.retry_erasure_task"
+      },
+      {
+        "code": "SUPPORT-SKILL-INSTALL",
+        "owner": "skills",
+        "resolution": "skills.rollback_installation"
+      }
+    ],
+    "missing_resolution": 0,
+    "owner_coverage": 3,
+    "playbooks": 3
+  },
+  "scenario_checks": [
+    {
+      "issues": [],
+      "scenario_code": "UAT-MEMBER-DASHBOARD"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-IDENTITY-REGISTRATION"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-COMMERCE-PURCHASE"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-ACTIVITY-REGISTRATION"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-COURSE-COMPLETION"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-COUNSELING-BOOKING"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-DATING-PROFILE-REVIEW"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-SAFETY-REPORT-BLOCK"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-PRIVACY-ERASURE"
+    },
+    {
+      "issues": [],
+      "scenario_code": "UAT-ADMIN-EXCEPTION-RECOVERY"
+    }
+  ],
+  "scenario_matrix": {
+    "coverage": {
+      "activity_participant": [
+        "UAT-ACTIVITY-REGISTRATION"
+      ],
+      "admin_operator": [
+        "UAT-ADMIN-EXCEPTION-RECOVERY"
+      ],
+      "counseling_client": [
+        "UAT-COUNSELING-BOOKING"
+      ],
+      "dating_member": [
+        "UAT-DATING-PROFILE-REVIEW"
+      ],
+      "learner": [
+        "UAT-COURSE-COMPLETION"
+      ],
+      "member": [
+        "UAT-MEMBER-DASHBOARD"
+      ],
+      "privacy_requester": [
+        "UAT-PRIVACY-ERASURE"
+      ],
+      "purchaser": [
+        "UAT-COMMERCE-PURCHASE"
+      ],
+      "safety_reporter": [
+        "UAT-SAFETY-REPORT-BLOCK"
+      ],
+      "visitor": [
+        "UAT-IDENTITY-REGISTRATION"
+      ]
+    },
+    "critical_coverage": {
+      "activity_participant": [
+        "UAT-ACTIVITY-REGISTRATION"
+      ],
+      "admin_operator": [
+        "UAT-ADMIN-EXCEPTION-RECOVERY"
+      ],
+      "counseling_client": [
+        "UAT-COUNSELING-BOOKING"
+      ],
+      "dating_member": [
+        "UAT-DATING-PROFILE-REVIEW"
+      ],
+      "learner": [
+        "UAT-COURSE-COMPLETION"
+      ],
+      "member": [
+        "UAT-MEMBER-DASHBOARD"
+      ],
+      "privacy_requester": [
+        "UAT-PRIVACY-ERASURE"
+      ],
+      "purchaser": [
+        "UAT-COMMERCE-PURCHASE"
+      ],
+      "safety_reporter": [
+        "UAT-SAFETY-REPORT-BLOCK"
+      ],
+      "visitor": [
+        "UAT-IDENTITY-REGISTRATION"
+      ]
+    },
+    "critical_role_count": 2,
+    "critical_role_coverage_ratio": 1.0,
+    "orphan_scenarios": [],
+    "status": "passed",
+    "uncovered_critical_roles": []
+  },
+  "schema_version": "1.0",
+  "skill_count": 12
+}

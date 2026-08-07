@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "kind": "storybook",
+  "source": "apps/design-system/storybook-static/index.json",
+  "checksum_sha256": "d9f0780daec4c54390f979037b839afb2c5b5afd33bd07b406300a5086494eb9",
+  "generated_at": "2026-08-06T11:48:10.103Z"
+}
