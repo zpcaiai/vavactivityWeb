@@ -11,7 +11,15 @@ interface Product {
   internal_name: string;
   status: string;
   default_locale: string;
+  visibility: string;
+  category_id: string | null;
+  purchasable_from: string | null;
+  purchasable_until: string | null;
+  featured: boolean;
+  sort_order: number;
+  metadata: Record<string, unknown>;
   version: number;
+  updated_at: string;
   localizations: Record<string, {
     slug: string;
     name: string;
@@ -26,20 +34,39 @@ interface Product {
 
 interface Sku {
   id: string;
+  product_id: string;
   sku_code: string;
   internal_name: string;
   billing_type: string;
+  service_quantity: number | null;
+  service_unit: string | null;
+  fulfillment_configuration: Record<string, unknown>;
+  entitlement_definition: Record<string, unknown>;
   inventory_policy: string;
+  purchase_limit_per_user: number | null;
+  purchase_limit_total: number | null;
+  purchasable_from: string | null;
+  purchasable_until: string | null;
   status: string;
   version: number;
 }
 
 interface Price {
   id: string;
+  sku_id: string;
+  price_book_id: string;
   currency_code: string;
   unit_amount_minor: number;
-  status: string;
+  compare_at_amount_minor: number | null;
+  billing_type: string;
+  billing_interval: string | null;
+  billing_interval_count: number | null;
+  tax_behavior: string;
   valid_from: string;
+  valid_until: string | null;
+  status: string;
+  external_price_references: Record<string, unknown>;
+  supersedes_price_id: string | null;
 }
 
 const route = useRoute();
@@ -70,20 +97,32 @@ const skuForm = ref({
   inventoryPolicy: "unlimited",
   referenceId: "",
   ticketType: "general",
-  serviceCode: ""
+  serviceCode: "",
+  serviceQuantity: "",
+  serviceUnit: "",
+  entitlementDefinition: "{}",
+  purchaseLimitPerUser: "",
+  purchaseLimitTotal: "",
+  purchasableFrom: "",
+  purchasableUntil: ""
 });
 const priceForm = ref({
   priceBookId: "",
   currency: "USD",
   amountMinor: 0,
+  compareAtAmountMinor: "",
   interval: "month",
-  intervalCount: 1
+  intervalCount: 1,
+  taxBehavior: "unspecified",
+  validFrom: "",
+  validUntil: "",
+  externalRefs: "{}"
 });
 const inventoryForm = ref({
-  totalCapacity: 0,
-  safetyStock: 0,
+  totalCapacity: "",
+  safetyStock: "0",
   oversellingAllowed: false,
-  oversellLimit: 0,
+  oversellLimit: "0",
   reason: ""
 });
 
@@ -157,6 +196,14 @@ async function saveLocalization() {
   }
 }
 
+function safeJsonObject(raw: string) {
+  try {
+    return JSON.parse(raw || "{}");
+  } catch {
+    return {};
+  }
+}
+
 function fulfillmentConfiguration() {
   const type = product.value?.product_type;
   if (type === "activity_ticket") {
@@ -190,7 +237,18 @@ async function createSku() {
         internal_name: skuForm.value.name,
         billing_type: skuForm.value.billingType,
         fulfillment_configuration: fulfillmentConfiguration(),
-        inventory_policy: skuForm.value.inventoryPolicy
+        inventory_policy: skuForm.value.inventoryPolicy,
+        service_quantity: skuForm.value.serviceQuantity ? Number(skuForm.value.serviceQuantity) : null,
+        service_unit: skuForm.value.serviceUnit || null,
+        entitlement_definition: safeJsonObject(skuForm.value.entitlementDefinition),
+        purchase_limit_per_user: skuForm.value.purchaseLimitPerUser
+          ? Number(skuForm.value.purchaseLimitPerUser)
+          : null,
+        purchase_limit_total: skuForm.value.purchaseLimitTotal
+          ? Number(skuForm.value.purchaseLimitTotal)
+          : null,
+        purchasable_from: skuForm.value.purchasableFrom || null,
+        purchasable_until: skuForm.value.purchasableUntil || null
       })
     });
     showSku.value = false;
@@ -218,14 +276,15 @@ async function configureInventory() {
     await catalogApi(`/admin/catalog/inventory/${selectedSku.value.id}`, {
       method: "PUT",
       body: JSON.stringify({
-        total_capacity: inventoryForm.value.totalCapacity,
-        safety_stock: inventoryForm.value.safetyStock,
+        total_capacity: inventoryForm.value.totalCapacity ? Number(inventoryForm.value.totalCapacity) : null,
+        safety_stock: Number(inventoryForm.value.safetyStock || 0),
         overselling_allowed: inventoryForm.value.oversellingAllowed,
-        oversell_limit: inventoryForm.value.oversellLimit,
+        oversell_limit: Number(inventoryForm.value.oversellLimit || 0),
         reason: inventoryForm.value.reason
       })
     });
     showInventory.value = false;
+    await load();
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : "库存配置失败";
   }
@@ -256,6 +315,9 @@ async function createPrice() {
         price_book_id: priceForm.value.priceBookId,
         currency_code: priceForm.value.currency,
         unit_amount_minor: priceForm.value.amountMinor,
+        compare_at_amount_minor: priceForm.value.compareAtAmountMinor
+          ? Number(priceForm.value.compareAtAmountMinor)
+          : null,
         billing_type: selectedSku.value.billing_type,
         billing_interval: selectedSku.value.billing_type === "recurring"
           ? priceForm.value.interval
@@ -263,7 +325,10 @@ async function createPrice() {
         billing_interval_count: selectedSku.value.billing_type === "recurring"
           ? priceForm.value.intervalCount
           : null,
-        valid_from: new Date().toISOString()
+        tax_behavior: priceForm.value.taxBehavior,
+        valid_from: priceForm.value.validFrom || new Date().toISOString(),
+        valid_until: priceForm.value.validUntil || null,
+        external_price_references: safeJsonObject(priceForm.value.externalRefs)
       })
     });
     await catalogApi(`/admin/catalog/prices/${price.id}/activate`, {
@@ -318,7 +383,15 @@ onMounted(() => void load());
           PRODUCT / SKU / PRICE
         </p>
         <h2>{{ product?.internal_name }}</h2>
-        <p>{{ product?.product_code }} · {{ product?.status }}</p>
+        <p>
+          {{ product?.product_code }} · {{ product?.status }}
+          · 可见性：{{ product?.visibility }} · 分类：{{ product?.category_id ?? "无" }}
+        </p>
+        <p>
+          可售窗口：{{ product?.purchasable_from || "—" }} 至 {{ product?.purchasable_until || "—" }}
+          · 精选：{{ product?.featured ? "是" : "否" }} · 排序：{{ product?.sort_order ?? 0 }}
+          · 版本：{{ product?.version }} · 更新时间：{{ product?.updated_at || "—" }}
+        </p>
       </div>
       <div class="toolbar-actions">
         <el-button
@@ -368,6 +441,10 @@ onMounted(() => void load());
         label="SKU"
       />
       <el-table-column
+        prop="id"
+        label="SKU ID"
+      />
+      <el-table-column
         prop="internal_name"
         label="名称"
       />
@@ -376,8 +453,32 @@ onMounted(() => void load());
         label="计费"
       />
       <el-table-column
+        prop="service_quantity"
+        label="服务量"
+      />
+      <el-table-column
+        prop="service_unit"
+        label="服务单位"
+      />
+      <el-table-column
+        prop="purchase_limit_per_user"
+        label="每人限额"
+      />
+      <el-table-column
+        prop="purchase_limit_total"
+        label="总限额"
+      />
+      <el-table-column
         prop="inventory_policy"
         label="库存策略"
+      />
+      <el-table-column
+        prop="purchasable_from"
+        label="可售起始"
+      />
+      <el-table-column
+        prop="purchasable_until"
+        label="可售截止"
       />
       <el-table-column
         prop="status"
@@ -410,7 +511,7 @@ onMounted(() => void load());
       </el-table-column>
       <el-table-column
         label="价格"
-        min-width="220"
+        min-width="380"
       >
         <template #default="{ row }">
           <div
@@ -418,7 +519,13 @@ onMounted(() => void load());
             :key="price.id"
             class="price-status-row"
           >
-            <span>{{ price.currency_code }} {{ price.unit_amount_minor }} · {{ price.status }}</span>
+            <span>
+              {{ price.currency_code }} {{ price.unit_amount_minor }}
+              （对比价：{{ price.compare_at_amount_minor ?? "—" }}）
+              · {{ price.billing_type }}
+              · {{ price.status }}
+              · 价格簿：{{ price.price_book_id }}
+            </span>
             <el-button
               v-if="price.status === 'draft'"
               link
@@ -506,7 +613,7 @@ onMounted(() => void load());
     <el-dialog
       v-model="showSku"
       title="新建 SKU"
-      width="640px"
+      width="680px"
     >
       <div class="editor-form">
         <label>SKU 编码<el-input v-model="skuForm.code" /></label>
@@ -539,8 +646,25 @@ onMounted(() => void load());
             value="service_capacity"
           />
         </el-select></label>
+        <label>服务数量<el-input v-model="skuForm.serviceQuantity" /></label>
+        <label>服务单位<el-input v-model="skuForm.serviceUnit" /></label>
+        <label>权益定义（JSON）<el-input
+          v-model="skuForm.entitlementDefinition"
+          type="textarea"
+          :rows="4"
+        /></label>
+        <label>每用户限额<el-input v-model="skuForm.purchaseLimitPerUser" /></label>
+        <label>总限额<el-input v-model="skuForm.purchaseLimitTotal" /></label>
         <label>业务对象 UUID<el-input v-model="skuForm.referenceId" /></label>
         <label>数字服务编码<el-input v-model="skuForm.serviceCode" /></label>
+        <label>可售起始<el-input
+          v-model="skuForm.purchasableFrom"
+          type="datetime-local"
+        /></label>
+        <label>可售截止<el-input
+          v-model="skuForm.purchasableUntil"
+          type="datetime-local"
+        /></label>
       </div>
       <template #footer>
         <el-button @click="showSku = false">
@@ -557,7 +681,7 @@ onMounted(() => void load());
     <el-dialog
       v-model="showPrice"
       title="创建不可变价格草稿"
-      width="640px"
+      width="680px"
     >
       <div class="editor-form">
         <label>Price Book UUID<el-input v-model="priceForm.priceBookId" /></label>
@@ -580,6 +704,30 @@ onMounted(() => void load());
           />
         </el-select></label>
         <label>最小货币单位金额<el-input v-model.number="priceForm.amountMinor" /></label>
+        <label>对比价最小单位<el-input
+          v-model="priceForm.compareAtAmountMinor"
+          placeholder="可选"
+        /></label>
+        <label>税务策略<el-input v-model="priceForm.taxBehavior" /></label>
+        <label v-if="selectedSku?.billing_type === 'recurring'">
+          计费周期<el-input v-model="priceForm.interval" />
+        </label>
+        <label v-if="selectedSku?.billing_type === 'recurring'">
+          周期倍数<el-input v-model.number="priceForm.intervalCount" />
+        </label>
+        <label>生效时间<el-input
+          v-model="priceForm.validFrom"
+          type="datetime-local"
+        /></label>
+        <label>失效时间<el-input
+          v-model="priceForm.validUntil"
+          type="datetime-local"
+        /></label>
+        <label>外部引用（JSON）<el-input
+          v-model="priceForm.externalRefs"
+          type="textarea"
+          :rows="4"
+        /></label>
       </div>
       <template #footer>
         <el-button @click="showPrice = false">
@@ -596,12 +744,22 @@ onMounted(() => void load());
     <el-dialog
       v-model="showInventory"
       title="配置库存或服务容量"
-      width="640px"
+      width="680px"
     >
       <div class="editor-form">
-        <label>总容量<el-input v-model.number="inventoryForm.totalCapacity" /></label>
-        <label>安全库存<el-input v-model.number="inventoryForm.safetyStock" /></label>
-        <label>超卖上限<el-input v-model.number="inventoryForm.oversellLimit" /></label>
+        <label>总容量<el-input v-model="inventoryForm.totalCapacity" /></label>
+        <label>安全库存<el-input v-model="inventoryForm.safetyStock" /></label>
+        <label>允许超卖<el-select v-model="inventoryForm.oversellingAllowed">
+          <el-option
+            label="否"
+            :value="false"
+          />
+          <el-option
+            label="是"
+            :value="true"
+          />
+        </el-select></label>
+        <label>超卖上限<el-input v-model="inventoryForm.oversellLimit" /></label>
         <label>调整原因<el-input v-model="inventoryForm.reason" /></label>
       </div>
       <template #footer>
