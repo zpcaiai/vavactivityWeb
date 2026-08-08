@@ -301,6 +301,46 @@ function apiPython(script: string[]): string {
   ).trim();
 }
 
+/** Create an authenticated member with a real free membership projection. */
+export function seedMembershipFixture(): string {
+  const email = recommendationFixtureEmail("mei");
+  const existingEmail = apiPython([
+    "import asyncio",
+    "from sqlalchemy import select",
+    "from vav.core.database import session_factory",
+    "from vav.models.identity import User",
+    `EMAIL = ${JSON.stringify(email)}`,
+    "async def main():",
+    "    async with session_factory() as session:",
+    "        user = await session.scalar(select(User.email).where(User.email == EMAIL))",
+    "        print(user or '')",
+    "asyncio.run(main())"
+  ]);
+  if (!existingEmail) seedRecommendationFixture();
+  execFileSync(
+    "docker",
+    ["compose", "exec", "-T", "api", "python", "-m", "vav.cli.seed_memberships"],
+    { stdio: "pipe" }
+  );
+  apiPython([
+    "import asyncio",
+    "from sqlalchemy import select",
+    "from vav.core.database import session_factory",
+    "from vav.models.identity import User",
+    "from vav.modules.memberships import projection",
+    `EMAIL = ${JSON.stringify(email)}`,
+    "async def main():",
+    "    async with session_factory() as session:",
+    "        user = await session.scalar(select(User).where(User.email == EMAIL))",
+    "        if user is None:",
+    "            raise SystemExit(f'membership fixture user missing: {EMAIL}')",
+    "        await projection.ensure_free_membership(session, user.id)",
+    "        print(EMAIL)",
+    "asyncio.run(main())"
+  ]);
+  return email;
+}
+
 /** Run SQL and return the last value psql printed, ignoring command tags. */
 function postgresValue(statements: string): string {
   const output = execFileSync(

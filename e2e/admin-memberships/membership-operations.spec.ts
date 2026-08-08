@@ -1,10 +1,21 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-import { adminEmail, adminPassword, resetLoginRateLimits, seedSuperAdmin } from "../helpers";
+import {
+  adminEmail,
+  adminPassword,
+  resetLoginRateLimits,
+  seedMembershipFixture,
+  seedSuperAdmin
+} from "../helpers";
 
 const adminBaseUrl = process.env.E2E_ADMIN_WEB_URL ?? "http://localhost:5174";
-test.beforeAll(() => { resetLoginRateLimits(); seedSuperAdmin(); });
+test.beforeAll(() => {
+  test.setTimeout(180_000);
+  resetLoginRateLimits();
+  seedMembershipFixture();
+  seedSuperAdmin();
+});
 
 async function signIn(page: Page) {
   await page.goto(`${adminBaseUrl}/admin/login`);

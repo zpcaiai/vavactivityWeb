@@ -4,7 +4,11 @@ import { expect, test } from "@playwright/test";
 import { recommendationFixturePassword, resetLoginRateLimits, seedRelationshipFixture } from "../helpers";
 
 let memberEmail = "";
-test.beforeAll(() => { resetLoginRateLimits(); memberEmail = seedRelationshipFixture(); });
+test.beforeAll(() => {
+  test.setTimeout(180_000);
+  resetLoginRateLimits();
+  memberEmail = seedRelationshipFixture();
+});
 
 async function signIn(page: Page) {
   await page.goto("/zh-CN/auth/login");
