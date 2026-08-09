@@ -8,6 +8,8 @@ test("frontend image workflow owns both web images and emits an immutable handof
   const workflow = read(".github/workflows/build-images.yml");
   assert.match(workflow, /name: user-web, target: user-production/u);
   assert.match(workflow, /name: admin-web, target: admin-production/u);
+  assert.match(workflow, /vavactivity-web-\$\{\{ matrix\.name \}\}/u);
+  assert.doesNotMatch(workflow, /\/vav-\$\{\{ matrix\.name \}\}/u);
   assert.match(workflow, /frontend_commit=\$\{GITHUB_SHA\}/u);
   assert.match(workflow, /user_web_image=.*user-web\.image/u);
   assert.match(workflow, /admin_web_image=.*admin-web\.image/u);
@@ -18,6 +20,7 @@ test("complete E2E explicitly assembles the split backend and frontend checkouts
   assert.match(workflow, /repository: zpcaiai\/vavactivity/u);
   assert.match(workflow, /VAV_WEB_ROOT:/u);
   assert.match(workflow, /VAV_BACKEND_ROOT:/u);
+  assert.match(workflow, /COMPOSE_FILE:.*backend\/docker-compose\.yml/u);
   const setup = read("e2e/global-setup.ts");
   assert.match(setup, /process\.env\.VAV_BACKEND_ROOT/u);
   assert.match(setup, /cwd: backendRoot/u);
