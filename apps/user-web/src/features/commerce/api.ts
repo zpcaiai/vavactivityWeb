@@ -86,6 +86,14 @@ export function anonymousSessionId() {
   return value;
 }
 
+export function buildCommerceApiUrl(
+  apiBaseUrl: string,
+  path: string,
+  origin = window.location.origin
+): URL {
+  return new URL(`${apiBaseUrl}${path}`, origin);
+}
+
 async function request<T>(
   path: string,
   init: RequestInit = {},
@@ -93,7 +101,7 @@ async function request<T>(
 ): Promise<T> {
   const auth = useAuthStore();
   await auth.bootstrap();
-  const url = new URL(`${baseUrl}${path}`);
+  const url = buildCommerceApiUrl(baseUrl, path);
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value) {
       url.searchParams.set(key, value);
