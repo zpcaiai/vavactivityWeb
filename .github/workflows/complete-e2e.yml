@@ -15,6 +15,7 @@ jobs:
     env:
       VAV_WEB_ROOT: ${{ github.workspace }}/web
       VAV_BACKEND_ROOT: ${{ github.workspace }}/backend
+      COMPOSE_FILE: ${{ github.workspace }}/backend/docker-compose.yml
     steps:
       - uses: actions/checkout@v4
         with: {path: web}
