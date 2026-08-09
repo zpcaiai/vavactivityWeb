@@ -5,7 +5,9 @@
     "authorizedSession": "後端授權工作階段",
     "expand": "展開",
     "collapse": "收合導覽",
-    "language": "介面語言"
+    "language": "介面語言",
+    "logout": "安全登出",
+    "signingOut": "登出中"
   },
   "menu": {
     "dashboard": "工作台",
@@ -22,8 +24,12 @@
     "ai": "AI 營運中心",
     "notifications": "通知營運中心",
     "privacy": "隱私營運中心",
+    "matchmaking": "婚戀檔案中心",
+    "recommendations": "推薦營運中心",
     "interactions": "互動營運中心",
     "relationships": "關係營運中心",
+    "memberships": "會員營運中心",
+    "trustSafety": "信任與安全中心",
     "system": "系統維運中心",
     "skills": "Skill 控制台",
     "quality": "品質治理",

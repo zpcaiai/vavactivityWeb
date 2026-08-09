@@ -10,6 +10,17 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/element-plus")) return "element-plus";
+          if (id.includes("node_modules/@element-plus/icons-vue")) return "element-icons";
+          if (/node_modules\/(vue|vue-router|pinia)\//.test(id)) return "vue-runtime";
+        }
+      }
+    }
+  },
   server: {
     port: 5174,
     strictPort: true,

@@ -1,4 +1,3 @@
-import { createInternalNeonAuth } from "@neondatabase/neon-js/auth";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -30,26 +29,6 @@ interface AuthResponse {
 type AuthStatus = "unknown" | "authenticated" | "anonymous" | "refreshing";
 
 const baseUrl = resolveApiBaseUrl();
-const neonAuthUrl = import.meta.env.VITE_NEON_AUTH_URL?.trim();
-const neonAuth = neonAuthUrl ? createInternalNeonAuth(neonAuthUrl) : undefined;
-
-interface NeonAuthUser {
-  id: string;
-  email: string;
-  emailVerified: boolean;
-}
-
-function mapNeonUser(value: NeonAuthUser): CurrentUser {
-  return {
-    id: value.id,
-    email: value.email,
-    status: "active",
-    email_verified: value.emailVerified,
-    preferred_locale: document.documentElement.lang || "zh-CN",
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    permissions: []
-  };
-}
 
 function csrfToken() {
   return document.cookie
@@ -97,27 +76,7 @@ export const useAuthStore = defineStore("auth", () => {
     status.value = "authenticated";
   }
 
-  async function applyNeonAuth(neonUser: NeonAuthUser) {
-    accessToken.value = (await neonAuth?.getJWTToken()) ?? undefined;
-    user.value = mapNeonUser(neonUser);
-    status.value = "authenticated";
-  }
-
   async function login(email: string, password: string, deviceName = "Web browser") {
-    if (neonAuth) {
-      const result = await neonAuth.adapter.signIn.email({
-        email: normalizeLoginIdentifier(email),
-        password
-      });
-      if (result.error) {
-        throw new Error(result.error.message ?? "Authentication request failed");
-      }
-      if (!result.data?.user) {
-        throw new Error("Authentication request failed");
-      }
-      await applyNeonAuth(result.data.user);
-      return;
-    }
     const result = await authRequest<AuthResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify({
@@ -137,22 +96,6 @@ export const useAuthStore = defineStore("auth", () => {
     terms_version: string;
     privacy_version: string;
   }) {
-    if (neonAuth) {
-      const result = await neonAuth.adapter.signUp.email({
-        name: payload.email.split("@")[0] || "VAV User",
-        email: payload.email,
-        password: payload.password
-      });
-      if (result.error) {
-        throw new Error(result.error.message ?? "Authentication request failed");
-      }
-      return {
-        data: {
-          registration_status: "created",
-          email: result.data.user.email
-        }
-      };
-    }
     return authRequest<{ data: { registration_status: string; email: string } }>(
       "/auth/register",
       { method: "POST", body: JSON.stringify(payload) }
@@ -161,20 +104,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function refresh() {
     status.value = "refreshing";
-    if (neonAuth) {
-      try {
-        const result = await neonAuth.adapter.getSession();
-        if (result.error || !result.data?.user) {
-          clearSession();
-          return false;
-        }
-        await applyNeonAuth(result.data.user);
-        return true;
-      } catch {
-        clearSession();
-        return false;
-      }
-    }
     try {
       const token = csrfToken();
       if (!token) {
@@ -201,11 +130,6 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function logout(allDevices = false) {
-    if (neonAuth) {
-      await neonAuth.adapter.signOut();
-      clearSession();
-      return;
-    }
     if (!accessToken.value) {
       clearSession();
       return;

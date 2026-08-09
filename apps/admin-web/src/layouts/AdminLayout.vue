@@ -9,16 +9,18 @@ import {
   User
 } from "@element-plus/icons-vue";
 import { computed, nextTick, ref, watch, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { VSkipLink } from "@vav/ui-core";
 
 import { adminLocales, type AdminLocale, useAdminLocale } from "@/i18n";
 import { useAdminAuthStore } from "@/stores/admin-auth";
 
 const route = useRoute();
+const router = useRouter();
 const auth = useAdminAuthStore();
 const { locale, setLocale, t } = useAdminLocale();
 const collapsed = ref(false);
+const signingOut = ref(false);
 const pageTitle = computed(() => String(route.meta.title ?? "工作台"));
 
 const menu = [
@@ -36,8 +38,12 @@ const menu = [
   { path: "/admin/ai", labelKey: "menu.ai", icon: DataAnalysis },
   { path: "/admin/notifications/dashboard", labelKey: "menu.notifications", icon: Document },
   { path: "/admin/privacy/dashboard", labelKey: "menu.privacy", icon: Lock },
+  { path: "/admin/matchmaking/profiles", labelKey: "menu.matchmaking", icon: User },
+  { path: "/admin/recommendations/dashboard", labelKey: "menu.recommendations", icon: DataAnalysis },
   { path: "/admin/matchmaking-interactions/dashboard", labelKey: "menu.interactions", icon: User },
   { path: "/admin/relationships/dashboard", labelKey: "menu.relationships", icon: User },
+  { path: "/admin/memberships/dashboard", labelKey: "menu.memberships", icon: Goods },
+  { path: "/admin/trust-safety/reports", labelKey: "menu.trustSafety", icon: Lock },
   { path: "/admin/system/status", labelKey: "menu.system", icon: Setting },
   { path: "/admin/skills/dashboard", labelKey: "menu.skills", icon: DataAnalysis },
   { path: "/admin/quality/dashboard", labelKey: "menu.quality", icon: DataAnalysis },
@@ -77,8 +83,12 @@ const visibleMenu = computed(() => {
       "/admin/ai": "ai.conversations.read",
       "/admin/notifications/dashboard": "notifications.analytics.read",
       "/admin/privacy/dashboard": "privacy.requests.read",
+      "/admin/matchmaking/profiles": "matchmaking.profiles.read",
+      "/admin/recommendations/dashboard": "recommendations.analytics.read",
       "/admin/matchmaking-interactions/dashboard": "matchmaking.analytics.read",
       "/admin/relationships/dashboard": "relationships.analytics.read",
+      "/admin/memberships/dashboard": "memberships.analytics.read",
+      "/admin/trust-safety/reports": "safety.reports.read",
       "/admin/system/status": "system.status.read",
       "/admin/skills/dashboard": "skills.analytics.read",
       "/admin/quality/dashboard": "quality.analytics.read",
@@ -101,6 +111,19 @@ const visibleMenu = computed(() => {
 function changeLocale(value: string) {
   if (adminLocales.includes(value as AdminLocale)) {
     setLocale(value as AdminLocale);
+  }
+}
+
+async function logout() {
+  signingOut.value = true;
+  try {
+    await auth.logout();
+  } catch {
+    // Never retain a bearer token locally merely because the network failed.
+    auth.clearSession();
+  } finally {
+    signingOut.value = false;
+    await router.replace({ name: "admin-login" });
   }
 }
 
@@ -194,6 +217,14 @@ watch(() => route.fullPath, async () => {
               <small>{{ t("shell.authorizedSession") }}</small>
             </div>
           </div>
+          <el-button
+            type="danger"
+            plain
+            :loading="signingOut"
+            @click="logout"
+          >
+            {{ signingOut ? t("shell.signingOut") : t("shell.logout") }}
+          </el-button>
         </div>
       </header>
       <main

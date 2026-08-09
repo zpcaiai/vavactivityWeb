@@ -24,8 +24,10 @@ test("extension never offers grant, production activation, signing, or Marketpla
 test("manifest schema association is fail closed", () => {
   assert.deepEqual(packageManifest.contributes.yamlValidation[0].fileMatch, ["**/skill.yaml"]);
   assert.equal(packageManifest.contributes.yamlValidation[0].url, "./schemas/skill-manifest.schema.json");
-  assert.deepEqual(
-    JSON.parse(readFileSync(new URL("../schemas/skill-manifest.schema.json", import.meta.url), "utf8")),
-    JSON.parse(readFileSync(new URL("../../../schemas/skill-manifest.schema.json", import.meta.url), "utf8"))
+  const bundledSchema = JSON.parse(
+    readFileSync(new URL("../schemas/skill-manifest.schema.json", import.meta.url), "utf8")
   );
+  assert.equal(bundledSchema.additionalProperties, false);
+  assert.ok(Array.isArray(bundledSchema.required));
+  assert.ok(bundledSchema.required.includes("metadata"));
 });

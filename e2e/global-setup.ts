@@ -1,7 +1,11 @@
 import { execFileSync } from "node:child_process";
+import { resolve } from "node:path";
+
+const backendRoot = resolve(process.env.VAV_BACKEND_ROOT ?? "../vavactivity");
 
 function dockerCompose(args: string[]): string {
   return execFileSync("docker", ["compose", ...args], {
+    cwd: backendRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"]
   }).trim();

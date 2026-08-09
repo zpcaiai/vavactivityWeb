@@ -1,42 +1,42 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import AdminLayout from "@/layouts/AdminLayout.vue";
-import AcceptInvitationPage from "@/pages/AcceptInvitationPage.vue";
-import ActivityManagementPage from "@/pages/ActivityManagementPage.vue";
-import AccessManagementPage from "@/pages/AccessManagementPage.vue";
-import CatalogManagementPage from "@/pages/CatalogManagementPage.vue";
-import CatalogProductEditorPage from "@/pages/CatalogProductEditorPage.vue";
-import CommerceManagementPage from "@/pages/CommerceManagementPage.vue";
-import CourseManagementPage from "@/pages/CourseManagementPage.vue";
-import CounselingManagementPage from "@/pages/CounselingManagementPage.vue";
-import CmsEditorPage from "@/pages/CmsEditorPage.vue";
-import DashboardPage from "@/pages/DashboardPage.vue";
-import CmsManagementPage from "@/pages/CmsManagementPage.vue";
-import ErrorPage from "@/pages/ErrorPage.vue";
-import LoginPage from "@/pages/LoginPage.vue";
-import MediaLibraryPage from "@/pages/MediaLibraryPage.vue";
-import KnowledgeManagementPage from "@/pages/KnowledgeManagementPage.vue";
-import AiManagementPage from "@/pages/AiManagementPage.vue";
-import NotificationManagementPage from "@/pages/NotificationManagementPage.vue";
-import MatchmakingProfileManagementPage from "@/pages/MatchmakingProfileManagementPage.vue";
-import PrivacyManagementPage from "@/pages/PrivacyManagementPage.vue";
-import ModuleListPage from "@/pages/ModuleListPage.vue";
-import NavigationManagementPage from "@/pages/NavigationManagementPage.vue";
-import PricingSimulationPage from "@/pages/PricingSimulationPage.vue";
-import RecommendationManagementPage from "@/pages/RecommendationManagementPage.vue";
-import MatchmakingInteractionManagementPage from "@/pages/MatchmakingInteractionManagementPage.vue";
-import RelationshipManagementPage from "@/pages/RelationshipManagementPage.vue";
-import MembershipManagementPage from "@/pages/MembershipManagementPage.vue";
-import TrustSafetyManagementPage from "@/pages/TrustSafetyManagementPage.vue";
-import SystemOperationsPage from "@/pages/SystemOperationsPage.vue";
-import SkillManagementPage from "@/pages/SkillManagementPage.vue";
-import QualityManagementPage from "@/pages/QualityManagementPage.vue";
-import DesignSystemManagementPage from "@/pages/DesignSystemManagementPage.vue";
-import ExperienceManagementPage from "@/pages/ExperienceManagementPage.vue";
-import ProcessGovernancePage from "@/pages/ProcessGovernancePage.vue";
-import DataGovernancePage from "@/pages/DataGovernancePage.vue";
-import AdminPlatformPage from "@/pages/AdminPlatformPage.vue";
 import { useAccessStore } from "@/stores/access";
+
+const AdminLayout = () => import("@/layouts/AdminLayout.vue");
+const AcceptInvitationPage = () => import("@/pages/AcceptInvitationPage.vue");
+const ActivityManagementPage = () => import("@/pages/ActivityManagementPage.vue");
+const AccessManagementPage = () => import("@/pages/AccessManagementPage.vue");
+const CatalogManagementPage = () => import("@/pages/CatalogManagementPage.vue");
+const CatalogProductEditorPage = () => import("@/pages/CatalogProductEditorPage.vue");
+const CommerceManagementPage = () => import("@/pages/CommerceManagementPage.vue");
+const CourseManagementPage = () => import("@/pages/CourseManagementPage.vue");
+const CounselingManagementPage = () => import("@/pages/CounselingManagementPage.vue");
+const CmsEditorPage = () => import("@/pages/CmsEditorPage.vue");
+const DashboardPage = () => import("@/pages/DashboardPage.vue");
+const CmsManagementPage = () => import("@/pages/CmsManagementPage.vue");
+const ErrorPage = () => import("@/pages/ErrorPage.vue");
+const LoginPage = () => import("@/pages/LoginPage.vue");
+const MediaLibraryPage = () => import("@/pages/MediaLibraryPage.vue");
+const KnowledgeManagementPage = () => import("@/pages/KnowledgeManagementPage.vue");
+const AiManagementPage = () => import("@/pages/AiManagementPage.vue");
+const NotificationManagementPage = () => import("@/pages/NotificationManagementPage.vue");
+const MatchmakingProfileManagementPage = () => import("@/pages/MatchmakingProfileManagementPage.vue");
+const PrivacyManagementPage = () => import("@/pages/PrivacyManagementPage.vue");
+const NavigationManagementPage = () => import("@/pages/NavigationManagementPage.vue");
+const PricingSimulationPage = () => import("@/pages/PricingSimulationPage.vue");
+const RecommendationManagementPage = () => import("@/pages/RecommendationManagementPage.vue");
+const MatchmakingInteractionManagementPage = () => import("@/pages/MatchmakingInteractionManagementPage.vue");
+const RelationshipManagementPage = () => import("@/pages/RelationshipManagementPage.vue");
+const MembershipManagementPage = () => import("@/pages/MembershipManagementPage.vue");
+const TrustSafetyManagementPage = () => import("@/pages/TrustSafetyManagementPage.vue");
+const SystemOperationsPage = () => import("@/pages/SystemOperationsPage.vue");
+const SkillManagementPage = () => import("@/pages/SkillManagementPage.vue");
+const QualityManagementPage = () => import("@/pages/QualityManagementPage.vue");
+const DesignSystemManagementPage = () => import("@/pages/DesignSystemManagementPage.vue");
+const ExperienceManagementPage = () => import("@/pages/ExperienceManagementPage.vue");
+const ProcessGovernancePage = () => import("@/pages/ProcessGovernancePage.vue");
+const DataGovernancePage = () => import("@/pages/DataGovernancePage.vue");
+const AdminPlatformPage = () => import("@/pages/AdminPlatformPage.vue");
 
 const modules = [
   ["users", "用户", "账户、资料与数据权利", "users:view"],
@@ -712,11 +712,16 @@ export const router = createRouter({
           component: AccessManagementPage,
           meta: { title: "权限审计", permission: "audit.read", endpoint: "/admin/audit/security-events" }
         },
-        ...modules.filter(([path]) => !["users", "catalog", "activities", "courses", "counseling", "ai"].includes(path)).map(([path, title, description, routePermission]) => ({
+        ...[
+          ["content", "/admin/content/pages"],
+          ["orders", "/admin/commerce/orders"],
+          ["payments", "/admin/commerce/payments"],
+          ["moderation", "/admin/trust-safety/moderation"],
+          ["settings", "/admin/content/settings"],
+          ["audit", "/admin/audit/auth"]
+        ].map(([path, redirect]) => ({
           path,
-          name: `admin-${path}`,
-          component: ModuleListPage,
-          meta: { title, description, permission: routePermission }
+          redirect
         }))
       ]
     },

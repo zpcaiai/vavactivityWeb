@@ -5,7 +5,9 @@
     "authorizedSession": "后端授权会话",
     "expand": "展开",
     "collapse": "收起导航",
-    "language": "界面语言"
+    "language": "界面语言",
+    "logout": "安全退出",
+    "signingOut": "退出中"
   },
   "menu": {
     "dashboard": "工作台",
@@ -22,8 +24,12 @@
     "ai": "AI 运营中心",
     "notifications": "通知运营中心",
     "privacy": "隐私运营中心",
+    "matchmaking": "婚恋档案中心",
+    "recommendations": "推荐运营中心",
     "interactions": "互动运营中心",
     "relationships": "关系运营中心",
+    "memberships": "会员运营中心",
+    "trustSafety": "信任与安全中心",
     "system": "系统运维中心",
     "skills": "Skill 控制台",
     "quality": "质量治理",

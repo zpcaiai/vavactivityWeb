@@ -12,32 +12,53 @@ jobs:
   complete-journeys:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      VAV_WEB_ROOT: ${{ github.workspace }}/web
+      VAV_BACKEND_ROOT: ${{ github.workspace }}/backend
     steps:
       - uses: actions/checkout@v4
+        with: {path: web}
+      - uses: actions/checkout@v4
+        with:
+          repository: zpcaiai/vavactivity
+          path: backend
       - uses: pnpm/action-setup@v6
         with: {version: "10.14.0"}
       - uses: actions/setup-node@v4
-        with: {node-version: "24.4.1", cache: pnpm}
+        with: {node-version: "24.4.1", cache: pnpm, cache-dependency-path: web/pnpm-lock.yaml}
       - uses: astral-sh/setup-uv@v6
         with: {version: "0.8.3", python-version: "3.12", enable-cache: true}
       - run: cp .env.example .env
+        working-directory: backend
       - run: corepack pnpm install --frozen-lockfile
+        working-directory: web
       - run: uv sync --frozen --all-packages --all-groups
+        working-directory: backend
       - run: ./scripts/generate-dev-auth-keys.sh
+        working-directory: backend
       - run: docker compose --profile full up -d --build
+        working-directory: backend
       - run: ./scripts/wait-for-services.sh
+        working-directory: backend
       - run: docker compose exec -T api alembic upgrade head
+        working-directory: backend
       - run: VAV_INCLUDE_DEMO=true ./scripts/vavctl seed
+        working-directory: backend
       - run: corepack pnpm exec playwright install --with-deps chromium
-      - run: PLAYWRIGHT_CHANNEL=chromium make complete-e2e
+        working-directory: web
+      - run: corepack pnpm exec playwright test --config playwright.complete.config.ts
+        working-directory: web
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
       - if: always()
-        run: docker compose logs --no-color > complete-e2e-compose.log
+        run: docker compose logs --no-color > ../web/complete-e2e-compose.log
+        working-directory: backend
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: complete-e2e-evidence
           path: |
-            playwright-report
-            test-results/complete-e2e
-            complete-e2e-compose.log
+            web/playwright-report
+            web/test-results/complete-e2e
+            web/complete-e2e-compose.log
           if-no-files-found: warn

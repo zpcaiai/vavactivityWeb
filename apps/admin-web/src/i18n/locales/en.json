@@ -5,7 +5,9 @@
     "authorizedSession": "Server-authorized session",
     "expand": "Expand",
     "collapse": "Collapse navigation",
-    "language": "Interface language"
+    "language": "Interface language",
+    "logout": "Sign out",
+    "signingOut": "Signing out"
   },
   "menu": {
     "dashboard": "Workspace",
@@ -22,8 +24,12 @@
     "ai": "AI operations",
     "notifications": "Notification operations",
     "privacy": "Privacy operations",
+    "matchmaking": "Matchmaking profiles",
+    "recommendations": "Recommendation operations",
     "interactions": "Interaction operations",
     "relationships": "Relationship operations",
+    "memberships": "Membership operations",
+    "trustSafety": "Trust and safety",
     "system": "System operations",
     "skills": "Skill console",
     "quality": "Quality governance",
