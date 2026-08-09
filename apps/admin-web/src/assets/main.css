@@ -508,6 +508,15 @@ body {
   line-height: 1.8;
 }
 
+.login-card .el-button--primary {
+  --el-button-bg-color: var(--vav-color-primary-strong);
+  --el-button-border-color: var(--vav-color-primary-strong);
+  --el-button-hover-bg-color: var(--vav-color-primary);
+  --el-button-hover-border-color: var(--vav-color-primary);
+  --el-button-active-bg-color: var(--vav-color-primary-strong);
+  --el-button-active-border-color: var(--vav-color-primary-strong);
+}
+
 .preview-link {
   background: var(--vav-color-primary);
   border-radius: 999px;

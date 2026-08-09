@@ -7,7 +7,11 @@ const languages = [
 </script>
 
 <template>
-  <main class="language-gateway">
+  <main
+    id="main-content"
+    class="language-gateway"
+    tabindex="-1"
+  >
     <div class="gateway-card">
       <span
         class="brand-mark gateway-mark"
@@ -35,4 +39,3 @@ const languages = [
     </div>
   </main>
 </template>
-
