@@ -49,3 +49,15 @@ test("production SPA delivery sets browser security and cache controls", () => {
   assert.match(nginx, /Cache-Control "public, immutable"/);
   assert.match(nginx, /Cache-Control "no-cache"/);
 });
+
+test("Vercel serves the admin SPA and its hashed assets from the same prefix", () => {
+  const config = JSON.parse(read("vercel.json"));
+  assert.equal(config.buildCommand, "node scripts/vercel-build.mjs");
+  assert.equal(config.outputDirectory, "dist/public");
+
+  const build = read("scripts/vercel-build.mjs");
+  assert.match(build, /VITE_BASE_PATH: "\/admin\/"/u);
+
+  const adminVite = read("apps/admin-web/vite.config.ts");
+  assert.match(adminVite, /base: process\.env\.VITE_BASE_PATH \?\? "\/"/u);
+});
