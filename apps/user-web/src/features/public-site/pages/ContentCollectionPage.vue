@@ -64,22 +64,31 @@ watch([locale, kind], () => void load());
     </p>
     <div
       v-else-if="items.length"
-      class="editorial-grid"
+      class="editorial-grid content-card-grid"
     >
       <article
         v-for="item in items"
         :key="item.id"
+        class="content-card content-card-body content-card--compact"
       >
-        <p class="eyebrow">
+        <p class="eyebrow content-card-kicker">
           {{ item.locale }}
         </p>
-        <h2>{{ item.title }}</h2>
-        <p>{{ item.excerpt }}</p>
-        <RouterLink
-          :to="`/${locale}/${kind === 'testimonials' ? 'stories' : 'articles'}/${item.canonical_slug}`"
-        >
-          阅读全文
-        </RouterLink>
+        <h2 class="content-card-title">
+          {{ item.title }}
+        </h2>
+        <p class="content-card-summary">
+          {{ item.excerpt }}
+        </p>
+        <footer class="content-card-footer">
+          <RouterLink
+            class="text-link content-card-link"
+            :to="`/${locale}/${kind === 'testimonials' ? 'stories' : 'articles'}/${item.canonical_slug}`"
+          >
+            阅读全文
+            <span aria-hidden="true">→</span>
+          </RouterLink>
+        </footer>
       </article>
     </div>
     <div

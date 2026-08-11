@@ -53,25 +53,43 @@ watch(() => route.params.locale, () => void load());
     </p>
     <div
       v-else
-      class="product-grid"
+      class="product-grid content-card-grid"
     >
       <article
         v-for="activity in activities"
         :key="activity.id"
-        class="product-card"
+        class="product-card content-card activity-card"
       >
-        <p class="eyebrow">
-          {{ activity.format }} · {{ activity.status }}
-        </p>
-        <h2>{{ activity.title }}</h2>
-        <p>{{ activity.summary }}</p>
-        <p>
-          <strong>{{ new Date(activity.starts_at).toLocaleString() }}</strong>
-          · {{ activity.timezone }}
-        </p>
-        <RouterLink :to="`/${String(route.params.locale)}/activities/${activity.slug}`">
-          {{ t("activities.view") }}
-        </RouterLink>
+        <div class="product-card-body content-card-body">
+          <p class="eyebrow content-card-kicker">
+            {{ activity.format }} · {{ activity.status }}
+          </p>
+          <h2 class="content-card-title">
+            {{ activity.title }}
+          </h2>
+          <p
+            v-if="activity.summary"
+            class="content-card-summary"
+          >
+            {{ activity.summary }}
+          </p>
+          <footer class="content-card-footer">
+            <time
+              class="content-card-meta"
+              :datetime="activity.starts_at"
+            >
+              {{ new Date(activity.starts_at).toLocaleString() }}
+              <span>{{ activity.timezone }}</span>
+            </time>
+            <RouterLink
+              class="text-link content-card-link"
+              :to="`/${String(route.params.locale)}/activities/${activity.slug}`"
+            >
+              {{ t("activities.view") }}
+              <span aria-hidden="true">→</span>
+            </RouterLink>
+          </footer>
+        </div>
       </article>
     </div>
   </section>

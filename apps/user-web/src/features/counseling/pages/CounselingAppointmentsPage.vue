@@ -41,38 +41,65 @@ onMounted(() => void load());
     </p>
     <article
       v-if="detail"
-      class="product-card"
+      class="product-card content-card content-card-body content-card--compact"
     >
-      <h2>{{ detail.appointment_number }}</h2>
-      <p>状态：{{ detail.status }}</p>
-      <p v-if="detail.scheduled_starts_at">
-        时间：{{ new Date(detail.scheduled_starts_at).toLocaleString() }}
+      <p class="eyebrow content-card-kicker">
+        {{ detail.status }}
       </p>
-      <p>会谈入口仅在预约窗口内签发，录音与转写默认关闭。</p>
-      <button
-        v-if="detail.status === 'confirmed'"
-        type="button"
-        @click="cancel(detail.id)"
-      >
-        取消预约
-      </button>
+      <h2 class="content-card-title">
+        {{ detail.appointment_number }}
+      </h2>
+      <p class="content-card-summary">
+        会谈入口仅在预约窗口内签发，录音与转写默认关闭。
+      </p>
+      <footer class="content-card-footer">
+        <time
+          v-if="detail.scheduled_starts_at"
+          class="content-card-meta"
+          :datetime="detail.scheduled_starts_at"
+        >
+          {{ new Date(detail.scheduled_starts_at).toLocaleString() }}
+        </time>
+        <button
+          v-if="detail.status === 'confirmed'"
+          type="button"
+          @click="cancel(detail.id)"
+        >
+          取消预约
+        </button>
+      </footer>
     </article>
     <div
       v-else
-      class="product-grid"
+      class="product-grid content-card-grid"
     >
       <article
         v-for="appointment in appointments"
         :key="appointment.id"
-        class="product-card"
+        class="product-card content-card content-card-body content-card--compact"
       >
-        <h2>{{ appointment.appointment_number }}</h2>
-        <p>状态：{{ appointment.status }}</p>
-        <RouterLink
-          :to="`/${String(route.params.locale)}/account/counseling/${appointment.id}`"
-        >
-          查看预约
-        </RouterLink>
+        <p class="eyebrow content-card-kicker">
+          {{ appointment.status }}
+        </p>
+        <h2 class="content-card-title">
+          {{ appointment.appointment_number }}
+        </h2>
+        <footer class="content-card-footer">
+          <time
+            v-if="appointment.scheduled_starts_at"
+            class="content-card-meta"
+            :datetime="appointment.scheduled_starts_at"
+          >
+            {{ new Date(appointment.scheduled_starts_at).toLocaleString() }}
+          </time>
+          <RouterLink
+            class="text-link content-card-link"
+            :to="`/${String(route.params.locale)}/account/counseling/${appointment.id}`"
+          >
+            查看预约
+            <span aria-hidden="true">→</span>
+          </RouterLink>
+        </footer>
       </article>
     </div>
   </section>
