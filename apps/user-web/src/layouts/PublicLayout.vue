@@ -31,7 +31,7 @@ const fallbackLinks = [
 
 const routePaths: Record<string, string> = {
   home: "",
-  about: "about",
+  about: "activities",
   services: "services",
   contact: "contact",
   articles: "articles",
@@ -51,6 +51,10 @@ function internalPath(item: PublicNavigationItem) {
     return `/${locale.value}/${item.target_slug ?? ""}`;
   }
   return `/${locale.value}/${routePaths[item.route_name ?? ""] ?? ""}`;
+}
+
+function navigationLabel(item: PublicNavigationItem) {
+  return item.route_name === "about" ? t("nav.activities") : item.label;
 }
 
 async function loadNavigation() {
@@ -129,14 +133,14 @@ watch(() => route.path, async () => {
               :rel="link.open_in_new_tab ? 'noopener noreferrer' : undefined"
               @click="menuOpen = false"
             >
-              {{ link.label }}
+              {{ navigationLabel(link) }}
             </a>
             <RouterLink
               v-else
               :to="internalPath(link)"
               @click="menuOpen = false"
             >
-              {{ link.label }}
+              {{ navigationLabel(link) }}
             </RouterLink>
           </template>
         </template>

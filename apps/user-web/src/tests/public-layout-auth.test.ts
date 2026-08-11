@@ -68,4 +68,50 @@ describe("PublicLayout authenticated navigation", () => {
     expect(mocks.clearSession).not.toHaveBeenCalled();
     expect(router.currentRoute.value.fullPath).toBe("/zh-CN/");
   });
+
+  it("renders the configured about slot as the themed activities destination", async () => {
+    mocks.getNavigation.mockResolvedValueOnce([
+      {
+        id: "navigation-about",
+        label: "关于 VAV",
+        link_type: "route",
+        external_url: null,
+        route_name: "about",
+        target_slug: null,
+        open_in_new_tab: false,
+        required_auth: false
+      }
+    ]);
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: "/", component: { template: "<p>language</p>" } },
+        {
+          path: "/:locale/:pathMatch(.*)*",
+          component: PublicLayout,
+          children: [{ path: "", component: { template: "<h1>home</h1>" } }]
+        }
+      ]
+    });
+    await router.push("/zh-CN/");
+    await router.isReady();
+    const wrapper = mount(PublicLayout, {
+      global: {
+        plugins: [router, i18n],
+        stubs: {
+          VSkipLink: true,
+          NotificationBell: true,
+          GlobalCommandPalette: true,
+          RouterView: true
+        }
+      }
+    });
+    await flushPromises();
+
+    const activitiesLink = wrapper
+      .findAll("a")
+      .find((link) => link.text() === "主题活动");
+    expect(activitiesLink?.attributes("href")).toBe("/zh-CN/activities");
+    expect(wrapper.get(".main-nav").text()).not.toContain("关于 VAV");
+  });
 });
