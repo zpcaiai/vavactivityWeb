@@ -28,6 +28,21 @@ export type NotificationPreference = {
   quiet_hours_timezone?: string | null;
 };
 
+export function toNotificationPreferenceInput(
+  item: NotificationPreference
+): NotificationPreference {
+  return {
+    category: item.category,
+    channel: item.channel,
+    enabled: item.enabled,
+    frequency: item.frequency,
+    quiet_hours_enabled: item.quiet_hours_enabled,
+    quiet_hours_start: item.quiet_hours_start,
+    quiet_hours_end: item.quiet_hours_end,
+    quiet_hours_timezone: item.quiet_hours_timezone
+  };
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const auth = useAuthStore();
   await auth.bootstrap();
@@ -54,7 +69,7 @@ export const notificationApi = {
   updatePreferences: (items: NotificationPreference[]) =>
     request<{ updated: number }>("/account/notification-preferences", {
       method: "PUT",
-      body: JSON.stringify({ items })
+      body: JSON.stringify({ items: items.map(toNotificationPreferenceInput) })
     }),
   consents: () =>
     request<{ items: Array<{ consent_type: string; status: string; consent_version: string }> }>(

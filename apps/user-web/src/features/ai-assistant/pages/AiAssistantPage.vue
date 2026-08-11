@@ -8,7 +8,7 @@ import {
   type AiMessage,
   type AiTurnResult
 } from "../api";
-import { aiAssistantErrorMessage, isAiAssistantDisabled } from "../errors";
+import { aiAssistantErrorMessage, isAiAssistantUnavailable } from "../errors";
 
 const route = useRoute();
 const router = useRouter();
@@ -90,7 +90,7 @@ async function loadList() {
 }
 
 function showError(cause: unknown, fallback: string) {
-  serviceDisabled.value = isAiAssistantDisabled(cause);
+  serviceDisabled.value = isAiAssistantUnavailable(cause);
   error.value = aiAssistantErrorMessage(cause, locale.value, fallback);
 }
 

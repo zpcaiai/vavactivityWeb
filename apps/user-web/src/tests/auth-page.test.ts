@@ -68,4 +68,30 @@ describe("AuthPage registration", () => {
     expect(wrapper.get("a.primary-button").attributes("href"))
       .toContain("/zh-CN/auth/login?email=member@example.com");
   });
+
+  it("allows direct login when staging registration does not require verification", async () => {
+    mocks.register.mockResolvedValueOnce({
+      registration_status: "active",
+      email: "m***@example.com"
+    });
+    const router = testRouter();
+    await router.push("/zh-CN/auth/register");
+    await router.isReady();
+    const wrapper = mount(AuthPage, {
+      props: { mode: "register" },
+      global: { plugins: [router, i18n] }
+    });
+
+    await wrapper.get('input[type="email"]').setValue("member@example.com");
+    await wrapper.get('input[type="password"]').setValue("correct horse battery staple");
+    await wrapper.get('input[type="checkbox"]').setValue(true);
+    await wrapper.get("form").trigger("submit");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("注册成功，可以登录");
+    expect(wrapper.text()).toContain("当前环境无需邮箱验证码");
+    expect(wrapper.find("button.secondary-button").exists()).toBe(false);
+    expect(wrapper.get("a.primary-button").attributes("href"))
+      .toContain("/zh-CN/auth/login?email=member@example.com");
+  });
 });

@@ -22,6 +22,8 @@ const error = ref("");
 const complete = ref(false);
 const registeredEmail = ref("");
 const registrationRecipient = ref("");
+const registrationRequiresVerification = ref(true);
+const loginNeedsVerification = ref(false);
 const resendBusy = ref(false);
 const resendMessage = ref("");
 
@@ -34,6 +36,8 @@ function resetForm() {
   complete.value = false;
   registeredEmail.value = "";
   registrationRecipient.value = "";
+  registrationRequiresVerification.value = true;
+  loginNeedsVerification.value = false;
   resendBusy.value = false;
   resendMessage.value = "";
 }
@@ -41,6 +45,8 @@ function resetForm() {
 async function submit() {
   busy.value = true;
   error.value = "";
+  loginNeedsVerification.value = false;
+  resendMessage.value = "";
   try {
     if (props.mode === "login") {
       await auth.login(email.value, password.value);
@@ -57,15 +63,27 @@ async function submit() {
         terms_version: "2026-07-01",
         privacy_version: "2026-07-01"
       });
-      if (result.registration_status !== "verification_required") {
+      if (!["verification_required", "active"].includes(result.registration_status)) {
         throw new Error("注册状态无法确认，请稍后重试。");
       }
       registeredEmail.value = result.email;
       registrationRecipient.value = email.value;
+      registrationRequiresVerification.value = (
+        result.registration_status === "verification_required"
+      );
       complete.value = true;
     }
   } catch (cause) {
-    error.value = cause instanceof Error ? cause.message : "请求失败，请稍后重试。";
+    const code = (
+      cause instanceof Error && "code" in cause ? String(cause.code) : ""
+    );
+    if (props.mode === "login" && code === "EMAIL_VERIFICATION_REQUIRED") {
+      loginNeedsVerification.value = true;
+      registrationRecipient.value = email.value;
+      error.value = "邮箱尚未验证。请重新发送验证邮件，或稍后再试。";
+    } else {
+      error.value = cause instanceof Error ? cause.message : "请求失败，请稍后重试。";
+    }
   } finally {
     busy.value = false;
   }
@@ -115,12 +133,21 @@ watch(() => route.query.email, (value) => {
         <p class="eyebrow">
           REGISTRATION COMPLETE
         </p>
-        <h2>注册成功，请验证邮箱</h2>
-        <p>
+        <h2>
+          {{ registrationRequiresVerification ? "注册成功，请验证邮箱" : "注册成功，可以登录" }}
+        </h2>
+        <p v-if="registrationRequiresVerification">
           账户已经创建，验证邮件已发送至 <strong>{{ registeredEmail }}</strong>。
           完成邮箱验证后即可登录。
         </p>
-        <p class="auth-success__hint">
+        <p v-else>
+          账户 <strong>{{ registeredEmail }}</strong> 已创建，当前环境无需邮箱验证码。
+          现在可以直接使用刚设置的密码登录。
+        </p>
+        <p
+          v-if="registrationRequiresVerification"
+          class="auth-success__hint"
+        >
           验证链接仅可使用一次，并会在 24 小时后失效。
         </p>
         <p
@@ -145,6 +172,7 @@ watch(() => route.query.email, (value) => {
             前往登录
           </RouterLink>
           <button
+            v-if="registrationRequiresVerification"
             class="secondary-button"
             type="button"
             :disabled="resendBusy"
@@ -210,6 +238,22 @@ watch(() => route.query.email, (value) => {
         >
           {{ error }}
         </p>
+        <p
+          v-if="resendMessage"
+          class="auth-success__notice"
+          role="status"
+        >
+          {{ resendMessage }}
+        </p>
+        <button
+          v-if="loginNeedsVerification"
+          class="secondary-button auth-form__resend"
+          type="button"
+          :disabled="resendBusy"
+          @click="resendVerification"
+        >
+          {{ resendBusy ? "发送中…" : "重新发送验证邮件" }}
+        </button>
         <button
           class="primary-button"
           type="submit"
@@ -310,6 +354,11 @@ watch(() => route.query.email, (value) => {
 .secondary-button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.auth-form__resend {
+  min-height: var(--vav-component-touch-target-minimum);
+  width: 100%;
 }
 
 @media (max-width: 36rem) {

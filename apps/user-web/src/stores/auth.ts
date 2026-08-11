@@ -27,7 +27,7 @@ interface AuthResponse {
 }
 
 export interface RegistrationResult {
-  registration_status: "verification_required";
+  registration_status: "verification_required" | "active";
   email: string;
 }
 
@@ -36,6 +36,13 @@ interface RegistrationResponse {
 }
 
 type AuthStatus = "unknown" | "authenticated" | "anonymous" | "refreshing";
+
+export class AuthError extends Error {
+  constructor(public readonly code: string, message: string) {
+    super(message);
+    this.name = "AuthError";
+  }
+}
 
 const baseUrl = resolveApiBaseUrl();
 
@@ -78,7 +85,10 @@ export const useAuthStore = defineStore("auth", () => {
       error?: { code: string; message: string };
     };
     if (!response.ok) {
-      throw new Error(body.error?.message ?? "Authentication request failed");
+      throw new AuthError(
+        body.error?.code ?? "AUTHENTICATION_REQUEST_FAILED",
+        body.error?.message ?? "Authentication request failed"
+      );
     }
     return body;
   }

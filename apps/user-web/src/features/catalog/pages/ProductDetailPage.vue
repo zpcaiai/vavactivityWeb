@@ -145,6 +145,7 @@ watch([selectedSkuId, quantity], () => {
           <SkuSelector
             v-model="selectedSkuId"
             :skus="product.skus"
+            :product-type="product.product_type"
           />
           <template v-if="selectedSku">
             <div class="purchase-price">

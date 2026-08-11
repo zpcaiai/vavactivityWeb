@@ -173,35 +173,49 @@ onMounted(() => void load());
 
     <section
       v-if="participants.length"
-      class="product-grid"
+      class="product-grid content-card-grid"
     >
       <article
         v-for="participant in participants"
         :key="participant.user_id"
-        class="product-card"
+        class="product-card content-card content-card-body content-card--compact"
       >
-        <h2>{{ participant.display_name }}</h2>
-        <p>{{ participant.brief_introduction }}</p>
-        <p>{{ t("activities.choicePrivacy") }}</p>
-        <button
-          type="button"
-          @click="choose(participant.user_id, 'interested')"
+        <p class="eyebrow content-card-kicker">
+          {{ t("activities.participantAccess") }}
+        </p>
+        <h2 class="content-card-title">
+          {{ participant.display_name }}
+        </h2>
+        <p
+          v-if="participant.brief_introduction"
+          class="content-card-summary"
         >
-          {{ t("activities.interested") }}
-        </button>
-        <button
-          type="button"
-          @click="choose(participant.user_id, 'pass')"
-        >
-          {{ t("activities.pass") }}
-        </button>
-        <button
-          v-if="choices.has(participant.user_id)"
-          type="button"
-          @click="withdraw(participant.user_id)"
-        >
-          {{ t("activities.withdraw") }}
-        </button>
+          {{ participant.brief_introduction }}
+        </p>
+        <p class="content-card-note">
+          {{ t("activities.choicePrivacy") }}
+        </p>
+        <footer class="content-card-actions">
+          <button
+            type="button"
+            @click="choose(participant.user_id, 'interested')"
+          >
+            {{ t("activities.interested") }}
+          </button>
+          <button
+            type="button"
+            @click="choose(participant.user_id, 'pass')"
+          >
+            {{ t("activities.pass") }}
+          </button>
+          <button
+            v-if="choices.has(participant.user_id)"
+            type="button"
+            @click="withdraw(participant.user_id)"
+          >
+            {{ t("activities.withdraw") }}
+          </button>
+        </footer>
       </article>
     </section>
 

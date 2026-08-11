@@ -18,39 +18,46 @@ const firstPrice = computed(() => firstSku.value?.prices[0]);
 </script>
 
 <template>
-  <article class="product-card">
+  <article class="product-card content-card">
     <div
       class="product-card-art"
       aria-hidden="true"
     >
       <span>{{ product.product_type.replaceAll("_", " ") }}</span>
     </div>
-    <div class="product-card-body">
-      <p class="eyebrow">
+    <div class="product-card-body content-card-body catalog-product-card-body">
+      <p class="eyebrow content-card-kicker">
         {{ product.product_code }}
       </p>
-      <h2>{{ product.name }}</h2>
-      <p>{{ product.short_description }}</p>
-      <div class="product-card-meta">
-        <ProductPrice
-          v-if="firstPrice"
-          :amount-minor="firstPrice.unit_amount_minor"
-          :currency="firstPrice.currency"
-        />
-        <span v-else-if="firstSku?.billing_type === 'free'">{{ t("catalog.free") }}</span>
-        <span v-else>{{ t("catalog.missingPrice") }}</span>
-        <AvailabilityBadge
-          v-if="firstSku"
-          :status="firstSku.availability.status"
-          :quantity="firstSku.availability.available_quantity"
-        />
-      </div>
-      <RouterLink
-        class="text-link"
-        :to="`/${locale}/products/${product.slug}?currency=${currency}`"
-      >
-        {{ t("catalog.details") }}
-      </RouterLink>
+      <h2 class="content-card-title">
+        {{ product.name }}
+      </h2>
+      <p class="content-card-summary">
+        {{ product.short_description }}
+      </p>
+      <footer class="content-card-footer catalog-product-card-footer">
+        <div class="product-card-meta">
+          <ProductPrice
+            v-if="firstPrice"
+            :amount-minor="firstPrice.unit_amount_minor"
+            :currency="firstPrice.currency"
+          />
+          <span v-else-if="firstSku?.billing_type === 'free'">{{ t("catalog.free") }}</span>
+          <span v-else>{{ t("catalog.missingPrice") }}</span>
+          <AvailabilityBadge
+            v-if="firstSku"
+            :status="firstSku.availability.status"
+            :quantity="firstSku.availability.available_quantity"
+          />
+        </div>
+        <RouterLink
+          class="text-link content-card-link"
+          :to="`/${locale}/products/${product.slug}?currency=${currency}`"
+        >
+          {{ t("catalog.details") }}
+          <span aria-hidden="true">→</span>
+        </RouterLink>
+      </footer>
     </div>
   </article>
 </template>
