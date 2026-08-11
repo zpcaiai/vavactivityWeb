@@ -2,6 +2,7 @@ export { default as AdminDataTable } from "./tables/AdminDataTable.vue";
 export {
   ADMIN_TIME_ZONE,
   ADMIN_TIME_ZONE_LABEL,
+  adminColumnMinWidth,
   formatAdminDate,
   formatAdminTableCell,
   isAdminDateField,

@@ -50,4 +50,10 @@ describe("admin page localization contract", () => {
       expect(page.source, `${page.name} exposes raw API keys`).not.toMatch(/:label="(?:key|column)"/u);
     }
   });
+
+  it("uses audit-aware column widths in the generic access table", () => {
+    const accessPage = pageSources.find((page) => page.name === "AccessManagementPage.vue");
+    expect(accessPage?.source).toContain(':label="localizeAdminLabel(key)"');
+    expect(accessPage?.source).toContain(':min-width="adminColumnMinWidth(key)"');
+  });
 });
