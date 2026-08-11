@@ -7,7 +7,12 @@
     "collapse": "收合導覽",
     "language": "介面語言",
     "logout": "安全登出",
-    "signingOut": "登出中"
+    "signingOut": "登出中",
+    "navigation": "管理端導覽",
+    "openNavigation": "開啟導覽",
+    "closeNavigation": "關閉導覽",
+    "searchNavigation": "搜尋功能",
+    "noNavigationResults": "沒有符合的功能"
   },
   "menu": {
     "dashboard": "工作台",

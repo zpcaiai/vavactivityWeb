@@ -37,13 +37,11 @@ type ApiRequestInit = NonNullable<Parameters<typeof fetch>[1]>;
 async function api<T>(path: string, init: ApiRequestInit = {}) {
   await auth.bootstrap();
   const headers = new Headers(init.headers);
-  headers.set("Authorization", `Bearer ${auth.accessToken}`);
   if (init.body) {
     headers.set("Content-Type", "application/json");
   }
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await auth.authorizedFetch(`${baseUrl}${path}`, {
     ...init,
-    credentials: "include",
     headers
   });
   const payload = (await response.json()) as T & { error?: { message: string } };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { catalogApi } from "@/features/catalog/api";
@@ -36,6 +36,14 @@ const suppressions = ref<Suppression[]>([]);
 const providerEvents = ref<ProviderEvent[]>([]);
 const audits = ref<AuditEvent[]>([]);
 const activeTab = ref("dashboard");
+const routeTabs: Record<string, string> = {
+  "template-releases": "templates",
+  "event-subscriptions": "subscriptions",
+  "dead-letters": "deadletters",
+  "provider-events": "providers",
+  suppressions: "providers",
+  unsubscribes: "providers"
+};
 const reason = ref("Batch 11 governed notification operation.");
 const busy = ref(false);
 const error = ref("");
@@ -137,12 +145,17 @@ async function liftSuppression(item: Suppression) {
   await load();
 }
 
-onMounted(() => {
+function syncRouteSection() {
   if (typeof route.meta.notificationSection === "string") {
-    activeTab.value = route.meta.notificationSection;
+    activeTab.value = routeTabs[route.meta.notificationSection] ?? route.meta.notificationSection;
   }
+}
+
+onMounted(() => {
+  syncRouteSection();
   void load();
 });
+watch(() => route.fullPath, syncRouteSection);
 </script>
 
 <template>

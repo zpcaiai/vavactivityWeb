@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { catalogApi } from "@/features/catalog/api";
@@ -72,7 +72,9 @@ const reasonCode = ref("manual_review_required");
 
 const visibleSections = computed(() => sections.filter((item) => auth.hasPermission(item[2])));
 const canDecide = computed(() => auth.hasPermission("matchmaking.reviews.decide"));
-const canReviewPhotos = computed(() => auth.hasPermission("matchmaking.photos.review"));
+const canReviewPhotos = computed(() =>
+  auth.hasPermission(["matchmaking.photos.review", "matchmaking.reviews.decide"])
+);
 const canSuspend = computed(() => auth.hasPermission("matchmaking.profiles.suspend"));
 
 async function load() {
@@ -165,8 +167,11 @@ async function fieldDecision(fieldCode: string, decision: "approve" | "changes_r
 }
 
 async function photoDecision(row: Row, decision: "approve" | "reject") {
-  const caseId = window.prompt("请输入该照片所属的审核案件 ID");
-  if (!caseId) return;
+  const caseId = String(row.review_case_id ?? "");
+  if (!caseId) {
+    error.value = "该照片尚未关联可操作的审核案件，请先从审核队列建立或恢复案件。";
+    return;
+  }
   await catalogApi(`/admin/dating-profile-reviews/${caseId}/items`, {
     method: "POST",
     body: JSON.stringify({
@@ -221,6 +226,13 @@ async function processJobs() {
 }
 
 onMounted(() => void load());
+watch(() => route.fullPath, () => {
+  section.value = String(route.meta.matchmakingSection ?? "reviews");
+  notice.value = "";
+  activeCase.value = undefined;
+  diff.value = undefined;
+  void load();
+});
 </script>
 
 <template>

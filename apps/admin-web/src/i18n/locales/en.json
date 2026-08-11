@@ -7,7 +7,12 @@
     "collapse": "Collapse navigation",
     "language": "Interface language",
     "logout": "Sign out",
-    "signingOut": "Signing out"
+    "signingOut": "Signing out",
+    "navigation": "Administration navigation",
+    "openNavigation": "Open navigation",
+    "closeNavigation": "Close navigation",
+    "searchNavigation": "Search features",
+    "noNavigationResults": "No matching features"
   },
   "menu": {
     "dashboard": "Workspace",

@@ -7,7 +7,12 @@
     "collapse": "收起导航",
     "language": "界面语言",
     "logout": "安全退出",
-    "signingOut": "退出中"
+    "signingOut": "退出中",
+    "navigation": "管理端导航",
+    "openNavigation": "打开导航",
+    "closeNavigation": "关闭导航",
+    "searchNavigation": "搜索功能",
+    "noNavigationResults": "没有匹配的功能"
   },
   "menu": {
     "dashboard": "工作台",

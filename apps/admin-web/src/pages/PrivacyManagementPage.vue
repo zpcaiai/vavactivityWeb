@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { catalogApi } from "@/features/catalog/api";
@@ -124,6 +124,11 @@ async function breakGlassAction(row: Row, action: "approve" | "use") {
 }
 
 onMounted(() => void load());
+watch(() => route.fullPath, () => {
+  section.value = String(route.meta.privacySection ?? "dashboard");
+  notice.value = "";
+  void load();
+});
 </script>
 
 <template>

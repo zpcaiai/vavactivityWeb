@@ -29,10 +29,7 @@ async function load() {
     const url = new URL(`${baseUrl}${endpoint.value}`, window.location.origin);
     url.searchParams.set("page", String(page.value));
     url.searchParams.set("page_size", String(pageSize.value));
-    const response = await fetch(url, {
-      credentials: "include",
-      headers: { Authorization: `Bearer ${auth.accessToken}` }
-    });
+    const response = await auth.authorizedFetch(url);
     const payload = (await response.json()) as {
       data?: { items?: Record<string, unknown>[]; total?: number };
       error?: { message: string };

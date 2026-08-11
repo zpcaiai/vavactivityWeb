@@ -20,6 +20,10 @@ const router = useRouter();
 const auth = useAdminAuthStore();
 const { locale, setLocale, t } = useAdminLocale();
 const collapsed = ref(false);
+const mobileNavigationOpen = ref(false);
+const mobileNavigationButton = ref<HTMLButtonElement | null>(null);
+const mobileNavigationClose = ref<HTMLButtonElement | null>(null);
+const navigationQuery = ref("");
 const signingOut = ref(false);
 const pageTitle = computed(() => String(route.meta.title ?? "工作台"));
 
@@ -66,7 +70,7 @@ const visibleMenu = computed(() => {
     ["notifications.providers.read", "providers"],
     ["notifications.audit.read", "audit"]
   ].find(([permission]) => auth.hasPermission(permission))?.[1];
-  return menu.map((item) => item.path === "/admin/notifications/dashboard" && notificationLanding
+  const permittedItems = menu.map((item) => item.path === "/admin/notifications/dashboard" && notificationLanding
     ? { ...item, path: `/admin/notifications/${notificationLanding}` }
     : item).filter((item) => {
     const permissionByPath: Record<string, string> = {
@@ -96,6 +100,7 @@ const visibleMenu = computed(() => {
       "/admin/experience/dashboard": "experience.analytics.read",
       "/admin/processes/dashboard": "process.dashboard.read",
       "/admin/data-governance/dashboard": "data.dashboard.read",
+      "/admin/platform/dashboard": "admin.workbench.read",
       "/admin/content/settings": "content.settings.read",
       "/admin/access/admins": "admins.read",
       "/admin/audit/auth": "audit.read"
@@ -106,6 +111,13 @@ const visibleMenu = computed(() => {
     const required = permissionByPath[item.path];
     return !required || auth.hasPermission(required);
   });
+  const query = navigationQuery.value.trim().toLocaleLowerCase(locale.value);
+  if (!query) {
+    return permittedItems;
+  }
+  return permittedItems.filter((item) =>
+    t(item.labelKey).toLocaleLowerCase(locale.value).includes(query)
+  );
 });
 
 function changeLocale(value: string) {
@@ -130,7 +142,16 @@ async function logout() {
 watchEffect(() => {
   document.documentElement.lang = locale.value;
 });
+watch(mobileNavigationOpen, async (open) => {
+  await nextTick();
+  if (open) {
+    mobileNavigationClose.value?.focus();
+  } else {
+    mobileNavigationButton.value?.focus();
+  }
+});
 watch(() => route.fullPath, async () => {
+  mobileNavigationOpen.value = false;
   await nextTick();
   const heading = document.querySelector<HTMLElement>("#admin-main h1");
   if (heading) {
@@ -143,33 +164,74 @@ watch(() => route.fullPath, async () => {
 <template>
   <div class="admin-shell">
     <VSkipLink target="admin-main" />
-    <aside :class="['admin-sidebar', { collapsed }]">
+    <button
+      v-if="mobileNavigationOpen"
+      class="navigation-backdrop"
+      type="button"
+      :aria-label="t('shell.closeNavigation')"
+      @click="mobileNavigationOpen = false"
+    />
+    <aside
+      id="admin-navigation"
+      :class="['admin-sidebar', { collapsed, 'mobile-open': mobileNavigationOpen }]"
+      :aria-label="t('shell.navigation')"
+      @keydown.esc="mobileNavigationOpen = false"
+    >
       <div class="admin-brand">
         <span
           class="brand-mark"
           aria-hidden="true"
         >V</span>
-        <div v-if="!collapsed">
+        <div v-if="!collapsed || mobileNavigationOpen">
           <strong>VAV</strong>
           <small>{{ t("shell.workspace") }}</small>
         </div>
-      </div>
-      <el-menu
-        :default-active="route.path"
-        router
-        :collapse="collapsed"
-      >
-        <el-menu-item
-          v-for="item in visibleMenu"
-          :key="item.path"
-          :index="item.path"
+        <button
+          ref="mobileNavigationClose"
+          class="mobile-navigation-close"
+          type="button"
+          :aria-label="t('shell.closeNavigation')"
+          @click="mobileNavigationOpen = false"
         >
-          <el-icon><component :is="item.icon" /></el-icon>
-          <template #title>
-            {{ t(item.labelKey) }}
-          </template>
-        </el-menu-item>
-      </el-menu>
+          ×
+        </button>
+      </div>
+      <label
+        v-if="!collapsed || mobileNavigationOpen"
+        class="navigation-search"
+      >
+        <span class="visually-hidden">{{ t("shell.searchNavigation") }}</span>
+        <input
+          v-model="navigationQuery"
+          type="search"
+          :placeholder="t('shell.searchNavigation')"
+        >
+      </label>
+      <nav :aria-label="t('shell.navigation')">
+        <el-menu
+          :default-active="route.path"
+          router
+          :collapse="collapsed && !mobileNavigationOpen"
+        >
+          <el-menu-item
+            v-for="item in visibleMenu"
+            :key="item.path"
+            :index="item.path"
+          >
+            <el-icon><component :is="item.icon" /></el-icon>
+            <template #title>
+              {{ t(item.labelKey) }}
+            </template>
+          </el-menu-item>
+        </el-menu>
+        <p
+          v-if="!collapsed && visibleMenu.length === 0"
+          class="navigation-empty"
+          role="status"
+        >
+          {{ t("shell.noNavigationResults") }}
+        </p>
+      </nav>
       <button
         class="collapse-button"
         type="button"
@@ -181,11 +243,24 @@ watch(() => route.fullPath, async () => {
 
     <section class="admin-content">
       <header class="admin-header">
-        <div>
-          <p class="admin-kicker">
-            {{ t("shell.operations") }}
-          </p>
-          <h1>{{ pageTitle }}</h1>
+        <div class="admin-heading">
+          <button
+            ref="mobileNavigationButton"
+            class="mobile-navigation-open"
+            type="button"
+            aria-controls="admin-navigation"
+            :aria-expanded="mobileNavigationOpen"
+            :aria-label="t('shell.openNavigation')"
+            @click="mobileNavigationOpen = true"
+          >
+            ☰
+          </button>
+          <div>
+            <p class="admin-kicker">
+              {{ t("shell.operations") }}
+            </p>
+            <h1>{{ pageTitle }}</h1>
+          </div>
         </div>
         <div class="operator-actions">
           <label class="admin-locale-select">

@@ -7,7 +7,7 @@
  * read a member's private preference list. Diagnostics stay at code and count
  * level, and every state change carries a typed reason into the audit trail.
  */
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { recommendationApi } from "@/features/recommendations/api";
@@ -276,6 +276,12 @@ async function checkGuardrails(row: Row) {
 }
 
 onMounted(() => void load());
+watch(() => route.fullPath, () => {
+  section.value = String(route.meta.recommendationSection ?? "dashboard");
+  detailId.value = String(route.params.id ?? "");
+  notice.value = "";
+  void load();
+});
 </script>
 
 <template>

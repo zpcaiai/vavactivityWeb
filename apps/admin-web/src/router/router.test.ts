@@ -1,12 +1,20 @@
 import { describe, expect, it } from "vitest";
 
-import { adminModuleRoutes, router } from "./index";
+import { router } from "./index";
 
 describe("admin routes", () => {
-  it("assigns a backend permission contract to every module route", () => {
-    expect(adminModuleRoutes).toHaveLength(12);
-    for (const route of adminModuleRoutes) {
-      expect(route[3]).toMatch(/:view$/);
+  it("protects every operational page with authentication and permission metadata", () => {
+    const publicNames = new Set(["admin-login", "admin-accept-invitation"]);
+    const operationalRoutes = router.getRoutes().filter((route) =>
+      route.path.startsWith("/admin/") &&
+      route.components &&
+      !publicNames.has(String(route.name)) &&
+      !["admin-dashboard", "admin-forbidden", "admin-error", "admin-not-found"].includes(String(route.name))
+    );
+
+    expect(operationalRoutes.length).toBeGreaterThan(150);
+    for (const route of operationalRoutes) {
+      expect(route.meta.permission, route.path).toEqual(expect.any(String));
     }
   });
 
@@ -25,6 +33,22 @@ describe("admin routes", () => {
       const record = router.getRoutes().find((route) => route.path === path);
       expect(record?.redirect).toBe(redirect);
       expect(record?.components).toBeUndefined();
+    }
+  });
+
+  it("does not advertise detail routes that have no detail view", () => {
+    for (const path of [
+      "/admin/catalog/skus/example",
+      "/admin/catalog/inventory/example",
+      "/admin/catalog/promotions/example",
+      "/admin/notifications/templates/example",
+      "/admin/notifications/deliveries/example",
+      "/admin/notifications/campaigns/example",
+      "/admin/matchmaking/profiles/example",
+      "/admin/matchmaking/reviews/example",
+      "/admin/privacy/requests/example"
+    ]) {
+      expect(router.resolve(path).name, path).toBe("admin-not-found");
     }
   });
 });

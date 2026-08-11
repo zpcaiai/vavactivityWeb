@@ -7,8 +7,8 @@ import { useAdminAuthStore } from "@/stores/admin-auth";
 const auth = useAdminAuthStore();
 const route = useRoute();
 const router = useRouter();
-const email = ref("admin");
-const password = ref("admin");
+const email = ref("");
+const password = ref("");
 const busy = ref(false);
 const error = ref("");
 
@@ -17,8 +17,13 @@ async function submit() {
   error.value = "";
   try {
     await auth.login(email.value, password.value);
-    const returnTo =
-      typeof route.query.returnTo === "string" ? route.query.returnTo : "/admin/dashboard";
+    const requestedReturnTo =
+      typeof route.query.returnTo === "string" ? route.query.returnTo : "";
+    const returnTo = requestedReturnTo.startsWith("/admin/") &&
+      !requestedReturnTo.startsWith("//") &&
+      requestedReturnTo !== "/admin/login"
+      ? requestedReturnTo
+      : "/admin/dashboard";
     await router.replace(returnTo);
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : "登录失败";
@@ -45,32 +50,40 @@ async function submit() {
     </section>
     <section class="login-card">
       <span class="login-status">SECURE ACCESS</span>
-      <h2>超级管理员登录</h2>
+      <h2>管理员登录</h2>
+      <p>使用已获授权的管理账户。权限不足的账户不会进入管理端。</p>
       <form @submit.prevent="submit">
-        <label>
-          超级管理员邮箱
+        <label for="admin-email">
+          管理员邮箱
           <el-input
+            id="admin-email"
             v-model="email"
-            type="text"
+            type="email"
             autocomplete="username"
+            inputmode="email"
             placeholder="admin@example.com"
+            required
           />
         </label>
-        <label>
+        <label for="admin-password">
           密码
           <el-input
+            id="admin-password"
             v-model="password"
             type="password"
             autocomplete="current-password"
+            required
             show-password
           />
         </label>
         <el-alert
           v-if="error"
+          id="admin-login-error"
           :title="error"
           type="error"
           :closable="false"
           show-icon
+          role="alert"
         />
         <el-button
           native-type="submit"
@@ -81,7 +94,7 @@ async function submit() {
         </el-button>
       </form>
       <RouterLink
-        class="preview-link"
+        class="login-secondary-link"
         to="/admin/accept-invitation"
       >
         接受管理员邀请

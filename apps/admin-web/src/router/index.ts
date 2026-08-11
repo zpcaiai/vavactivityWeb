@@ -38,21 +38,6 @@ const ProcessGovernancePage = () => import("@/pages/ProcessGovernancePage.vue");
 const DataGovernancePage = () => import("@/pages/DataGovernancePage.vue");
 const AdminPlatformPage = () => import("@/pages/AdminPlatformPage.vue");
 
-const modules = [
-  ["users", "用户", "账户、资料与数据权利", "users:view"],
-  ["content", "内容", "页面、文章与幸福见证", "content:view"],
-  ["activities", "活动", "发布、报名、签到与分组", "activities:view"],
-  ["courses", "课程", "课程结构、资源与进度", "courses:view"],
-  ["counseling", "辅导", "导师、预约与跟进", "counseling:view"],
-  ["catalog", "服务目录", "商品、价格与权益定义", "catalog:view"],
-  ["orders", "订单", "订单状态与售后处理", "orders:view"],
-  ["payments", "支付", "Webhook、退款与支付日志", "payments:view"],
-  ["ai", "AI 辅导", "知识库、对话风险与转介", "ai:view"],
-  ["moderation", "安全审核", "档案、照片、举报与屏蔽", "moderation:view"],
-  ["settings", "系统设置", "配置与待决策项状态", "settings:view"],
-  ["audit", "审计日志", "追加式操作记录", "audit:view"]
-] as const;
-
 const notificationSectionPermissions: Record<string, string> = {
   dashboard: "notifications.analytics.read",
   templates: "notifications.templates.read",
@@ -65,7 +50,7 @@ const notificationSectionPermissions: Record<string, string> = {
   providers: "notifications.providers.read",
   "provider-events": "notifications.providers.read",
   suppressions: "notifications.suppressions.read",
-  unsubscribes: "notifications.preferences.read",
+  unsubscribes: "notifications.suppressions.read",
   audit: "notifications.audit.read"
 };
 
@@ -283,7 +268,7 @@ export const router = createRouter({
       path: "/admin/login",
       name: "admin-login",
       component: LoginPage,
-      meta: { public: true, title: "超级管理员登录" }
+      meta: { public: true, guestOnly: true, title: "管理员登录" }
     },
     {
       path: "/admin/accept-invitation",
@@ -373,12 +358,6 @@ export const router = createRouter({
           meta: { title: "商品编辑", permission: "catalog.products.read" }
         },
         {
-          path: "catalog/skus/:id",
-          name: "admin-catalog-sku-edit",
-          component: CatalogManagementPage,
-          meta: { title: "SKU 管理", permission: "catalog.skus.read", catalogSection: "products" }
-        },
-        {
           path: "catalog/price-books",
           name: "admin-catalog-price-books",
           component: CatalogManagementPage,
@@ -397,12 +376,6 @@ export const router = createRouter({
           meta: { title: "库存与名额", permission: "catalog.inventory.read", catalogSection: "inventory" }
         },
         {
-          path: "catalog/inventory/:skuId",
-          name: "admin-catalog-inventory-detail",
-          component: CatalogManagementPage,
-          meta: { title: "库存详情", permission: "catalog.inventory.read", catalogSection: "inventory" }
-        },
-        {
           path: "catalog/promotions",
           name: "admin-catalog-promotions",
           component: CatalogManagementPage,
@@ -413,12 +386,6 @@ export const router = createRouter({
           name: "admin-catalog-promotions-new",
           component: CatalogManagementPage,
           meta: { title: "新建优惠", permission: "catalog.promotions.create", catalogSection: "promotions" }
-        },
-        {
-          path: "catalog/promotions/:id",
-          name: "admin-catalog-promotion-edit",
-          component: CatalogManagementPage,
-          meta: { title: "优惠详情", permission: "catalog.promotions.read", catalogSection: "promotions" }
         },
         {
           path: "catalog/coupons",
@@ -509,28 +476,10 @@ export const router = createRouter({
           meta: { title: "通知运营中心", permission: notificationSectionPermissions[section], notificationSection: section }
         })),
         {
-          path: "notifications/templates/:templateId",
-          name: "admin-notifications-template-detail",
-          component: NotificationManagementPage,
-          meta: { title: "通知模板详情", permission: "notifications.templates.read", notificationSection: "templates" }
-        },
-        {
-          path: "notifications/deliveries/:deliveryId",
-          name: "admin-notifications-delivery-detail",
-          component: NotificationManagementPage,
-          meta: { title: "通知发送详情", permission: "notifications.deliveries.read", notificationSection: "deliveries" }
-        },
-        {
           path: "notifications/campaigns/new",
           name: "admin-notifications-campaign-new",
           component: NotificationManagementPage,
           meta: { title: "新建通知活动", permission: "notifications.campaigns.create", notificationSection: "campaigns" }
-        },
-        {
-          path: "notifications/campaigns/:campaignId",
-          name: "admin-notifications-campaign-detail",
-          component: NotificationManagementPage,
-          meta: { title: "通知活动详情", permission: "notifications.campaigns.read", notificationSection: "campaigns" }
         },
         ...Object.keys(matchmakingSectionPermissions).map((section) => ({
           path: `matchmaking/${section}`,
@@ -538,18 +487,6 @@ export const router = createRouter({
           component: MatchmakingProfileManagementPage,
           meta: { title: "婚恋档案运营中心", permission: matchmakingSectionPermissions[section], matchmakingSection: section }
         })),
-        {
-          path: "matchmaking/profiles/:profileId",
-          name: "admin-matchmaking-profile-detail",
-          component: MatchmakingProfileManagementPage,
-          meta: { title: "婚恋档案详情", permission: "matchmaking.profiles.read", matchmakingSection: "profiles" }
-        },
-        {
-          path: "matchmaking/reviews/:caseId",
-          name: "admin-matchmaking-review-detail",
-          component: MatchmakingProfileManagementPage,
-          meta: { title: "档案审核详情", permission: "matchmaking.reviews.read", matchmakingSection: "reviews" }
-        },
         ...Object.keys(recommendationSectionPermissions).map((section) => ({
           path: `recommendations/${section}`,
           name: `admin-recommendations-${section}`,
@@ -671,12 +608,6 @@ export const router = createRouter({
           meta: { title: "隐私运营中心", permission: privacySectionPermissions[section], privacySection: section }
         })),
         {
-          path: "privacy/requests/:requestId",
-          name: "admin-privacy-request-detail",
-          component: PrivacyManagementPage,
-          meta: { title: "隐私请求详情", permission: "privacy.requests.read", privacySection: "requests" }
-        },
-        {
           path: "access/admins",
           name: "admin-access-admins",
           component: AccessManagementPage,
@@ -749,11 +680,17 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
   document.title = `${String(to.meta.title ?? "运营工作台")} · VAV`;
+  const access = useAccessStore();
   if (to.meta.public) {
+    if (to.meta.guestOnly) {
+      await access.bootstrap();
+      if (access.isAuthenticated) {
+        return { name: "admin-dashboard" };
+      }
+    }
     return true;
   }
 
-  const access = useAccessStore();
   await access.bootstrap();
   if (!access.isAuthenticated) {
     return { name: "admin-login", query: { returnTo: to.fullPath } };
@@ -766,5 +703,3 @@ router.beforeEach(async (to) => {
   }
   return true;
 });
-
-export const adminModuleRoutes = modules;

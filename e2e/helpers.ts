@@ -8,6 +8,7 @@ export const adminPassword = "VavE2e!2026_Secure#";
 
 export function seedSuperAdmin() {
   if (process.env.VAV_E2E_SKIP_ADMIN_SEED === "1") return;
+  resetLoginRateLimits();
   execFileSync(
     "docker",
     [
@@ -525,6 +526,7 @@ export function seedRecommendationOperator() {
  * directory full of specs would otherwise exhaust before the last file runs.
  */
 export function resetLoginRateLimits() {
+  if (process.env.VAV_E2E_SKIP_RATE_LIMIT_RESET === "1") return;
   const output = execFileSync(
     "docker",
     [

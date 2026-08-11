@@ -2,6 +2,7 @@ import "@vav/design-tokens/tokens.css";
 import "@vav/ui-core/styles.css";
 import "element-plus/es/components/alert/style/css";
 import "element-plus/es/components/button/style/css";
+import "element-plus/es/components/card/style/css";
 import "element-plus/es/components/date-picker/style/css";
 import "element-plus/es/components/descriptions/style/css";
 import "element-plus/es/components/dialog/style/css";
@@ -22,6 +23,7 @@ import "./assets/main.css";
 import {
   ElAlert,
   ElButton,
+  ElCard,
   ElDatePicker,
   ElDescriptions,
   ElDescriptionsItem,
@@ -59,6 +61,7 @@ app.use(router);
 [
   ElAlert,
   ElButton,
+  ElCard,
   ElDatePicker,
   ElDescriptions,
   ElDescriptionsItem,
