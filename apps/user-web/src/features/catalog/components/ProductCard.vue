@@ -18,7 +18,7 @@ const firstPrice = computed(() => firstSku.value?.prices[0]);
 </script>
 
 <template>
-  <article class="product-card">
+  <article class="product-card content-card">
     <div
       class="product-card-art"
       aria-hidden="true"
