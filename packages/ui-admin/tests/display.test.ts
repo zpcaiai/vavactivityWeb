@@ -46,6 +46,8 @@ describe("admin Chinese display", () => {
     expect(localizeAdminValue("auth.login.succeeded", "event_type")).toBe("用户登录成功");
     expect(localizeAdminValue("auth.login.failed", "event_type")).toBe("用户登录失败");
     expect(localizeAdminValue("content.entry.submit_review", "event_type")).toBe("内容已提交审核");
+    expect(localizeAdminValue("content.site_setting.rolled_back", "event_type")).toBe("网站设置已回滚");
+    expect(localizeAdminValue("reschedule_requested", "status")).toBe("等待确认改期");
     expect(localizeAdminValue("info", "severity")).toBe("信息");
     expect(localizeAdminValue("user", "actor_type")).toBe("用户");
     expect(localizeAdminValue("content_entry", "target_type")).toBe("内容条目");
