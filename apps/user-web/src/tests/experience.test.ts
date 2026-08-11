@@ -9,7 +9,13 @@ import { experienceApi } from "@/features/experience/api";
 
 describe("experience API", () => {
   beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn(async (url: string) => ({ ok: true, status: 200, json: async () => ({ data: url.includes("/tasks") ? [] : { items: [] } }) })));
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: url.includes("/tasks") || url.includes("/search") ? [] : { items: [] }
+      })
+    })));
   });
 
   it("uses the backend-owned task projection", async () => {
@@ -18,7 +24,7 @@ describe("experience API", () => {
   });
 
   it("keeps anonymous search on the public filtered endpoint", async () => {
-    await experienceApi.search("活动", false);
+    await expect(experienceApi.search("活动", false)).resolves.toEqual([]);
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/public/experience/search?q="), expect.any(Object));
   });
 });

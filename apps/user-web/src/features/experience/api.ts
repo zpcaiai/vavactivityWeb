@@ -5,8 +5,15 @@ const baseUrl = resolveApiBaseUrl();
 
 export type ExperienceRow = Record<string, unknown> & {
   id?: string;
+  document_code?: string;
+  source_module?: string;
+  source_entity_type?: string;
+  summary?: string;
+  locale?: string;
+  visibility?: string;
   route_code?: string;
   route_path?: string;
+  route_parameters?: Record<string, unknown>;
   task_code?: string;
   journey_code?: string;
   current_step_code?: string;

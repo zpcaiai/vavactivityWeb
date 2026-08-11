@@ -29,3 +29,11 @@ test("global command palette is keyboard reachable", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "全站搜索与快捷导航" })).toBeVisible();
   await expect(page.getByLabel("输入内容、服务、任务或帮助")).toBeFocused();
 });
+
+test("anonymous search renders backend route-code results as working links", async ({ page }) => {
+  await page.goto("/zh-CN/search?q=活动");
+  const result = page.getByRole("link", { name: /活动.*查看可报名活动/ }).first();
+  await expect(result).toBeVisible();
+  await result.click();
+  await expect(page).toHaveURL(/\/zh-CN\/activities$/);
+});

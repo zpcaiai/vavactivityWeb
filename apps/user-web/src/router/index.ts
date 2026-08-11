@@ -32,6 +32,7 @@ import RelationshipJourneyPage from "@/features/relationships/pages/Relationship
 import MembershipPage from "@/features/memberships/pages/MembershipPage.vue";
 import SafetyCenterPage from "@/features/trust-safety/pages/SafetyCenterPage.vue";
 import ExperiencePage from "@/features/experience/pages/ExperiencePage.vue";
+import SearchPage from "@/features/experience/pages/SearchPage.vue";
 import PrivacyCenterPage from "@/features/privacy/pages/PrivacyCenterPage.vue";
 import UnsubscribePage from "@/features/notifications/pages/UnsubscribePage.vue";
 import AuthPage from "@/pages/AuthPage.vue";
@@ -112,7 +113,7 @@ export const router = createRouter({
         { path: "account/home", name: "experience-home", component: ExperiencePage, meta: { requiresAuth: true, experienceSection: "home" } },
         { path: "account/tasks", name: "account-tasks", component: ExperiencePage, meta: { requiresAuth: true, experienceSection: "tasks" } },
         { path: "account/journeys", name: "account-journeys", component: ExperiencePage, meta: { requiresAuth: true, experienceSection: "journeys" } },
-        { path: "search", name: "global-search", component: ExperiencePage, meta: { experienceSection: "search" } },
+        { path: "search", name: "global-search", component: SearchPage },
         { path: "help", name: "help-center", component: ExperiencePage, meta: { experienceSection: "help" } },
         { path: "account/notification-preferences", name: "account-notification-preferences", component: NotificationsPage, meta: { requiresAuth: true } },
         { path: "account/dating-profile", name: "account-dating-profile", component: DatingProfilePage, meta: { requiresAuth: true, requiresVerifiedEmail: true } },

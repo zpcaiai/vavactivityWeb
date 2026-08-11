@@ -61,7 +61,7 @@ async function loadNavigation() {
 
 onMounted(() => void loadNavigation());
 watch(locale, () => void loadNavigation());
-watch(() => route.fullPath, async () => {
+watch(() => route.path, async () => {
   menuOpen.value = false;
   await nextTick();
   const heading = document.querySelector<HTMLElement>("#main-content h1");
