@@ -3,7 +3,9 @@ import { onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
+import { commerceApi, type Order } from "@/features/commerce/api";
 import { activityApi, type PublicActivity } from "../api";
+import ActivityPaymentPanel from "../components/ActivityPaymentPanel.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -16,6 +18,8 @@ const loading = ref(true);
 const submitting = ref(false);
 const error = ref("");
 const result = ref("");
+const paymentOrder = ref<Order | null>(null);
+const paymentRegistrationId = ref("");
 
 function ticketPrice(ticket: PublicActivity["ticket_types"][number]) {
   const price = ticket.prices.find((item) => item.currency === "USD") ?? ticket.prices[0];
@@ -54,6 +58,19 @@ async function register() {
       accepted.value
     );
     result.value = `${registration.registration_number} · ${registration.status}`;
+    paymentOrder.value = null;
+    paymentRegistrationId.value = registration.id;
+    if (registration.order_id) {
+      try {
+        const orders = await commerceApi.orders();
+        paymentOrder.value = orders.items.find((order) => order.id === registration.order_id) ?? null;
+        if (!paymentOrder.value) {
+          error.value = t("activities.paymentOrderUnavailable");
+        }
+      } catch {
+        error.value = t("activities.paymentOrderUnavailable");
+      }
+    }
   } catch (cause) {
     const message = cause instanceof Error ? cause.message : "报名失败";
     if (message.toLowerCase().includes("authentication")) {
@@ -160,6 +177,11 @@ onMounted(() => void load());
       >
         {{ t("activities.registrationStatus") }}：{{ result }}。{{ t("activities.paymentBoundary") }}
       </p>
+      <ActivityPaymentPanel
+        v-if="paymentOrder"
+        :order="paymentOrder"
+        :registration-id="paymentRegistrationId"
+      />
       <p
         v-if="error"
         class="form-error"

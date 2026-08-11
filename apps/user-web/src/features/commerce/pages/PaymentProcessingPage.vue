@@ -10,6 +10,7 @@ const { t } = useI18n();
 const orderNumber = computed(() => String(route.query.order ?? ""));
 const order = ref<Order | null>(null);
 const payment = ref<Payment | null>(null);
+const registrationId = computed(() => String(route.query.registration ?? ""));
 const error = ref("");
 let timer: number | undefined;
 
@@ -69,6 +70,12 @@ onBeforeUnmount(() => window.clearInterval(timer));
       </p>
       <RouterLink :to="`/${String(route.params.locale)}/account/orders/${order.order_number}`">
         {{ t("commerce.orderDetail") }}
+      </RouterLink>
+      <RouterLink
+        v-if="registrationId"
+        :to="{ name: 'activity-registrations', params: { locale: String(route.params.locale) } }"
+      >
+        {{ t("activities.backToRegistrations") }}
       </RouterLink>
     </div>
     <p class="checkout-boundary">
