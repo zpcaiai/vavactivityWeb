@@ -38,23 +38,43 @@ watch(() => route.params.locale, () => void load());
     >
       {{ error }}
     </p>
-    <div class="product-grid">
+    <div class="product-grid content-card-grid">
       <article
         v-for="service in services"
         :key="service.id"
-        class="product-card"
+        class="product-card content-card counseling-card"
       >
-        <p class="eyebrow">
-          {{ service.delivery_mode }} · {{ service.duration_minutes }} 分钟
-        </p>
-        <h2>{{ service.name }}</h2>
-        <p>{{ service.summary }}</p>
-        <p v-if="service.prices.length">
-          {{ service.prices[0].currency }} {{ (service.prices[0].unit_amount_minor / 100).toFixed(2) }}
-        </p>
-        <RouterLink :to="`/${String(route.params.locale)}/counseling/${service.slug}`">
-          查看服务与可预约时间
-        </RouterLink>
+        <div class="product-card-body content-card-body">
+          <p class="eyebrow content-card-kicker">
+            {{ service.delivery_mode }} · {{ service.duration_minutes }} 分钟
+          </p>
+          <h2 class="content-card-title">
+            {{ service.name }}
+          </h2>
+          <p
+            v-if="service.summary"
+            class="content-card-summary"
+          >
+            {{ service.summary }}
+          </p>
+          <footer class="content-card-footer">
+            <span class="content-card-meta">
+              <template v-if="service.prices.length">
+                {{ service.prices[0].currency }} {{ (service.prices[0].unit_amount_minor / 100).toFixed(2) }}
+              </template>
+              <template v-else>
+                {{ service.free_access ? "免费" : "价格待确认" }}
+              </template>
+            </span>
+            <RouterLink
+              class="text-link content-card-link"
+              :to="`/${String(route.params.locale)}/counseling/${service.slug}`"
+            >
+              查看服务
+              <span aria-hidden="true">→</span>
+            </RouterLink>
+          </footer>
+        </div>
       </article>
     </div>
   </section>

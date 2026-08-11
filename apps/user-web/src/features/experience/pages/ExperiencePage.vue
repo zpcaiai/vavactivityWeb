@@ -166,22 +166,33 @@ watch(() => [section.value, route.query.history], load);
     />
     <div
       v-else-if="section !== 'home'"
-      class="cards"
+      class="cards content-card-grid"
       aria-live="polite"
     >
       <article
         v-for="row in rows"
         :key="String(row.id ?? row.task_code ?? row.journey_code ?? row.route_code ?? row.title)"
+        class="content-card content-card-body content-card--compact"
       >
         <VStatusBadge
           :status="row.state === 'blocked' ? 'warning' : 'info'"
           :label="String(row.state ?? row.category ?? row.source_module ?? '可查看')"
-        /><h2>{{ localized(row.title_i18n) || row.title || row.task_code || row.journey_code || row.document_code }}</h2><p>{{ localized(row.description_i18n) || row.summary || row.body_markdown || row.current_step_code || '查看当前状态和可用下一步。' }}</p><RouterLink
+        /><h2 class="content-card-title">
+          {{ localized(row.title_i18n) || row.title || row.task_code || row.journey_code || row.document_code }}
+        </h2><p class="content-card-summary">
+          {{ localized(row.description_i18n) || row.summary || row.body_markdown || row.current_step_code || '查看当前状态和可用下一步。' }}
+        </p><footer
           v-if="row.action_route_code || row.route_path || row.route_code"
-          :to="pathFor(row)"
+          class="content-card-footer"
         >
-          继续或查看状态
-        </RouterLink>
+          <RouterLink
+            class="content-card-link"
+            :to="pathFor(row)"
+          >
+            继续或查看状态
+            <span aria-hidden="true">→</span>
+          </RouterLink>
+        </footer>
       </article>
     </div>
     <footer class="support-footer">
@@ -200,4 +211,4 @@ watch(() => [section.value, route.query.history], load);
   </section>
 </template>
 
-<style scoped>.experience-page{display:grid;gap:var(--vav-density-page-gap);max-width:var(--vav-layout-content-wide);margin:auto;padding:var(--vav-density-page-gap)}header{display:flex;justify-content:space-between;align-items:end;gap:var(--vav-space-5)}.eyebrow{color:var(--vav-color-action-primary);font-weight:700;letter-spacing:.08em}nav,.support-footer{display:flex;flex-wrap:wrap;gap:var(--vav-space-3)}nav a,.support-footer a,.support-footer button{min-height:var(--vav-control-min-height);display:inline-flex;align-items:center;padding:var(--vav-space-2) var(--vav-space-3);border:1px solid var(--vav-color-border);border-radius:var(--vav-radius-pill);background:var(--vav-color-surface-raised);color:var(--vav-color-text);text-decoration:none}.metrics,.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:var(--vav-space-4)}article{padding:var(--vav-component-card-padding);border:1px solid var(--vav-color-border);border-radius:var(--vav-component-card-radius);background:var(--vav-color-surface-raised)}article.wide{grid-column:span 2}.search-form{display:grid;gap:var(--vav-space-2)}.search-form div{display:grid;grid-template-columns:1fr auto;gap:var(--vav-space-2)}input{min-height:var(--vav-control-min-height);border:1px solid var(--vav-color-border);border-radius:var(--vav-radius-md);padding:var(--vav-space-2)}@media(max-width:48rem){header{align-items:start;flex-direction:column}article.wide{grid-column:auto}.search-form div{grid-template-columns:1fr}}</style>
+<style scoped>.experience-page{display:grid;gap:var(--vav-density-page-gap);max-width:var(--vav-layout-content-wide);margin:auto;padding:var(--vav-density-page-gap)}header{display:flex;justify-content:space-between;align-items:end;gap:var(--vav-space-5)}.eyebrow{color:var(--vav-color-action-primary);font-weight:700;letter-spacing:.08em}nav,.support-footer{display:flex;flex-wrap:wrap;gap:var(--vav-space-3)}nav a,.support-footer a,.support-footer button{min-height:var(--vav-control-min-height);display:inline-flex;align-items:center;padding:var(--vav-space-2) var(--vav-space-3);border:1px solid var(--vav-color-border);border-radius:var(--vav-radius-pill);background:var(--vav-glass);color:var(--vav-color-ink);text-decoration:none}.metrics,.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:var(--vav-space-4)}article{padding:var(--vav-component-card-padding);border:1px solid var(--vav-color-border);border-radius:var(--vav-component-card-radius);backdrop-filter:blur(18px);background:var(--vav-glass);color:var(--vav-color-ink)}article.wide{grid-column:span 2}.search-form{display:grid;gap:var(--vav-space-2)}.search-form div{display:grid;grid-template-columns:1fr auto;gap:var(--vav-space-2)}input{min-height:var(--vav-control-min-height);border:1px solid var(--vav-color-border);border-radius:var(--vav-radius-md);padding:var(--vav-space-2)}@media(max-width:48rem){header{align-items:start;flex-direction:column}article.wide{grid-column:auto}.search-form div{grid-template-columns:1fr}}</style>

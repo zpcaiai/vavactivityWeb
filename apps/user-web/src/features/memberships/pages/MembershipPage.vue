@@ -112,22 +112,29 @@ onMounted(load);
 
     <section
       v-else-if="!accountView"
-      class="cards"
+      class="cards content-card-grid"
     >
       <article
         v-for="item in plans"
         :key="item.plan_code"
-        class="panel"
+        class="panel content-card content-card-body"
       >
-        <p class="badge">
+        <p class="badge eyebrow content-card-kicker">
           {{ item.plan_type }}
-        </p><h2>{{ item.name }}</h2><p>{{ item.short_description }}</p>
-        <RouterLink
-          class="button"
-          :to="`/${locale}/membership/plans/${item.plan_code}`"
-        >
-          查看真实权益与限制
-        </RouterLink>
+        </p><h2 class="content-card-title">
+          {{ item.name }}
+        </h2><p class="content-card-summary">
+          {{ item.short_description }}
+        </p>
+        <footer class="content-card-footer">
+          <RouterLink
+            class="text-link content-card-link"
+            :to="`/${locale}/membership/plans/${item.plan_code}`"
+          >
+            查看权益与限制
+            <span aria-hidden="true">→</span>
+          </RouterLink>
+        </footer>
       </article>
     </section>
 
@@ -204,5 +211,122 @@ onMounted(load);
 </template>
 
 <style scoped>
-.membership-page{max-width:1120px;margin:0 auto;padding:3rem 1.25rem 5rem}.eyebrow{letter-spacing:.14em;color:#7b5d38}.intro,.retention{max-width:780px;color:#5e6265}.cards,.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}.panel{display:flex;flex-direction:column;gap:.8rem;padding:1.3rem;border:1px solid #ded7cc;border-radius:18px;background:#fff}.hero{margin:1.2rem 0;flex-direction:row;justify-content:space-between;background:#f6f0e7}.badge{align-self:flex-start;padding:.25rem .6rem;border-radius:999px;background:#eee6d9}.button,button{align-self:flex-start;padding:.7rem 1rem;border:0;border-radius:999px;background:#365f50;color:#fff;text-decoration:none;cursor:pointer}select{width:100%;padding:.7rem;border:1px solid #c9c1b5;border-radius:10px}.alert{padding:.8rem;border-radius:10px}.error{background:#fde8e7}.notice{background:#e7f4ed}ul{display:grid;gap:.65rem;padding:0;list-style:none}li,.quota>div{display:flex;justify-content:space-between;gap:1rem}.quota{display:grid;gap:.35rem}progress{width:100%}.preview{padding:1rem;background:#f5f5f2;border-radius:12px}@media(max-width:640px){.hero{flex-direction:column}}
+.membership-page {
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: 3rem 1.25rem 5rem;
+}
+
+.eyebrow {
+  color: var(--vav-color-primary);
+  letter-spacing: 0.14em;
+}
+
+.intro,
+.retention {
+  color: var(--vav-color-muted);
+  max-width: 780px;
+}
+
+.cards,
+.grid {
+  display: grid;
+  gap: var(--vav-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.panel {
+  backdrop-filter: blur(18px);
+  background: var(--vav-glass);
+  border: 1px solid var(--vav-color-border);
+  border-radius: var(--vav-radius-lg);
+  color: var(--vav-color-ink);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vav-space-3);
+  padding: var(--vav-component-card-padding);
+}
+
+.hero {
+  background: var(--vav-glass-strong);
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1.2rem 0;
+}
+
+.badge {
+  align-self: flex-start;
+  background: rgb(229 129 141 / 14%);
+  border-radius: var(--vav-radius-pill);
+  padding: var(--vav-space-1) var(--vav-space-3);
+}
+
+.button,
+button {
+  align-self: flex-start;
+  background: var(--vav-color-primary);
+  border: 0;
+  border-radius: var(--vav-radius-pill);
+  color: white;
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+}
+
+select {
+  background: rgb(255 255 255 / 6%);
+  border: 1px solid var(--vav-color-border);
+  border-radius: var(--vav-radius-sm);
+  color: inherit;
+  padding: 0.7rem;
+  width: 100%;
+}
+
+.alert,
+.preview {
+  border: 1px solid var(--vav-color-border);
+  border-radius: var(--vav-radius-sm);
+  padding: var(--vav-space-3);
+}
+
+.error {
+  background: rgb(239 136 146 / 14%);
+}
+
+.notice {
+  background: rgb(119 183 167 / 14%);
+}
+
+ul {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  padding: 0;
+}
+
+li,
+.quota > div {
+  display: flex;
+  gap: var(--vav-space-4);
+  justify-content: space-between;
+}
+
+.quota {
+  display: grid;
+  gap: 0.35rem;
+}
+
+progress {
+  width: 100%;
+}
+
+.preview {
+  background: rgb(255 255 255 / 4%);
+}
+
+@media (max-width: 640px) {
+  .hero {
+    flex-direction: column;
+  }
+}
 </style>

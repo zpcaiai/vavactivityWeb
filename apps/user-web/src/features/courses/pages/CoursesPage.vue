@@ -51,22 +51,39 @@ watch(() => route.params.locale, () => void load());
     </p>
     <div
       v-else
-      class="product-grid"
+      class="product-grid content-card-grid course-grid"
     >
       <article
         v-for="course in courses"
         :key="course.id"
-        class="product-card"
+        class="product-card content-card course-card"
       >
-        <p class="eyebrow">
-          {{ course.course_type }} · {{ course.difficulty_level ?? "all levels" }}
-        </p>
-        <h2>{{ course.title }}</h2>
-        <p>{{ course.summary }}</p>
-        <p>{{ course.estimated_duration_minutes ?? "—" }} 分钟</p>
-        <RouterLink :to="`/${String(route.params.locale)}/courses/${course.slug}`">
-          查看课程
-        </RouterLink>
+        <div class="product-card-body content-card-body course-card-body">
+          <p class="eyebrow content-card-kicker">
+            {{ course.course_type }} · {{ course.difficulty_level ?? "all levels" }}
+          </p>
+          <h2 class="content-card-title">
+            {{ course.title }}
+          </h2>
+          <p
+            v-if="course.summary"
+            class="content-card-summary"
+          >
+            {{ course.summary }}
+          </p>
+          <footer class="content-card-footer">
+            <span class="content-card-meta">
+              {{ course.estimated_duration_minutes ?? "—" }} 分钟
+            </span>
+            <RouterLink
+              class="text-link content-card-link"
+              :to="`/${String(route.params.locale)}/courses/${course.slug}`"
+            >
+              查看课程
+              <span aria-hidden="true">→</span>
+            </RouterLink>
+          </footer>
+        </div>
       </article>
     </div>
   </section>
