@@ -25,6 +25,7 @@ export interface Order {
   currency: string;
   total_minor: number;
   refunded_total_minor: number;
+  available_payment_providers?: string[];
   placed_at?: string | null;
   items?: Array<{
     id: string;
