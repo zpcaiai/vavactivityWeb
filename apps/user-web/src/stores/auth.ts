@@ -26,17 +26,30 @@ interface AuthResponse {
   };
 }
 
+export interface RegistrationResult {
+  registration_status: "verification_required";
+  email: string;
+}
+
+interface RegistrationResponse {
+  data: RegistrationResult;
+}
+
 type AuthStatus = "unknown" | "authenticated" | "anonymous" | "refreshing";
 
 const baseUrl = resolveApiBaseUrl();
 
 function csrfToken() {
-  return document.cookie
-    .split("; ")
-    .find((cookie) => cookie.startsWith("vav_csrf="))
-    ?.split("=")
-    .slice(1)
-    .join("=");
+  const cookies = document.cookie.split("; ");
+  for (const name of ["vav_user_csrf", "vav_csrf"]) {
+    const value = cookies
+      .find((cookie) => cookie.startsWith(`${name}=`))
+      ?.split("=")
+      .slice(1)
+      .join("=");
+    if (value) return value;
+  }
+  return undefined;
 }
 
 export const useAuthStore = defineStore("auth", () => {
@@ -96,10 +109,19 @@ export const useAuthStore = defineStore("auth", () => {
     terms_version: string;
     privacy_version: string;
   }) {
-    return authRequest<{ data: { registration_status: string; email: string } }>(
+    const result = await authRequest<RegistrationResponse>(
       "/auth/register",
       { method: "POST", body: JSON.stringify(payload) }
     );
+    return result.data;
+  }
+
+  async function resendVerification(email: string) {
+    const result = await authRequest<{ data: { message: string } }>(
+      "/auth/email-verification/send",
+      { method: "POST", body: JSON.stringify({ email: email.trim() }) }
+    );
+    return result.data.message;
   }
 
   async function refresh() {
@@ -159,6 +181,7 @@ export const useAuthStore = defineStore("auth", () => {
     isAuthenticated,
     login,
     register,
+    resendVerification,
     refresh,
     bootstrap,
     logout,

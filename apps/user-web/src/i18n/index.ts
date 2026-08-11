@@ -22,6 +22,8 @@ const messages = {
       ai: "AI 辅导",
       start: "开始认识",
       account: "我的账户",
+      logout: "安全退出",
+      signingOut: "退出中…",
       menu: "打开导航"
     },
     home: {
@@ -120,6 +122,8 @@ const messages = {
       ai: "AI 輔導",
       start: "開始認識",
       account: "我的帳戶",
+      logout: "安全登出",
+      signingOut: "登出中…",
       menu: "開啟導覽"
     },
     home: {
@@ -178,6 +182,8 @@ const messages = {
       ai: "AI guidance",
       start: "Begin your journey",
       account: "My account",
+      logout: "Sign out",
+      signingOut: "Signing out…",
       menu: "Open navigation"
     },
     home: {

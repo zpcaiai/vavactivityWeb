@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { VSkipLink } from "@vav/ui-core";
 
 import {
@@ -13,11 +13,13 @@ import NotificationBell from "@/features/notifications/components/NotificationBe
 import GlobalCommandPalette from "@/features/experience/components/GlobalCommandPalette.vue";
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const auth = useAuthStore();
 const menuOpen = ref(false);
 const locale = computed(() => String(route.params.locale));
 const configuredLinks = ref<PublicNavigationItem[]>([]);
+const signingOut = ref(false);
 
 const fallbackLinks = [
   { key: "home", path: "" },
@@ -56,6 +58,21 @@ async function loadNavigation() {
     configuredLinks.value = await getNavigation("main_navigation", locale.value);
   } catch {
     configuredLinks.value = [];
+  }
+}
+
+async function logout() {
+  if (signingOut.value) return;
+  signingOut.value = true;
+  menuOpen.value = false;
+  try {
+    await auth.logout();
+  } catch {
+    // Do not keep a bearer token in memory when the remote logout request fails.
+    auth.clearSession();
+  } finally {
+    signingOut.value = false;
+    await router.replace(`/${locale.value}/`);
   }
 }
 
@@ -157,6 +174,15 @@ watch(() => route.path, async () => {
         >
           {{ t("common.language") }}
         </RouterLink>
+        <button
+          v-if="auth.user"
+          class="logout-link"
+          type="button"
+          :disabled="signingOut"
+          @click="logout"
+        >
+          {{ signingOut ? t("nav.signingOut") : t("nav.logout") }}
+        </button>
       </nav>
     </header>
 
@@ -200,3 +226,33 @@ watch(() => route.path, async () => {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.logout-link {
+  background: transparent;
+  border: 0;
+  color: rgb(239 245 248 / 72%);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--vav-font-size-sm);
+  padding: 0;
+}
+
+.logout-link:hover:not(:disabled) {
+  color: var(--vav-color-action-primary);
+}
+
+.logout-link:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+@media (max-width: 62rem) {
+  .logout-link {
+    justify-self: stretch;
+    min-height: var(--vav-component-touch-target-minimum);
+    text-align: start;
+    width: 100%;
+  }
+}
+</style>

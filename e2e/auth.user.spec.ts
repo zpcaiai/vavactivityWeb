@@ -14,7 +14,7 @@ test("a user registers, verifies email, signs in and sees the current session", 
   await page.getByLabel("密码").fill(password);
   await page.getByLabel("我已阅读并同意服务条款与隐私说明").check();
   await page.getByRole("button", { name: "建立 VAV 账户" }).click();
-  await expect(page.getByRole("status")).toContainText("请查收验证邮件");
+  await expect(page.getByRole("status").first()).toContainText("注册成功，请验证邮箱");
 
   const verificationLink = await verificationLinkFor(request, email);
   await page.goto(verificationLink);
@@ -30,4 +30,9 @@ test("a user registers, verifies email, signs in and sees the current session", 
   await page.goto("/zh-CN/account/sessions");
   await expect(page.getByText("Web browser")).toBeVisible();
   await expect(page.getByText("当前设备")).toBeVisible();
+
+  await expect(page.getByRole("button", { name: "安全退出" })).toBeVisible();
+  await page.getByRole("button", { name: "安全退出" }).click();
+  await expect(page).toHaveURL(/\/zh-CN\/$/);
+  await expect(page.getByRole("link", { name: "开始认识" })).toBeVisible();
 });
