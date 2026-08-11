@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { AiAssistantApiError, createAiAssistantApiError } from "./api";
-import { aiAssistantErrorMessage, isAiAssistantDisabled } from "./errors";
+import {
+  aiAssistantErrorMessage,
+  isAiAssistantDisabled,
+  isAiAssistantUnavailable
+} from "./errors";
 
 describe("AI assistant API errors", () => {
   it("preserves the backend error code and status", () => {
@@ -37,5 +41,29 @@ describe("AI assistant API errors", () => {
 
     expect(isAiAssistantDisabled(error)).toBe(false);
     expect(aiAssistantErrorMessage(error, "zh-CN", "fallback")).toBe("Please sign in.");
+  });
+
+  it.each(["AI_PROVIDER_NOT_CONFIGURED", "AI_PROVIDER_UNAVAILABLE"])(
+    "localizes provider error %s",
+    (code) => {
+      const error = new AiAssistantApiError(code, "upstream message", 503);
+
+      expect(aiAssistantErrorMessage(error, "zh-CN", "fallback")).toBe(
+        "哈拿老师 AI 对话服务暂时不可用，请稍后重试。"
+      );
+      expect(isAiAssistantUnavailable(error)).toBe(code === "AI_PROVIDER_NOT_CONFIGURED");
+    }
+  );
+
+  it("localizes Gemini safety blocks", () => {
+    const error = new AiAssistantApiError(
+      "AI_PROVIDER_CONTENT_BLOCKED",
+      "upstream message",
+      422
+    );
+
+    expect(aiAssistantErrorMessage(error, "zh-TW", "fallback")).toBe(
+      "這項請求無法由 AI 安全回答，你可以換一種方式描述，或選擇真人支援。"
+    );
   });
 });
