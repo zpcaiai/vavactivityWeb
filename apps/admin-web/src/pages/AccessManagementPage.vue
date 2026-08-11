@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { localizeAdminLabel, localizeAdminValue } from "@vav/ui-admin";
 import { resolveApiBaseUrl } from "@/config/api";
 
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -73,9 +74,13 @@ watch([page, pageSize], () => void load());
         v-for="key in Object.keys(items[0] ?? {})"
         :key="key"
         :prop="key"
-        :label="key"
+        :label="localizeAdminLabel(key)"
         min-width="140"
-      />
+      >
+        <template #default="{ row }">
+          {{ localizeAdminValue(row[key], key) }}
+        </template>
+      </el-table-column>
     </el-table>
     <PaginationBar
       v-if="total > pageSize || page > 1"

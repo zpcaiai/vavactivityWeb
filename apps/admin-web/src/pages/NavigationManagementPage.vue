@@ -158,7 +158,7 @@ onMounted(() => void load());
     <header class="page-toolbar">
       <div>
         <p class="admin-kicker">
-          NAVIGATION &amp; FOOTER
+          导航与页脚
         </p>
         <h2>导航管理</h2>
       </div>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { localizeAdminLabel, localizeAdminValue } from "@vav/ui-admin";
 
 import { catalogApi } from "@/features/catalog/api";
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -240,7 +241,7 @@ watch(() => route.fullPath, () => {
     <div class="page-heading">
       <div>
         <p class="admin-kicker">
-          BATCH 13 · DATING PROFILE REVIEW
+          第 13 批 · 婚恋档案审核
         </p>
         <h2>婚恋档案运营中心</h2>
         <p>审核档案版本、字段与照片，管理 Schema、字典与推荐投影。</p>
@@ -292,7 +293,7 @@ watch(() => route.fullPath, () => {
         <el-option
           v-for="code in PHOTO_REASON_CODES"
           :key="code"
-          :label="code"
+          :label="localizeAdminValue(code, 'reason_code')"
           :value="code"
         />
       </el-select>
@@ -323,9 +324,13 @@ watch(() => route.fullPath, () => {
         v-for="key in Object.keys(rows[0] ?? {})"
         :key="key"
         :prop="key"
-        :label="key"
+        :label="localizeAdminLabel(key)"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ localizeAdminValue(row[key], key) }}
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         width="260"
@@ -385,7 +390,7 @@ watch(() => route.fullPath, () => {
     >
       <h3>审核案件 {{ activeCase.id }}</h3>
       <p>
-        状态 {{ activeCase.status }} · 乐观锁版本 {{ activeCase.version }} ·
+        状态 {{ localizeAdminValue(activeCase.status, "status") }} · 乐观锁版本 {{ activeCase.version }} ·
         敏感字段权限：{{ activeCase.sensitive_access_granted ? "已授予" : "未授予" }}
       </p>
 

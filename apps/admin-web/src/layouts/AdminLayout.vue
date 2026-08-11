@@ -280,7 +280,7 @@ watch(() => route.fullPath, async () => {
                 value="zh-TW"
               />
               <el-option
-                label="English"
+                label="英文"
                 value="en"
               />
             </el-select>

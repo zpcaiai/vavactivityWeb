@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { formatAdminTableCell } from "@vav/ui-admin";
 import { resolveApiBaseUrl } from "@/config/api";
 
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -123,7 +124,7 @@ watch(section, () => void load());
     <header class="page-toolbar">
       <div>
         <p class="admin-kicker">
-          STRUCTURED CMS
+          结构化内容管理
         </p>
         <h2>{{ section }}</h2>
       </div>
@@ -152,10 +153,11 @@ watch(section, () => void load());
       />
       <el-table-column
         prop="canonical_slug"
-        label="Slug"
+        label="URL 短标识"
       />
       <el-table-column
         prop="status"
+        :formatter="formatAdminTableCell"
         label="发布状态"
       />
       <el-table-column
@@ -206,7 +208,7 @@ watch(section, () => void load());
             value="zh-TW"
           />
           <el-option
-            label="English"
+            label="英文"
             value="en"
           />
         </el-select></label>

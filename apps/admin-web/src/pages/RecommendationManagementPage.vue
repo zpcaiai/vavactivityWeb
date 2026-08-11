@@ -9,6 +9,7 @@
  */
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { localizeAdminLabel, localizeAdminValue } from "@vav/ui-admin";
 
 import { recommendationApi } from "@/features/recommendations/api";
 import type {
@@ -289,7 +290,7 @@ watch(() => route.fullPath, () => {
     <div class="page-heading">
       <div>
         <p class="admin-kicker">
-          BATCH 14 · RECOMMENDATION OPERATIONS
+          第 14 批 · 推荐运营
         </p>
         <h2>推荐运营中心</h2>
         <p>监督策略版本、批次、候选漏斗、曝光公平、评估与实验。</p>
@@ -374,9 +375,13 @@ watch(() => route.fullPath, () => {
           v-for="key in Object.keys(rows[0] ?? {})"
           :key="key"
           :prop="key"
-          :label="key"
+          :label="localizeAdminLabel(key)"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            {{ localizeAdminValue(row[key], key) }}
+          </template>
+        </el-table-column>
         <el-table-column
           label="操作"
           min-width="300"
@@ -422,7 +427,7 @@ watch(() => route.fullPath, () => {
         <h3>策略 {{ strategyDetail.strategy.strategy_code }}</h3>
         <p>
           版本 {{ strategyDetail.strategy.semantic_version }} · 状态
-          {{ strategyDetail.strategy.status }}
+          {{ localizeAdminValue(strategyDetail.strategy.status, "status") }}
         </p>
         <h4>评估记录</h4>
         <ul class="code-list">
@@ -430,7 +435,7 @@ watch(() => route.fullPath, () => {
             v-for="item in strategyDetail.evaluations"
             :key="String(item.id)"
           >
-            {{ item.status }} · 阻断项 {{ JSON.stringify(item.blocking_failures) }} · 护栏
+            {{ localizeAdminValue(item.status, "status") }} · 阻断项 {{ localizeAdminValue(item.blocking_failures) }} · 护栏
             {{ JSON.stringify(item.guardrail_failures) }}
           </li>
         </ul>
@@ -540,9 +545,13 @@ watch(() => route.fullPath, () => {
           v-for="key in Object.keys(rows[0] ?? {})"
           :key="key"
           :prop="key"
-          :label="key"
+          :label="localizeAdminLabel(key)"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            {{ localizeAdminValue(row[key], key) }}
+          </template>
+        </el-table-column>
         <el-table-column
           label="操作"
           min-width="200"
@@ -573,7 +582,7 @@ watch(() => route.fullPath, () => {
       >
         <h3>批次 {{ batchDetail.batch.id }}</h3>
         <p>
-          状态 {{ batchDetail.batch.status }} · 生成 {{ batchDetail.batch.generated_size }} /
+          状态 {{ localizeAdminValue(batchDetail.batch.status, "status") }} · 生成 {{ batchDetail.batch.generated_size }} /
           请求 {{ batchDetail.batch.requested_size }}
         </p>
         <el-table
@@ -634,13 +643,13 @@ watch(() => route.fullPath, () => {
           v-for="(total, status) in candidates.pairs_by_status"
           :key="`status-${status}`"
         >
-          <strong>{{ total }}</strong><span>配对状态 {{ status }}</span>
+          <strong>{{ total }}</strong><span>配对状态 {{ localizeAdminValue(status, "status") }}</span>
         </el-card>
         <el-card
           v-for="(total, type) in candidates.active_exclusions"
           :key="`exclusion-${type}`"
         >
-          <strong>{{ total }}</strong><span>生效排除 {{ type }}</span>
+          <strong>{{ total }}</strong><span>生效排除 {{ localizeAdminValue(type, "type") }}</span>
         </el-card>
       </div>
     </div>
@@ -701,7 +710,7 @@ watch(() => route.fullPath, () => {
         class="detail-panel"
       >
         <p>
-          状态 {{ pairDiagnostics.pair.status }} · 策略 {{ pairDiagnostics.pair.strategy_id }} ·
+          状态 {{ localizeAdminValue(pairDiagnostics.pair.status, "status") }} · 策略 {{ pairDiagnostics.pair.strategy_id }} ·
           投影版本 {{ pairDiagnostics.pair.low_profile_projection_version }} /
           {{ pairDiagnostics.pair.high_profile_projection_version }} ·
           条件版本 {{ pairDiagnostics.pair.low_preference_version }} /
@@ -756,7 +765,7 @@ watch(() => route.fullPath, () => {
           v-for="(item, index) in exposures.most_exposed_profiles"
           :key="index"
         >
-          第 {{ index + 1 }} 名 · {{ item.total_exposures }} 次 · 最近 {{ item.last_exposed_at }}
+          第 {{ index + 1 }} 名 · {{ item.total_exposures }} 次 · 最近 {{ localizeAdminValue(item.last_exposed_at, "last_exposed_at") }}
         </li>
       </ul>
     </div>
@@ -790,7 +799,7 @@ watch(() => route.fullPath, () => {
           v-for="(total, type) in feedback.counts_by_type"
           :key="`feedback-${type}`"
         >
-          <strong>{{ total }}</strong><span>{{ type }}</span>
+          <strong>{{ total }}</strong><span>{{ localizeAdminValue(type, "type") }}</span>
         </el-card>
       </div>
     </div>
@@ -831,9 +840,13 @@ watch(() => route.fullPath, () => {
           v-for="key in Object.keys(rows[0] ?? {})"
           :key="key"
           :prop="key"
-          :label="key"
+          :label="localizeAdminLabel(key)"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            {{ localizeAdminValue(row[key], key) }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
@@ -855,9 +868,13 @@ watch(() => route.fullPath, () => {
           v-for="key in Object.keys(rows[0] ?? {})"
           :key="key"
           :prop="key"
-          :label="key"
+          :label="localizeAdminLabel(key)"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            {{ localizeAdminValue(row[key], key) }}
+          </template>
+        </el-table-column>
         <el-table-column
           label="操作"
           min-width="320"
@@ -911,9 +928,13 @@ watch(() => route.fullPath, () => {
           v-for="key in Object.keys(rows[0] ?? {})"
           :key="key"
           :prop="key"
-          :label="key"
+          :label="localizeAdminLabel(key)"
           show-overflow-tooltip
-        />
+        >
+          <template #default="{ row }">
+            {{ localizeAdminValue(row[key], key) }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
