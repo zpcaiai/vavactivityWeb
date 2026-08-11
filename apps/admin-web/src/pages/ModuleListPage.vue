@@ -34,7 +34,7 @@ function search(value: string) {
     <div class="module-intro">
       <div>
         <p class="admin-kicker">
-          MODULE FOUNDATION
+          模块基础功能
         </p>
         <h2>{{ title }}</h2>
         <p>{{ description }}</p>
@@ -43,7 +43,7 @@ function search(value: string) {
         type="info"
         effect="plain"
       >
-        NOT ENABLED
+        未启用
       </el-tag>
     </div>
 
@@ -75,4 +75,3 @@ function search(value: string) {
     </div>
   </section>
 </template>
-

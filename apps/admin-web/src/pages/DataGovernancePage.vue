@@ -10,7 +10,7 @@ const route = useRoute(); const auth = useAdminAuthStore();
 const section = computed(() => String(route.meta.dataGovernanceSection ?? "dashboard"));
 const rows = ref<DataGovernanceRow[]>([]); const dashboard = ref<DataGovernanceRow>({}); const busy = ref(false); const error = ref("");
 const sections = [
-  ["dashboard", "概览", "data.dashboard.read"], ["assets", "数据资产", "data.assets.read"], ["contracts", "数据契约", "data.contracts.read"], ["lineage", "数据血缘", "data.lineage.read"], ["events", "事件", "data.events.read"], ["event-gaps", "事件缺口", "data.events.read"], ["dead-letters", "死信", "data.dead_letters.read"], ["quality", "数据质量", "data.quality.read"], ["reconciliations", "对账", "data.reconciliations.read"], ["differences", "差异", "data.reconciliations.read"], ["backfills", "Backfill", "data.backfills.read"], ["repairs", "修复", "data.repairs.read"], ["projections", "投影重建", "data.projections.read"], ["erasures", "删除传播", "data.erasures.read"], ["certifications", "完整性认证", "data.certifications.read"], ["release", "发布", "data.release.read"]
+  ["dashboard", "概览", "data.dashboard.read"], ["assets", "数据资产", "data.assets.read"], ["contracts", "数据契约", "data.contracts.read"], ["lineage", "数据血缘", "data.lineage.read"], ["events", "事件", "data.events.read"], ["event-gaps", "事件缺口", "data.events.read"], ["dead-letters", "死信", "data.dead_letters.read"], ["quality", "数据质量", "data.quality.read"], ["reconciliations", "对账", "data.reconciliations.read"], ["differences", "差异", "data.reconciliations.read"], ["backfills", "数据回填", "data.backfills.read"], ["repairs", "修复", "data.repairs.read"], ["projections", "投影重建", "data.projections.read"], ["erasures", "删除传播", "data.erasures.read"], ["certifications", "完整性认证", "data.certifications.read"], ["release", "发布", "data.release.read"]
 ] as const;
 const visibleSections = computed(() => sections.filter((item) => auth.hasPermission(item[2])));
 const tableRows = computed(() => rows.value.map((row) => ({ ...row, identifier: row.asset_code ?? row.contract_code ?? row.gap_code ?? row.reconciliation_code ?? row.backfill_code ?? row.event_type ?? row.business_domain ?? row.id ?? "-", kind: row.asset_type ?? row.contract_type ?? row.dimension ?? row.category ?? "-", record_state: row.status ?? row.lifecycle_status ?? row.technical_status ?? "-" })));
@@ -23,11 +23,11 @@ onMounted(load); watch(section, load);
     <header>
       <div>
         <p class="eyebrow">
-          BATCH 25 · DATA INTEGRITY
+          第 25 批 · 数据完整性
         </p><h1>数据治理与完整性中心</h1><p>权威数据由领域模块持有；本中心验证契约、血缘、事件、对账、Backfill 与删除传播，不直接改写业务事实。</p>
       </div><VStatusBadge
         status="warning"
-        label="NOT CERTIFIED"
+        label="未认证"
       />
     </header>
     <nav aria-label="数据治理分区">

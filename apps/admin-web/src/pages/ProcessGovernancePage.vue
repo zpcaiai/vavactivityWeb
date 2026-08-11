@@ -16,7 +16,7 @@ const busy = ref(false);
 const error = ref("");
 const notice = ref("");
 const sections = [
-  ["dashboard", "概览", "process.dashboard.read"], ["definitions", "流程定义", "process.definitions.read"], ["state-machines", "状态机", "process.state_machines.read"], ["instances", "流程实例", "process.instances.read"], ["sagas", "Saga", "process.sagas.read"], ["timeouts", "超时", "process.timeouts.read"], ["cancellations", "取消", "process.cancellations.read"], ["compensations", "补偿", "process.compensations.read"], ["stuck", "卡死检测", "process.stuck.read"], ["interventions", "人工干预", "process.interventions.read"], ["simulations", "模拟", "process.simulations.read"], ["certifications", "业务认证", "process.certifications.read"], ["release", "发布", "process.release.read"]
+  ["dashboard", "概览", "process.dashboard.read"], ["definitions", "流程定义", "process.definitions.read"], ["state-machines", "状态机", "process.state_machines.read"], ["instances", "流程实例", "process.instances.read"], ["sagas", "分布式事务", "process.sagas.read"], ["timeouts", "超时", "process.timeouts.read"], ["cancellations", "取消", "process.cancellations.read"], ["compensations", "补偿", "process.compensations.read"], ["stuck", "卡死检测", "process.stuck.read"], ["interventions", "人工干预", "process.interventions.read"], ["simulations", "模拟", "process.simulations.read"], ["certifications", "业务认证", "process.certifications.read"], ["release", "发布", "process.release.read"]
 ] as const;
 const visibleSections = computed(() => sections.filter((item) => auth.hasPermission(item[2])));
 const tableRows = computed(() => rows.value.map((row) => ({
@@ -57,11 +57,11 @@ onMounted(load); watch(section, load);
     <header>
       <div>
         <p class="eyebrow">
-          BATCH 24 · PROCESS GOVERNANCE
+          第 24 批 · 流程治理
         </p><h1>业务流程与 Saga 控制中心</h1><p>领域模块保持权威；本控制面只执行注册命令、验证回执并协调超时、取消、补偿与恢复。</p>
       </div><VStatusBadge
         status="warning"
-        label="NOT CERTIFIED"
+        label="未认证"
       />
     </header>
     <nav aria-label="流程治理分区">

@@ -41,7 +41,7 @@ async function submit() {
         aria-hidden="true"
       >V</span>
       <p class="admin-kicker">
-        VAV OPERATIONS
+        VAV 运营后台
       </p>
       <h1>让每一次运营动作，都有边界和记录。</h1>
       <p>
@@ -49,7 +49,7 @@ async function submit() {
       </p>
     </section>
     <section class="login-card">
-      <span class="login-status">SECURE ACCESS</span>
+      <span class="login-status">安全访问</span>
       <h2>管理员登录</h2>
       <p>使用已获授权的管理账户。权限不足的账户不会进入管理端。</p>
       <form @submit.prevent="submit">

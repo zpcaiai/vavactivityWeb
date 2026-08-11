@@ -45,7 +45,7 @@ async function submit() {
   <main class="admin-login">
     <section class="login-card">
       <p class="admin-kicker">
-        ADMIN INVITATION
+        管理员邀请
       </p>
       <h1>接受管理员邀请</h1>
       <form @submit.prevent="submit">

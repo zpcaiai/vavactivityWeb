@@ -23,11 +23,11 @@ onMounted(load); watch(section, load);
     <header>
       <div>
         <p class="eyebrow">
-          BATCH 26 · ADMIN CONTROL PLANE
+          第 26 批 · 统一管理控制台
         </p><h1>统一管理运营平台</h1><p>所有写操作通过已注册领域命令；敏感字段由后端按权限和用途脱敏。</p>
       </div><VStatusBadge
         status="warning"
-        label="NOT CERTIFIED"
+        label="未认证"
       />
     </header>
     <nav aria-label="管理平台分区">

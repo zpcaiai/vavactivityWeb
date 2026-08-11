@@ -563,7 +563,7 @@ export const router = createRouter({
           path: `skills/${section}`,
           name: `admin-skills-${section}`,
           component: SkillManagementPage,
-          meta: { title: "Skill 控制台", permission: skillSectionPermissions[section], skillSection: section }
+          meta: { title: "技能控制台", permission: skillSectionPermissions[section], skillSection: section }
         })),
         ...Object.keys(qualitySectionPermissions).map((section) => ({
           path: `quality/${section}`,

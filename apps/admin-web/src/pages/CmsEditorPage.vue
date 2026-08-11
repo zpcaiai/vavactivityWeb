@@ -7,6 +7,7 @@ import {
   ref
 } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { localizeAdminValue } from "@vav/ui-admin";
 
 import { useAdminAuthStore } from "@/stores/admin-auth";
 
@@ -357,10 +358,10 @@ onBeforeRouteLeave(() => {
     <header class="page-toolbar">
       <div>
         <p class="admin-kicker">
-          STRUCTURED CONTENT EDITOR
+          结构化内容编辑器
         </p>
         <h2>{{ entry?.internal_name }}</h2>
-        <p>{{ entry?.canonical_slug }} · {{ entry?.status }} · v{{ entry?.version }}</p>
+        <p>{{ entry?.canonical_slug }} · {{ localizeAdminValue(entry?.status, "status") }} · 版本 {{ entry?.version }}</p>
       </div>
       <div class="toolbar-actions">
         <el-button @click="preview">
@@ -415,7 +416,7 @@ onBeforeRouteLeave(() => {
           :key="block.id"
           class="cms-block-list-item"
         >
-          <strong>{{ index + 1 }}. {{ block.type }}</strong>
+          <strong>{{ index + 1 }}. {{ localizeAdminValue(block.type, "type") }}</strong>
           <div>
             <el-button
               link
@@ -446,7 +447,7 @@ onBeforeRouteLeave(() => {
         </div>
         <el-select v-model="newBlockType">
           <el-option
-            label="Hero"
+            label="首屏横幅"
             value="hero"
           />
           <el-option
@@ -486,7 +487,7 @@ onBeforeRouteLeave(() => {
           :key="block.id"
           class="cms-block-editor"
         >
-          <strong>{{ index + 1 }} · {{ block.type }}</strong>
+          <strong>{{ index + 1 }} · {{ localizeAdminValue(block.type, "type") }}</strong>
           <template v-if="block.type === 'hero'">
             <label>标题<el-input v-model="block.data.heading" /></label>
             <label>副标题<el-input
@@ -543,7 +544,7 @@ onBeforeRouteLeave(() => {
             value="zh-TW"
           />
           <el-option
-            label="English"
+            label="英文"
             value="en"
           />
         </el-select></label>

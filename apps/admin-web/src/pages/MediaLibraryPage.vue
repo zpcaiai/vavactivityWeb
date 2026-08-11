@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import { localizeAdminValue } from "@vav/ui-admin";
 import { resolveApiBaseUrl } from "@/config/api";
 
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -136,7 +137,7 @@ onMounted(() => void load());
     <header class="page-toolbar">
       <div>
         <p class="admin-kicker">
-          VERIFIED MEDIA
+          已验证媒体
         </p>
         <h2>媒体库</h2>
       </div>
@@ -175,7 +176,7 @@ onMounted(() => void load());
           value="zh-TW"
         />
         <el-option
-          label="English"
+          label="英文"
           value="en"
         />
       </el-select></label>
@@ -217,7 +218,7 @@ onMounted(() => void load());
         </div>
         <strong>{{ item.filename }}</strong>
         <small>{{ item.mime_type }} · {{ Math.ceil(item.byte_size / 1024) }} KB</small>
-        <small>{{ item.visibility }} · {{ item.processing_status }}</small>
+        <small>{{ localizeAdminValue(item.visibility, "visibility") }} · {{ localizeAdminValue(item.processing_status, "processing_status") }}</small>
       </article>
     </div>
   </section>

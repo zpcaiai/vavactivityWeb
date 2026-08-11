@@ -44,29 +44,29 @@ async function simulate() {
     <header class="page-toolbar">
       <div>
         <p class="admin-kicker">
-          DETERMINISTIC PRICING
+          确定性定价
         </p>
         <h2>定价模拟器</h2>
       </div>
     </header>
     <div class="editor-form simulation-form">
-      <label>SKU UUID<el-input v-model="form.skuId" /></label>
+      <label>SKU 唯一标识<el-input v-model="form.skuId" /></label>
       <label>数量<el-input v-model.number="form.quantity" /></label>
       <label>币种<el-select v-model="form.currency">
         <el-option
-          label="CNY"
+          label="人民币（CNY）"
           value="CNY"
         />
         <el-option
-          label="USD"
+          label="美元（USD）"
           value="USD"
         />
         <el-option
-          label="TWD"
+          label="新台币（TWD）"
           value="TWD"
         />
         <el-option
-          label="HKD"
+          label="港币（HKD）"
           value="HKD"
         />
       </el-select></label>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { formatAdminTableCell } from "@vav/ui-admin";
 
 import { catalogApi } from "@/features/catalog/api";
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -163,7 +164,7 @@ watch(() => route.fullPath, syncRouteSection);
     <div class="page-heading">
       <div>
         <p class="admin-kicker">
-          BATCH 11 · GOVERNED DELIVERY
+          第 11 批 · 受控投递
         </p>
         <h2>通知运营中心</h2>
         <p>模板、事件订阅、发送、重试、提醒、群发、Provider 回执与抑制的统一审计视图。</p>
@@ -202,7 +203,7 @@ watch(() => route.fullPath, syncRouteSection);
     <el-tabs v-model="activeTab">
       <el-tab-pane
         v-if="auth.hasPermission('notifications.analytics.read')"
-        label="Dashboard"
+        label="概览"
         name="dashboard"
       >
         <div
@@ -226,7 +227,7 @@ watch(() => route.fullPath, syncRouteSection);
         <el-table :data="templates">
           <el-table-column
             prop="template_code"
-            label="Template Code"
+            label="模板代码"
           /><el-table-column
             prop="category"
             label="分类"
@@ -235,7 +236,7 @@ watch(() => route.fullPath, syncRouteSection);
             label="用途"
           /><el-table-column
             prop="active_count"
-            label="Active Releases"
+            label="生效版本"
           /><el-table-column
             prop="release_count"
             label="版本数"
@@ -264,6 +265,7 @@ watch(() => route.fullPath, syncRouteSection);
             label="模板"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column label="操作">
             <template #default="scope">
@@ -279,7 +281,7 @@ watch(() => route.fullPath, syncRouteSection);
       </el-tab-pane>
       <el-tab-pane
         v-if="auth.hasPermission('notifications.deliveries.read')"
-        label="Delivery"
+        label="投递"
         name="deliveries"
       >
         <el-table :data="deliveries">
@@ -294,10 +296,11 @@ watch(() => route.fullPath, syncRouteSection);
             label="渠道"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column
             prop="provider"
-            label="Provider"
+            label="服务商"
           /><el-table-column
             prop="attempt_count"
             label="尝试"
@@ -316,7 +319,7 @@ watch(() => route.fullPath, syncRouteSection);
       </el-tab-pane>
       <el-tab-pane
         v-if="auth.hasPermission('notifications.dead_letters.read')"
-        label="Dead Letter"
+        label="死信"
         name="deadletters"
       >
         <el-table :data="deadLetters">
@@ -331,6 +334,7 @@ watch(() => route.fullPath, syncRouteSection);
             label="安全错误码"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column label="操作">
             <template #default="scope">
@@ -359,9 +363,11 @@ watch(() => route.fullPath, syncRouteSection);
             label="业务对象"
           /><el-table-column
             prop="trigger_at"
-            label="触发时间"
+            :formatter="formatAdminTableCell"
+            label="触发时间（UTC+8）"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column label="操作">
             <template #default="scope">
@@ -378,14 +384,14 @@ watch(() => route.fullPath, syncRouteSection);
       </el-tab-pane>
       <el-tab-pane
         v-if="auth.hasPermission('notifications.campaigns.read')"
-        label="Campaign"
+        label="通知活动"
         name="campaigns"
       >
         <el-form
           class="inline-operation-form"
           label-position="top"
         >
-          <el-form-item label="Campaign Code">
+          <el-form-item label="活动代码">
             <el-input
               v-model="newCampaign.campaign_code"
               placeholder="NEWSLETTER_2026_08"
@@ -401,7 +407,7 @@ watch(() => route.fullPath, syncRouteSection);
                 label="繁體中文"
                 value="zh-TW"
               /><el-option
-                label="English"
+                label="英文"
                 value="en"
               />
             </el-select>
@@ -415,7 +421,7 @@ watch(() => route.fullPath, syncRouteSection);
         <el-table :data="campaigns">
           <el-table-column
             prop="campaign_code"
-            label="Code"
+            label="代码"
           /><el-table-column
             prop="internal_name"
             label="名称"
@@ -424,6 +430,7 @@ watch(() => route.fullPath, syncRouteSection);
             label="分类"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column
             label="受控流程"
@@ -481,7 +488,7 @@ watch(() => route.fullPath, syncRouteSection);
       </el-tab-pane>
       <el-tab-pane
         v-if="auth.hasPermission('notifications.providers.read') || auth.hasPermission('notifications.suppressions.read')"
-        label="Provider 与抑制"
+        label="服务商与抑制"
         name="providers"
       >
         <el-form
@@ -496,7 +503,7 @@ watch(() => route.fullPath, syncRouteSection);
                 label="管理员阻止"
                 value="admin_blocked"
               /><el-option
-                label="安全 Hold"
+                label="安全暂停"
                 value="security_hold"
               /><el-option
                 label="无效地址"
@@ -510,7 +517,7 @@ watch(() => route.fullPath, syncRouteSection);
         <el-table :data="suppressions">
           <el-table-column
             prop="destination_anonymous_hash"
-            label="地址 Hash"
+            label="地址哈希"
           /><el-table-column
             prop="suppression_reason"
             label="原因"
@@ -519,6 +526,7 @@ watch(() => route.fullPath, syncRouteSection);
             label="来源"
           /><el-table-column
             prop="status"
+            :formatter="formatAdminTableCell"
             label="状态"
           /><el-table-column label="操作">
             <template #default="scope">
@@ -535,7 +543,7 @@ watch(() => route.fullPath, syncRouteSection);
         <el-table :data="providerEvents">
           <el-table-column
             prop="provider_event_id"
-            label="Provider Event"
+            label="服务商事件"
           /><el-table-column
             prop="event_type"
             label="类型"
@@ -565,7 +573,8 @@ watch(() => route.fullPath, syncRouteSection);
             label="理由"
           /><el-table-column
             prop="created_at"
-            label="时间"
+            :formatter="formatAdminTableCell"
+            label="时间（UTC+8）"
           />
         </el-table><p>审计不保存完整正文、辅导内容、AI 对话、密码重置 Token 或退订 Token。</p>
       </el-tab-pane>
