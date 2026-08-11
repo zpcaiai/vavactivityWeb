@@ -8,6 +8,7 @@ import {
   type AiMessage,
   type AiTurnResult
 } from "../api";
+import { aiAssistantErrorMessage, isAiAssistantDisabled } from "../errors";
 
 const route = useRoute();
 const router = useRouter();
@@ -22,6 +23,7 @@ const busy = ref(false);
 const error = ref("");
 const notice = ref("");
 const pendingAction = ref("");
+const serviceDisabled = ref(false);
 
 const locale = computed(() => String(route.params.locale ?? "zh-CN"));
 const copy = computed(() => {
@@ -81,9 +83,15 @@ const copy = computed(() => {
 
 async function loadList() {
   conversations.value = (await aiAssistantApi.list()).items;
+  serviceDisabled.value = false;
   const requested = String(route.params.conversationId ?? "");
   const target = requested || conversations.value[0]?.id;
   if (target) await choose(target);
+}
+
+function showError(cause: unknown, fallback: string) {
+  serviceDisabled.value = isAiAssistantDisabled(cause);
+  error.value = aiAssistantErrorMessage(cause, locale.value, fallback);
 }
 
 async function choose(id: string) {
@@ -107,7 +115,7 @@ async function createConversation() {
     await loadList();
     await choose(value.id);
   } catch (cause) {
-    error.value = cause instanceof Error ? cause.message : "Unable to start conversation";
+    showError(cause, "Unable to start conversation");
   } finally {
     busy.value = false;
   }
@@ -123,7 +131,7 @@ async function send() {
     latestTurn.value = await aiAssistantApi.send(selected.value.id, content, locale.value);
     await choose(selected.value.id);
   } catch (cause) {
-    error.value = cause instanceof Error ? cause.message : "Unable to send message";
+    showError(cause, "Unable to send message");
   } finally {
     busy.value = false;
   }
@@ -164,14 +172,14 @@ async function saveActionItem() {
     notice.value = copy.value.confirmAction;
     pendingAction.value = "";
   } catch (cause) {
-    error.value = cause instanceof Error ? cause.message : "Unable to save action item";
+    showError(cause, "Unable to save action item");
   } finally {
     busy.value = false;
   }
 }
 
 onMounted(() => void loadList().catch((cause: unknown) => {
-  error.value = cause instanceof Error ? cause.message : "Unable to load conversations";
+  showError(cause, "Unable to load conversations");
 }));
 </script>
 
@@ -197,7 +205,7 @@ onMounted(() => void loadList().catch((cause: unknown) => {
         > {{ copy.memory }}</label>
         <button
           type="button"
-          :disabled="!disclosureAccepted || busy"
+          :disabled="!disclosureAccepted || busy || serviceDisabled"
           @click="createConversation"
         >
           {{ copy.newChat }}

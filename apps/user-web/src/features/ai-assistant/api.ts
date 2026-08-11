@@ -40,6 +40,35 @@ export interface AiTurnResult {
   structured?: { action_suggestions?: string[] };
 }
 
+interface AiAssistantErrorPayload {
+  error?: {
+    code?: string;
+    message?: string;
+  };
+}
+
+export class AiAssistantApiError extends Error {
+  constructor(
+    readonly code: string,
+    message: string,
+    readonly status: number
+  ) {
+    super(message);
+    this.name = "AiAssistantApiError";
+  }
+}
+
+export function createAiAssistantApiError(
+  status: number,
+  payload: AiAssistantErrorPayload
+): AiAssistantApiError {
+  return new AiAssistantApiError(
+    payload.error?.code ?? "AI_ASSISTANT_REQUEST_FAILED",
+    payload.error?.message ?? "AI assistant request failed",
+    status
+  );
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const auth = useAuthStore();
   await auth.bootstrap();
@@ -51,8 +80,8 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     credentials: "include",
     headers
   });
-  const payload = (await response.json()) as { data: T; error?: { message: string } };
-  if (!response.ok) throw new Error(payload.error?.message ?? "AI assistant request failed");
+  const payload = (await response.json()) as { data: T } & AiAssistantErrorPayload;
+  if (!response.ok) throw createAiAssistantApiError(response.status, payload);
   return payload.data;
 }
 
