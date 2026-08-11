@@ -12,6 +12,11 @@ membership, editorial, and experience-task cards share this hierarchy.
 - `content-card-footer`: bottom-aligned metadata and navigation action.
 - `content-card-actions`: wrapping button group for cards with multiple operations.
 
+Standard cards use the relaxed collection rhythm: a 20–23rem minimum height, 24–32px
+responsive padding, a readable title line-height, and a separated footer with pill-shaped
+metadata and navigation actions. Compact cards retain the same hierarchy with a lower minimum
+height and smaller title scale. At narrow viewports, footer controls stack to the full card width.
+
 ## Tokens
 
 Typography uses the VAV font-size and line-height tokens. Spacing uses `--vav-space-*` tokens;
