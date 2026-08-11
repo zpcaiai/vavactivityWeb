@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 
 const backendRoot = resolve(process.env.VAV_BACKEND_ROOT ?? "../vavactivity");
+process.env.COMPOSE_FILE ??= resolve(backendRoot, "docker-compose.yml");
 
 function dockerCompose(args: string[]): string {
   return execFileSync("docker", ["compose", ...args], {

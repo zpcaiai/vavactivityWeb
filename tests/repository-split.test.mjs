@@ -23,6 +23,7 @@ test("complete E2E explicitly assembles the split backend and frontend checkouts
   assert.match(workflow, /COMPOSE_FILE:.*backend\/docker-compose\.yml/u);
   const setup = read("e2e/global-setup.ts");
   assert.match(setup, /process\.env\.VAV_BACKEND_ROOT/u);
+  assert.match(setup, /process\.env\.COMPOSE_FILE \?\?=/u);
   assert.match(setup, /cwd: backendRoot/u);
 });
 
