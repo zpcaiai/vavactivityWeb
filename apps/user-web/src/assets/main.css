@@ -2124,3 +2124,264 @@ textarea::placeholder {
     padding: 4rem 1.25rem;
   }
 }
+
+/* Unified responsive typography and page geometry. Keep route-specific art direction,
+   but give every page the same readable scale, gutters, and content rhythm. */
+:root {
+  --vav-page-gutter: clamp(1rem, 4vw, 4rem);
+  --vav-page-space-start: clamp(2.5rem, 6vw, 5rem);
+  --vav-page-space-end: clamp(4rem, 8vw, 7rem);
+  --vav-page-title-size: clamp(2.5rem, 4vw, 4rem);
+  --vav-section-title-size: clamp(1.75rem, 2.8vw, 2.75rem);
+  --vav-reading-measure: 68ch;
+}
+
+html {
+  font-size: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-size: var(--vav-font-size-md);
+  line-height: var(--vav-line-height-normal);
+}
+
+#main-content,
+#main-content > * {
+  min-width: 0;
+}
+
+#main-content > :not(.home-experience, .language-gateway, .auth-page, .not-found, .ai-workspace) {
+  margin-inline: auto;
+  max-width: var(--vav-layout-content-wide);
+  padding: var(--vav-page-space-start) var(--vav-page-gutter) var(--vav-page-space-end);
+  width: 100%;
+}
+
+#main-content > :is(
+  .commerce-page,
+  .account-page,
+  .state-panel,
+  .notification-page,
+  .unsubscribe-page,
+  .privacy-center,
+  .journey-page,
+  .safety-center
+) {
+  max-width: var(--vav-layout-content-standard);
+}
+
+#main-content > :not(.home-experience) :is(h1, h2, h3) {
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+#main-content > :not(.home-experience) h1 {
+  font-family: var(--vav-font-sans);
+  font-size: var(--vav-page-title-size);
+  font-weight: 380;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  margin-block: 0.75rem 1.25rem;
+  max-width: 16ch;
+}
+
+#main-content > :not(.home-experience) h2 {
+  font-size: var(--vav-section-title-size);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+#main-content > :not(.home-experience) h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  line-height: 1.3;
+}
+
+#main-content > :not(.home-experience) :is(p, li, dd) {
+  line-height: var(--vav-line-height-relaxed);
+}
+
+#main-content > :not(.home-experience) :is(header, article) > p,
+#main-content > :not(.home-experience) .intro {
+  max-width: var(--vav-reading-measure);
+}
+
+#main-content :is(button, select, input:not([type="checkbox"]):not([type="radio"]), textarea),
+.site-header :is(button, a) {
+  min-height: var(--vav-component-touch-target-minimum);
+}
+
+.site-header {
+  gap: clamp(1rem, 2vw, 2.5rem);
+  max-width: min(1480px, calc(100% - 2rem));
+  padding-block: 0.9rem;
+}
+
+.main-nav {
+  gap: clamp(0.65rem, 1.35vw, 1.35rem);
+}
+
+.main-nav a {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--vav-font-size-sm);
+}
+
+.home-hero-copy {
+  max-width: min(44rem, 52vw);
+  top: 23%;
+}
+
+.home-hero h1 {
+  font-size: clamp(3rem, 4.7vw, 5rem);
+  line-height: 1.1;
+  max-width: 9.5em;
+}
+
+.home-hero .hero-intro {
+  font-size: var(--vav-font-size-lg);
+  max-width: 36rem;
+}
+
+.editorial-page {
+  align-items: start;
+  display: block;
+  min-height: auto;
+}
+
+.editorial-page.editorial-split {
+  align-items: center;
+  display: grid;
+  gap: clamp(3rem, 7vw, 7rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+}
+
+.editorial-page:not(.editorial-split) > article,
+.cms-page article {
+  max-width: 68rem;
+}
+
+.editorial-page:not(.editorial-split) > article > p,
+.cms-rich-text,
+.cms-rich-text p {
+  max-width: var(--vav-reading-measure);
+}
+
+.cms-page {
+  max-width: var(--vav-layout-content-standard);
+}
+
+.cms-hero,
+.cms-call-to-action,
+.cms-collection {
+  margin-block: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.catalog-page,
+.product-detail,
+.collection-page,
+.commerce-page,
+.account-page,
+.state-panel {
+  min-height: auto;
+}
+
+.catalog-heading {
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.product-grid,
+.editorial-grid,
+.preference-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
+.product-card {
+  min-height: 0;
+}
+
+#main-content > :not(.home-experience) .product-card-body h2 {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  max-width: none;
+}
+
+.product-card-body :is(h2, h3, .eyebrow),
+.product-card-art span {
+  overflow-wrap: anywhere;
+}
+
+.product-card-body,
+.editorial-grid article,
+.commerce-card,
+.checkout-summary,
+.status-panel,
+.empty-state {
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+}
+
+.site-footer {
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  max-width: min(1480px, calc(100% - 2rem));
+}
+
+@media (max-width: 980px) {
+  #main-content {
+    padding-top: 3rem;
+  }
+
+  .home-route #main-content {
+    padding-top: 0;
+  }
+
+  .editorial-page.editorial-split,
+  .product-detail-main {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial-art {
+    aspect-ratio: 16 / 10;
+    max-width: 42rem;
+  }
+
+  .catalog-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --vav-page-gutter: 1rem;
+    --vav-page-space-start: 2.5rem;
+    --vav-page-space-end: 4rem;
+    --vav-page-title-size: clamp(2.2rem, 10vw, 3rem);
+  }
+
+  #main-content > :not(.home-experience, .language-gateway, .auth-page, .not-found, .ai-workspace) {
+    padding-inline: var(--vav-page-gutter);
+  }
+
+  #main-content > :not(.home-experience) h1 {
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2.5rem, 11vw, 3.5rem);
+  }
+
+  .home-hero .hero-intro {
+    font-size: 1rem;
+  }
+
+  .cms-hero,
+  .cms-call-to-action,
+  .cms-collection,
+  .catalog-empty,
+  .empty-state {
+    padding: 1.25rem;
+  }
+}

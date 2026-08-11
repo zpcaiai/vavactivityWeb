@@ -48,11 +48,12 @@
   --vav-density-row-height: 3.25rem;
   --vav-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --vav-font-sans: Inter, Noto Sans SC, PingFang SC, system-ui, sans-serif;
-  --vav-font-size-2xl: 2.5rem;
-  --vav-font-size-lg: 1.25rem;
+  --vav-font-size-2xl: 2rem;
+  --vav-font-size-3xl: 3rem;
+  --vav-font-size-lg: 1.125rem;
   --vav-font-size-md: 1rem;
   --vav-font-size-sm: 0.875rem;
-  --vav-font-size-xl: 1.75rem;
+  --vav-font-size-xl: 1.5rem;
   --vav-font-size-xs: 0.75rem;
   --vav-layout-breakpoint-desktop: 64rem;
   --vav-layout-breakpoint-mobile: 22.5rem;

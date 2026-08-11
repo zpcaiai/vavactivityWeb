@@ -15,7 +15,7 @@ useSeo(computed(() => ({ title: title.value, description: body.value })));
 </script>
 
 <template>
-  <section class="editorial-page">
+  <section class="editorial-page editorial-split">
     <div class="editorial-copy">
       <p class="eyebrow">
         {{ t(`pages.${key}.eyebrow`) }}
@@ -40,4 +40,3 @@ useSeo(computed(() => ({ title: title.value, description: body.value })));
     </div>
   </section>
 </template>
-
