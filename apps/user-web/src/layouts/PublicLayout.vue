@@ -1,37 +1,26 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { VSkipLink } from "@vav/ui-core";
 
-import {
-  getNavigation,
-  type PublicNavigationItem
-} from "@/features/public-site/api/content";
-import { useAuthStore } from "@/stores/auth";
-import NotificationBell from "@/features/notifications/components/NotificationBell.vue";
 import GlobalCommandPalette from "@/features/experience/components/GlobalCommandPalette.vue";
+import NotificationBell from "@/features/notifications/components/NotificationBell.vue";
+import { getNavigation, type PublicNavigationItem } from "@/features/public-site/api/content";
+import { useAppNavigation } from "@/composables/useAppNavigation";
+import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 const auth = useAuthStore();
-const menuOpen = ref(false);
-const locale = computed(() => String(route.params.locale));
-const configuredLinks = ref<PublicNavigationItem[]>([]);
-const signingOut = ref(false);
+const { publicLinks, locale, localePath } = useAppNavigation();
 
-const fallbackLinks = [
-  { key: "home", path: "" },
-  { key: "activities", path: "activities" },
-  { key: "courses", path: "courses" },
-  { key: "counseling", path: "counseling" },
-  { key: "ai", path: "ai-assistant" }
-] as const;
+const menuOpen = ref(false);
+const configuredLinks = ref<PublicNavigationItem[]>([]);
 
 const routePaths: Record<string, string> = {
   home: "",
-  about: "activities",
+  about: "about",
   services: "services",
   contact: "contact",
   articles: "articles",
@@ -39,23 +28,81 @@ const routePaths: Record<string, string> = {
   activities: "activities",
   courses: "courses",
   counseling: "counseling",
+  membership: "membership",
   ai: "ai-assistant"
 };
 
-const visibleConfiguredLinks = computed(() =>
-  configuredLinks.value.filter((item) => !item.required_auth || Boolean(auth.user))
-);
+/**
+ * Content-managed navigation wins when the CMS provides it; the IA module is
+ * the fallback so the header is never empty and never drifts from the routes
+ * that actually exist.
+ */
+interface HeaderLink {
+  key: string;
+  label: string;
+  to: string;
+  external?: string;
+  newTab?: boolean;
+}
 
-function internalPath(item: PublicNavigationItem) {
-  if (item.link_type === "content") {
-    return `/${locale.value}/${item.target_slug ?? ""}`;
+const links = computed<HeaderLink[]>(() => {
+  const configured = configuredLinks.value.filter(
+    (item) => !item.required_auth || Boolean(auth.user)
+  );
+  if (!configured.length) return publicLinks.value;
+  return configured.map((item) => ({
+    key: String(item.id),
+    label: item.label,
+    to:
+      item.link_type === "content"
+        ? localePath(item.target_slug ?? "")
+        : localePath(routePaths[item.route_name ?? ""] ?? ""),
+    external: item.link_type === "external" ? item.external_url ?? "#" : undefined,
+    newTab: item.open_in_new_tab
+  }));
+});
+
+const footerGroups = computed(() => [
+  {
+    key: "services",
+    label: t("footer.services"),
+    links: [
+      { label: t("ia.public.activities"), to: localePath("activities") },
+      { label: t("ia.public.courses"), to: localePath("courses") },
+      { label: t("ia.public.counseling"), to: localePath("counseling") },
+      { label: t("ia.public.membership"), to: localePath("membership") }
+    ]
+  },
+  {
+    key: "about",
+    label: t("footer.about"),
+    links: [
+      { label: t("ia.public.about"), to: localePath("about") },
+      { label: t("ia.public.stories"), to: localePath("stories") },
+      { label: t("ia.public.articles"), to: localePath("articles") },
+      { label: t("footer.contact"), to: localePath("contact") }
+    ]
+  },
+  {
+    key: "trust",
+    label: t("footer.trust"),
+    links: [
+      { label: t("footer.privacy"), to: localePath("privacy") },
+      { label: t("footer.terms"), to: localePath("terms") },
+      { label: t("footer.refund"), to: localePath("refund-policy") },
+      { label: t("footer.aiDisclaimer"), to: localePath("ai-disclaimer") },
+      { label: t("footer.safety"), to: localePath("safety-support") }
+    ]
+  },
+  {
+    key: "support",
+    label: t("footer.support"),
+    links: [
+      { label: t("footer.help"), to: localePath("help") },
+      { label: t("footer.search"), to: localePath("search") }
+    ]
   }
-  return `/${locale.value}/${routePaths[item.route_name ?? ""] ?? ""}`;
-}
-
-function navigationLabel(item: PublicNavigationItem) {
-  return item.route_name === "about" ? t("nav.activities") : item.label;
-}
+]);
 
 async function loadNavigation() {
   try {
@@ -65,129 +112,102 @@ async function loadNavigation() {
   }
 }
 
-async function logout() {
-  if (signingOut.value) return;
-  signingOut.value = true;
-  menuOpen.value = false;
-  try {
-    await auth.logout();
-  } catch {
-    // Do not keep a bearer token in memory when the remote logout request fails.
-    auth.clearSession();
-  } finally {
-    signingOut.value = false;
-    await router.replace(`/${locale.value}/`);
-  }
-}
-
 onMounted(() => void loadNavigation());
 watch(locale, () => void loadNavigation());
-watch(() => route.path, async () => {
-  menuOpen.value = false;
-  await nextTick();
-  const heading = document.querySelector<HTMLElement>("#main-content h1");
-  if (heading) {
-    heading.tabIndex = -1;
-    heading.focus({ preventScroll: true });
+watch(
+  () => route.fullPath,
+  async () => {
+    menuOpen.value = false;
+    await nextTick();
+    const heading = document.querySelector<HTMLElement>("#main-content h1");
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
   }
-});
+);
 </script>
 
 <template>
   <div :class="['site-shell', { 'home-route': route.name === 'home' }]">
     <VSkipLink />
+
     <header class="site-header">
       <RouterLink
-        class="brand"
-        :to="`/${locale}/`"
-        aria-label="VAV home"
+        class="site-header__brand"
+        :to="localePath('')"
+        aria-label="VAV"
       >
-        <strong class="brand-wordmark">VAV</strong>
-        <small>{{ t("brand.promise") }}</small>
+        <span
+          class="site-header__mark"
+          aria-hidden="true"
+        >V</span>
+        <span class="site-header__wordmark">
+          <strong>VAV</strong>
+          <small>{{ t("brand.promise") }}</small>
+        </span>
       </RouterLink>
 
       <button
-        class="menu-button"
+        class="site-header__menu"
         type="button"
         :aria-label="t('nav.menu')"
         :aria-expanded="menuOpen"
         @click="menuOpen = !menuOpen"
       >
-        <span />
-        <span />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
       </button>
 
       <nav
-        :class="['main-nav', { open: menuOpen }]"
-        aria-label="Primary"
+        :class="['site-nav', { open: menuOpen }]"
+        :aria-label="t('nav.primary')"
       >
-        <template v-if="visibleConfiguredLinks.length">
-          <template
-            v-for="link in visibleConfiguredLinks"
-            :key="link.id"
-          >
-            <a
-              v-if="link.link_type === 'external'"
-              :href="link.external_url ?? '#'"
-              :target="link.open_in_new_tab ? '_blank' : undefined"
-              :rel="link.open_in_new_tab ? 'noopener noreferrer' : undefined"
-              @click="menuOpen = false"
-            >
-              {{ navigationLabel(link) }}
-            </a>
-            <RouterLink
-              v-else
-              :to="internalPath(link)"
-              @click="menuOpen = false"
-            >
-              {{ navigationLabel(link) }}
-            </RouterLink>
-          </template>
-        </template>
-        <template v-else>
+        <template
+          v-for="link in links"
+          :key="link.key"
+        >
+          <a
+            v-if="link.external"
+            :href="link.external"
+            :target="link.newTab ? '_blank' : undefined"
+            :rel="link.newTab ? 'noopener noreferrer' : undefined"
+            @click="menuOpen = false"
+          >{{ link.label }}</a>
           <RouterLink
-            v-for="link in fallbackLinks"
-            :key="link.key"
-            :to="`/${locale}/${link.path}`"
+            v-else
+            :to="link.to"
             @click="menuOpen = false"
           >
-            {{ t(`nav.${link.key}`) }}
+            {{ link.label }}
           </RouterLink>
         </template>
+      </nav>
+
+      <div class="site-header__actions">
+        <GlobalCommandPalette />
         <RouterLink
-          class="cart-link"
-          :to="`/${locale}/cart`"
-          @click="menuOpen = false"
+          class="site-header__cart"
+          :to="localePath('cart')"
         >
           {{ t("commerce.cart") }}
         </RouterLink>
         <NotificationBell v-if="auth.user" />
-        <GlobalCommandPalette />
         <RouterLink
-          class="start-link"
-          :to="auth.user ? `/${locale}/account` : `/${locale}/auth/register`"
-          @click="menuOpen = false"
+          class="site-header__cta"
+          :to="auth.user ? localePath('account/home') : localePath('auth/register')"
         >
-          {{ auth.user ? t("nav.account") : t("nav.start") }}
+          {{ auth.user ? t("shell.memberSpace") : t("nav.start") }}
           <span aria-hidden="true">↗</span>
         </RouterLink>
         <RouterLink
-          class="language-link"
+          class="site-header__language"
           to="/"
-          @click="menuOpen = false"
         >
           {{ t("common.language") }}
         </RouterLink>
-        <button
-          v-if="auth.user"
-          class="logout-link"
-          type="button"
-          :disabled="signingOut"
-          @click="logout"
-        >
-          {{ signingOut ? t("nav.signingOut") : t("nav.logout") }}
-        </button>
-      </nav>
+      </div>
     </header>
 
     <main id="main-content">
@@ -195,68 +215,39 @@ watch(() => route.path, async () => {
     </main>
 
     <footer class="site-footer">
-      <div>
+      <div class="site-footer__brand">
         <span
-          class="brand-mark small"
+          class="site-header__mark"
           aria-hidden="true"
         >V</span>
-        <strong>VAV</strong>
+        <div>
+          <strong>VAV</strong>
+          <p>{{ t("brand.promise") }}</p>
+        </div>
       </div>
-      <p>{{ t("brand.promise") }} · © 2026</p>
-      <RouterLink :to="`/${locale}/about`">
-        {{ t("nav.about") }}
-      </RouterLink>
-      <RouterLink :to="`/${locale}/privacy`">
-        隐私说明
-      </RouterLink>
-      <RouterLink
-        v-if="auth.user"
-        :to="`/${locale}/account/privacy`"
-      >
-        隐私中心
-      </RouterLink>
-      <RouterLink
-        v-if="auth.user"
-        :to="`/${locale}/account/tasks`"
-      >
-        任务中心
-      </RouterLink>
-      <RouterLink :to="`/${locale}/help`">
-        帮助中心
-      </RouterLink>
-      <RouterLink :to="`/${locale}/account/orders`">
-        {{ t("commerce.orders") }}
-      </RouterLink>
+
+      <div class="site-footer__groups">
+        <section
+          v-for="group in footerGroups"
+          :key="group.key"
+        >
+          <h2>{{ group.label }}</h2>
+          <ul>
+            <li
+              v-for="link in group.links"
+              :key="link.to"
+            >
+              <RouterLink :to="link.to">
+                {{ link.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="site-footer__legal">
+        © 2026 VAV · {{ t("footer.legal") }}
+      </p>
     </footer>
   </div>
 </template>
-
-<style scoped>
-.logout-link {
-  background: transparent;
-  border: 0;
-  color: rgb(239 245 248 / 72%);
-  cursor: pointer;
-  font: inherit;
-  font-size: var(--vav-font-size-sm);
-  padding: 0;
-}
-
-.logout-link:hover:not(:disabled) {
-  color: var(--vav-color-action-primary);
-}
-
-.logout-link:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
-@media (max-width: 62rem) {
-  .logout-link {
-    justify-self: stretch;
-    min-height: var(--vav-component-touch-target-minimum);
-    text-align: start;
-    width: 100%;
-  }
-}
-</style>

@@ -359,20 +359,11 @@ kbd {
 }
 
 .palette-dialog {
-  --vav-color-action-primary: #e5818d;
-  --vav-color-action-primary-hover: #f29ba5;
-  --vav-color-border: rgb(222 235 241 / 18%);
-  --vav-color-focus: #8ed5e0;
-  --vav-color-on-action: #091722;
-  --vav-color-surface-raised: #132632;
-  --vav-color-surface-soft: #1c3340;
-  --vav-color-text: #f5f7f8;
-  --vav-color-text-muted: #b7c2c7;
   backdrop-filter: blur(30px);
-  background: rgb(9 23 34 / 96%);
+  background: var(--vav-color-surface-raised);
   border: 1px solid var(--vav-color-border);
   border-radius: calc(var(--vav-radius-lg) + 0.25rem);
-  box-shadow: 0 35px 110px rgb(0 0 0 / 55%);
+  box-shadow: var(--vav-component-elevation-overlay);
   color: var(--vav-color-text);
   margin-block: min(11vh, 6rem) auto;
   max-height: min(80vh, 48rem);
@@ -381,21 +372,9 @@ kbd {
   width: min(44rem, calc(100% - 2rem));
 }
 
-:global([data-vav-theme="high-contrast"]) .palette-dialog {
-  --vav-color-action-primary: #ffbf00;
-  --vav-color-action-primary-hover: #ffd766;
-  --vav-color-border: #ffffff;
-  --vav-color-focus: #ffbf00;
-  --vav-color-on-action: #000000;
-  --vav-color-surface-raised: #000000;
-  --vav-color-surface-soft: #1f1f1f;
-  --vav-color-text: #ffffff;
-  --vav-color-text-muted: #ffffff;
-}
-
 .palette-dialog::backdrop {
   backdrop-filter: blur(10px);
-  background: rgb(2 10 16 / 74%);
+  background: var(--vav-color-overlay);
 }
 
 .palette-dialog__header {

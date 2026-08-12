@@ -7,23 +7,20 @@ import zhTWExtensions from "./locales/zh-TW.json";
 export const supportedLocales = ["zh-CN", "zh-TW", "en"] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
 
-const messages = {
+const baseMessages = {
   "zh-CN": {
-    ...zhCNExtensions,
     brand: { promise: "认真认识，安心同行" },
     nav: {
       home: "首页",
       about: "关于 VAV",
       stories: "幸福见证",
       articles: "文章",
-      activities: "主题活动",
+      activities: "活动",
       courses: "课程",
       counseling: "真人辅导",
       ai: "AI 辅导",
       start: "开始认识",
       account: "我的账户",
-      logout: "安全退出",
-      signingOut: "退出中…",
       menu: "打开导航"
     },
     home: {
@@ -109,21 +106,18 @@ const messages = {
     common: { coming: "正在建立可靠的服务闭环", language: "语言", close: "关闭" }
   },
   "zh-TW": {
-    ...zhTWExtensions,
     brand: { promise: "認真認識，安心同行" },
     nav: {
       home: "首頁",
       about: "關於 VAV",
       stories: "幸福見證",
       articles: "文章",
-      activities: "主題活動",
+      activities: "活動",
       courses: "課程",
       counseling: "真人輔導",
       ai: "AI 輔導",
       start: "開始認識",
       account: "我的帳戶",
-      logout: "安全登出",
-      signingOut: "登出中…",
       menu: "開啟導覽"
     },
     home: {
@@ -169,21 +163,18 @@ const messages = {
     common: { coming: "正在建立可靠的服務閉環", language: "語言", close: "關閉" }
   },
   en: {
-    ...enExtensions,
     brand: { promise: "Meet thoughtfully. Walk forward safely." },
     nav: {
       home: "Home",
       about: "About VAV",
       stories: "Stories",
       articles: "Articles",
-      activities: "Themed activities",
+      activities: "Activities",
       courses: "Courses",
       counseling: "Counseling",
       ai: "AI guidance",
       start: "Begin your journey",
       account: "My account",
-      logout: "Sign out",
-      signingOut: "Signing out…",
       menu: "Open navigation"
     },
     home: {
@@ -229,6 +220,31 @@ const messages = {
     common: { coming: "Building a dependable service journey", language: "Language", close: "Close" }
   }
 } as const;
+
+type MessageTree = { [key: string]: string | MessageTree };
+
+/**
+ * Locale JSON files are merged *over* the inline defaults key by key, so a
+ * feature can add or override a single string without having to restate the
+ * whole namespace. A shallow spread used to drop sibling keys silently.
+ */
+function deepMerge(base: MessageTree, extension: MessageTree): MessageTree {
+  const result: MessageTree = { ...base };
+  for (const [key, value] of Object.entries(extension)) {
+    const current = result[key];
+    result[key] =
+      value && typeof value === "object" && current && typeof current === "object"
+        ? deepMerge(current, value)
+        : value;
+  }
+  return result;
+}
+
+const messages = {
+  "zh-CN": deepMerge(baseMessages["zh-CN"] as unknown as MessageTree, zhCNExtensions as MessageTree),
+  "zh-TW": deepMerge(baseMessages["zh-TW"] as unknown as MessageTree, zhTWExtensions as MessageTree),
+  en: deepMerge(baseMessages.en as unknown as MessageTree, enExtensions as MessageTree)
+};
 
 export const i18n = createI18n({
   legacy: false,

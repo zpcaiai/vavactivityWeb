@@ -1,5 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import {
+  adminPlatformSectionPermissions,
+  dataGovernanceSectionPermissions,
+  designSystemSectionPermissions,
+  experienceSectionPermissions,
+  interactionSectionPermissions,
+  matchmakingSectionPermissions,
+  membershipSectionPermissions,
+  notificationSectionPermissions,
+  privacySectionPermissions,
+  processSectionPermissions,
+  qualitySectionPermissions,
+  recommendationSectionPermissions,
+  relationshipSectionPermissions,
+  safetySectionPermissions,
+  skillSectionPermissions,
+  systemSectionPermissions
+} from "@/navigation/admin-nav";
 import { useAccessStore } from "@/stores/access";
 
 const AdminLayout = () => import("@/layouts/AdminLayout.vue");
@@ -13,6 +31,9 @@ const CourseManagementPage = () => import("@/pages/CourseManagementPage.vue");
 const CounselingManagementPage = () => import("@/pages/CounselingManagementPage.vue");
 const CmsEditorPage = () => import("@/pages/CmsEditorPage.vue");
 const DashboardPage = () => import("@/pages/DashboardPage.vue");
+const UserManagementPage = () => import("@/pages/UserManagementPage.vue");
+const SiteSettingsPage = () => import("@/pages/SiteSettingsPage.vue");
+const AdminManagementPage = () => import("@/pages/AdminManagementPage.vue");
 const CmsManagementPage = () => import("@/pages/CmsManagementPage.vue");
 const ErrorPage = () => import("@/pages/ErrorPage.vue");
 const LoginPage = () => import("@/pages/LoginPage.vue");
@@ -38,228 +59,36 @@ const ProcessGovernancePage = () => import("@/pages/ProcessGovernancePage.vue");
 const DataGovernancePage = () => import("@/pages/DataGovernancePage.vue");
 const AdminPlatformPage = () => import("@/pages/AdminPlatformPage.vue");
 
-const notificationSectionPermissions: Record<string, string> = {
-  dashboard: "notifications.analytics.read",
-  templates: "notifications.templates.read",
-  "template-releases": "notifications.templates.read",
-  "event-subscriptions": "notifications.subscriptions.read",
-  deliveries: "notifications.deliveries.read",
-  "dead-letters": "notifications.dead_letters.read",
-  reminders: "notifications.reminders.read",
-  campaigns: "notifications.campaigns.read",
-  providers: "notifications.providers.read",
-  "provider-events": "notifications.providers.read",
-  suppressions: "notifications.suppressions.read",
-  unsubscribes: "notifications.suppressions.read",
-  audit: "notifications.audit.read"
-};
+const modules = [
+  ["users", "用户", "账户、资料与数据权利", "users:view"],
+  ["content", "内容", "页面、文章与幸福见证", "content:view"],
+  ["activities", "活动", "发布、报名、签到与分组", "activities:view"],
+  ["courses", "课程", "课程结构、资源与进度", "courses:view"],
+  ["counseling", "辅导", "导师、预约与跟进", "counseling:view"],
+  ["catalog", "服务目录", "商品、价格与权益定义", "catalog:view"],
+  ["orders", "订单", "订单状态与售后处理", "orders:view"],
+  ["payments", "支付", "Webhook、退款与支付日志", "payments:view"],
+  ["ai", "AI 辅导", "知识库、对话风险与转介", "ai:view"],
+  ["moderation", "安全审核", "档案、照片、举报与屏蔽", "moderation:view"],
+  ["settings", "系统设置", "配置与待决策项状态", "settings:view"],
+  ["audit", "审计日志", "追加式操作记录", "audit:view"]
+] as const;
 
-const matchmakingSectionPermissions: Record<string, string> = {
-  profiles: "matchmaking.profiles.read",
-  reviews: "matchmaking.reviews.read",
-  "photo-reviews": "matchmaking.photos.read",
-  "schema-releases": "matchmaking.schemas.read",
-  taxonomies: "matchmaking.taxonomies.read",
-  projections: "matchmaking.projections.read",
-  audit: "matchmaking.audit.read"
-};
 
-export const recommendationSectionPermissions: Record<string, string> = {
-  dashboard: "recommendations.analytics.read",
-  strategies: "recommendations.strategies.read",
-  features: "recommendations.features.read",
-  constraints: "recommendations.constraints.read",
-  batches: "recommendations.batches.read",
-  candidates: "recommendations.candidates.read",
-  diagnostics: "recommendations.diagnostics.run",
-  "pair-diagnostics": "recommendations.candidates.sensitive.read",
-  exposures: "recommendations.exposures.read",
-  "cold-start": "recommendations.analytics.read",
-  feedback: "recommendations.feedback.read",
-  evaluations: "recommendations.evaluations.read",
-  experiments: "recommendations.experiments.read",
-  incidents: "recommendations.incidents.read",
-  audit: "recommendations.audit.read"
-};
 
-export const interactionSectionPermissions: Record<string, string> = {
-  dashboard: "matchmaking.analytics.read",
-  pairs: "matchmaking.interactions.read",
-  matches: "matchmaking.matches.read",
-  invitations: "matchmaking.invitations.read",
-  "contact-exchanges": "matchmaking.contact_exchange.read",
-  invalidations: "matchmaking.interactions.read",
-  "dead-letters": "matchmaking.dead_letters.resolve",
-  incidents: "matchmaking.incidents.read",
-  audit: "matchmaking.audit.read"
-};
 
-export const relationshipSectionPermissions: Record<string, string> = {
-  dashboard: "relationships.analytics.read",
-  journeys: "relationships.read",
-  stages: "relationships.stages.read",
-  proposals: "relationships.proposals.read",
-  pauses: "relationships.pauses.read",
-  endings: "relationships.endings.read",
-  milestones: "relationships.milestones.read",
-  checkins: "relationships.checkins.read",
-  reminders: "relationships.reminders.read",
-  audit: "relationships.audit.read"
-};
 
-export const membershipSectionPermissions: Record<string, string> = {
-  dashboard: "memberships.analytics.read",
-  plans: "memberships.plans.read",
-  "plan-versions": "memberships.plans.read",
-  benefits: "memberships.benefits.read",
-  "sku-mappings": "memberships.sku_mappings.read",
-  accounts: "memberships.accounts.read",
-  cycles: "memberships.accounts.read",
-  changes: "memberships.changes.read",
-  quotas: "memberships.quotas.read",
-  usage: "memberships.quotas.read",
-  adjustments: "memberships.quotas.read",
-  "manual-grants": "memberships.manual_grants.read",
-  trials: "memberships.trials.read",
-  reconciliation: "memberships.reconciliation.read",
-  incidents: "memberships.incidents.read",
-  audit: "memberships.audit.read"
-};
 
-export const safetySectionPermissions: Record<string, string> = {
-  reports: "safety.reports.read",
-  cases: "safety.cases.read",
-  moderation: "safety.moderation.read",
-  harassment: "safety.analytics.read",
-  fraud: "safety.analytics.read",
-  restrictions: "safety.restrictions.read",
-  appeals: "safety.appeals.read",
-  rules: "safety.rules.read",
-  "red-team": "safety.red_team.read",
-  audit: "safety.audit.read"
-};
 
-export const systemSectionPermissions: Record<string, string> = {
-  status: "system.status.read",
-  releases: "system.releases.read",
-  jobs: "system.jobs.read",
-  integrations: "system.status.read",
-  "dead-letters": "system.dead_letters.read",
-  "feature-flags": "system.feature_flags.read",
-  maintenance: "system.maintenance.read",
-  backups: "system.backups.read",
-  "restore-drills": "system.restore_drills.read",
-  capacity: "system.capacity.read"
-};
 
-export const skillSectionPermissions: Record<string, string> = {
-  dashboard: "skills.analytics.read",
-  catalog: "skills.registry.read",
-  installations: "skills.installations.read",
-  executions: "skills.executions.read",
-  dependencies: "skills.registry.read",
-  permissions: "skills.permissions.read",
-  configurations: "skills.installations.read",
-  publishers: "skills.publishers.read",
-  reviews: "skills.marketplace.review",
-  marketplace: "skills.marketplace.read",
-  incidents: "skills.incidents.read",
-  audit: "skills.audit.read"
-};
 
-export const qualitySectionPermissions: Record<string, string> = {
-  dashboard: "quality.analytics.read",
-  requirements: "quality.requirements.read",
-  capabilities: "quality.capabilities.read",
-  traceability: "quality.traceability.read",
-  "business-flows": "quality.business_flows.read",
-  gaps: "quality.gaps.read",
-  risks: "quality.risks.read",
-  waivers: "quality.waivers.read",
-  evidence: "quality.evidence.read",
-  gates: "quality.gates.read",
-  "gate-runs": "quality.gates.read",
-  releases: "quality.releases.read",
-  certifications: "quality.releases.read",
-  audit: "quality.audit.read"
-};
 
-export const designSystemSectionPermissions: Record<string, string> = {
-  dashboard: "design.analytics.read",
-  tokens: "design.tokens.read",
-  components: "design.components.read",
-  patterns: "design.patterns.read",
-  pages: "design.audits.read",
-  accessibility: "design.accessibility.read",
-  "responsive-audits": "design.audits.read",
-  "visual-regression": "design.audits.read",
-  baselines: "design.baselines.read",
-  evidence: "design.evidence.read",
-  releases: "design.tokens.read",
-  audit: "design.audit.read"
-};
 
-export const experienceSectionPermissions: Record<string, string> = {
-  dashboard: "experience.analytics.read",
-  ia: "experience.ia.read",
-  routes: "experience.routes.read",
-  navigation: "experience.navigation.read",
-  tasks: "experience.tasks.read",
-  journeys: "experience.journeys.read",
-  handoffs: "experience.handoffs.read",
-  "search-governance": "experience.search.read",
-  help: "experience.help.read",
-  support: "experience.support.read",
-  "dead-ends": "experience.dead_ends.read",
-  analytics: "experience.analytics.read",
-  evidence: "experience.closure.read",
-  release: "experience.closure.read",
-  audit: "experience.audit.read"
-};
 
-export const processSectionPermissions: Record<string, string> = {
-  dashboard: "process.dashboard.read",
-  definitions: "process.definitions.read",
-  "state-machines": "process.state_machines.read",
-  instances: "process.instances.read",
-  sagas: "process.sagas.read",
-  timeouts: "process.timeouts.read",
-  cancellations: "process.cancellations.read",
-  compensations: "process.compensations.read",
-  stuck: "process.stuck.read",
-  interventions: "process.interventions.read",
-  simulations: "process.simulations.read",
-  certifications: "process.certifications.read",
-  release: "process.release.read"
-};
 
-export const dataGovernanceSectionPermissions: Record<string, string> = {
-  dashboard: "data.dashboard.read", assets: "data.assets.read", contracts: "data.contracts.read", lineage: "data.lineage.read", events: "data.events.read", "event-gaps": "data.events.read", "dead-letters": "data.dead_letters.read", quality: "data.quality.read", reconciliations: "data.reconciliations.read", differences: "data.reconciliations.read", backfills: "data.backfills.read", repairs: "data.repairs.read", projections: "data.projections.read", erasures: "data.erasures.read", certifications: "data.certifications.read", release: "data.release.read"
-};
 
-export const adminPlatformSectionPermissions: Record<string, string> = {
-  dashboard: "admin.workbench.read", capabilities: "admin.capabilities.read", "work-items": "admin.workbench.read", "saved-views": "admin.saved_views.read", "bulk-jobs": "admin.bulk.read", approvals: "admin.approvals.read", exceptions: "admin.exceptions.read", configurations: "admin.configurations.read", "field-access": "admin.fields.policies.read", "reveal-history": "admin.fields.policies.read", certifications: "admin.certifications.read", releases: "admin.certifications.read", audit: "admin.audit.read"
-};
 
-const privacySectionPermissions: Record<string, string> = {
-  dashboard: "privacy.requests.read",
-  requests: "privacy.requests.read",
-  exports: "privacy.exports.read",
-  corrections: "privacy.corrections.read",
-  erasures: "privacy.erasures.read",
-  consents: "privacy.consents.read",
-  "consent-releases": "privacy.consents.read",
-  inventory: "privacy.inventory.read",
-  processing: "privacy.inventory.read",
-  classifications: "privacy.classifications.read",
-  retention: "privacy.retention.read",
-  "retention-instances": "privacy.retention.read",
-  holds: "privacy.holds.read",
-  "break-glass": "privacy.break_glass.read",
-  "access-events": "privacy.sensitive_access.read",
-  incidents: "privacy.incidents.read",
-  audit: "privacy.audit.read"
-};
+
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -268,7 +97,7 @@ export const router = createRouter({
       path: "/admin/login",
       name: "admin-login",
       component: LoginPage,
-      meta: { public: true, guestOnly: true, title: "管理员登录" }
+      meta: { public: true, title: "超级管理员登录" }
     },
     {
       path: "/admin/accept-invitation",
@@ -291,7 +120,7 @@ export const router = createRouter({
           path: "content/pages",
           name: "admin-content-pages",
           component: CmsManagementPage,
-          meta: { title: "页面管理", permission: "content.pages.read", cmsSection: "pages" }
+          meta: { title: "内容中心", permission: "content.pages.read", cmsSection: "pages" }
         },
         {
           path: "content/pages/:id",
@@ -326,8 +155,8 @@ export const router = createRouter({
         {
           path: "content/settings",
           name: "admin-content-settings",
-          component: AccessManagementPage,
-          meta: { title: "网站设置", permission: "content.settings.read", endpoint: "/admin/site-settings" }
+          component: SiteSettingsPage,
+          meta: { title: "网站设置", permission: "content.settings.read" }
         },
         {
           path: "contact-submissions",
@@ -358,6 +187,12 @@ export const router = createRouter({
           meta: { title: "商品编辑", permission: "catalog.products.read" }
         },
         {
+          path: "catalog/skus/:id",
+          name: "admin-catalog-sku-edit",
+          component: CatalogManagementPage,
+          meta: { title: "SKU 管理", permission: "catalog.skus.read", catalogSection: "products" }
+        },
+        {
           path: "catalog/price-books",
           name: "admin-catalog-price-books",
           component: CatalogManagementPage,
@@ -376,6 +211,12 @@ export const router = createRouter({
           meta: { title: "库存与名额", permission: "catalog.inventory.read", catalogSection: "inventory" }
         },
         {
+          path: "catalog/inventory/:skuId",
+          name: "admin-catalog-inventory-detail",
+          component: CatalogManagementPage,
+          meta: { title: "库存详情", permission: "catalog.inventory.read", catalogSection: "inventory" }
+        },
+        {
           path: "catalog/promotions",
           name: "admin-catalog-promotions",
           component: CatalogManagementPage,
@@ -386,6 +227,12 @@ export const router = createRouter({
           name: "admin-catalog-promotions-new",
           component: CatalogManagementPage,
           meta: { title: "新建优惠", permission: "catalog.promotions.create", catalogSection: "promotions" }
+        },
+        {
+          path: "catalog/promotions/:id",
+          name: "admin-catalog-promotion-edit",
+          component: CatalogManagementPage,
+          meta: { title: "优惠详情", permission: "catalog.promotions.read", catalogSection: "promotions" }
         },
         {
           path: "catalog/coupons",
@@ -422,8 +269,8 @@ export const router = createRouter({
         {
           path: "users",
           name: "admin-users",
-          component: AccessManagementPage,
-          meta: { title: "用户管理", permission: "users.read", endpoint: "/admin/users" }
+          component: UserManagementPage,
+          meta: { title: "用户管理", permission: "users.read" }
         },
         {
           path: "activities",
@@ -476,10 +323,28 @@ export const router = createRouter({
           meta: { title: "通知运营中心", permission: notificationSectionPermissions[section], notificationSection: section }
         })),
         {
+          path: "notifications/templates/:templateId",
+          name: "admin-notifications-template-detail",
+          component: NotificationManagementPage,
+          meta: { title: "通知模板详情", permission: "notifications.templates.read", notificationSection: "templates" }
+        },
+        {
+          path: "notifications/deliveries/:deliveryId",
+          name: "admin-notifications-delivery-detail",
+          component: NotificationManagementPage,
+          meta: { title: "通知发送详情", permission: "notifications.deliveries.read", notificationSection: "deliveries" }
+        },
+        {
           path: "notifications/campaigns/new",
           name: "admin-notifications-campaign-new",
           component: NotificationManagementPage,
           meta: { title: "新建通知活动", permission: "notifications.campaigns.create", notificationSection: "campaigns" }
+        },
+        {
+          path: "notifications/campaigns/:campaignId",
+          name: "admin-notifications-campaign-detail",
+          component: NotificationManagementPage,
+          meta: { title: "通知活动详情", permission: "notifications.campaigns.read", notificationSection: "campaigns" }
         },
         ...Object.keys(matchmakingSectionPermissions).map((section) => ({
           path: `matchmaking/${section}`,
@@ -487,6 +352,18 @@ export const router = createRouter({
           component: MatchmakingProfileManagementPage,
           meta: { title: "婚恋档案运营中心", permission: matchmakingSectionPermissions[section], matchmakingSection: section }
         })),
+        {
+          path: "matchmaking/profiles/:profileId",
+          name: "admin-matchmaking-profile-detail",
+          component: MatchmakingProfileManagementPage,
+          meta: { title: "婚恋档案详情", permission: "matchmaking.profiles.read", matchmakingSection: "profiles" }
+        },
+        {
+          path: "matchmaking/reviews/:caseId",
+          name: "admin-matchmaking-review-detail",
+          component: MatchmakingProfileManagementPage,
+          meta: { title: "档案审核详情", permission: "matchmaking.reviews.read", matchmakingSection: "reviews" }
+        },
         ...Object.keys(recommendationSectionPermissions).map((section) => ({
           path: `recommendations/${section}`,
           name: `admin-recommendations-${section}`,
@@ -563,7 +440,7 @@ export const router = createRouter({
           path: `skills/${section}`,
           name: `admin-skills-${section}`,
           component: SkillManagementPage,
-          meta: { title: "技能控制台", permission: skillSectionPermissions[section], skillSection: section }
+          meta: { title: "Skill 控制台", permission: skillSectionPermissions[section], skillSection: section }
         })),
         ...Object.keys(qualitySectionPermissions).map((section) => ({
           path: `quality/${section}`,
@@ -608,10 +485,16 @@ export const router = createRouter({
           meta: { title: "隐私运营中心", permission: privacySectionPermissions[section], privacySection: section }
         })),
         {
+          path: "privacy/requests/:requestId",
+          name: "admin-privacy-request-detail",
+          component: PrivacyManagementPage,
+          meta: { title: "隐私请求详情", permission: "privacy.requests.read", privacySection: "requests" }
+        },
+        {
           path: "access/admins",
           name: "admin-access-admins",
-          component: AccessManagementPage,
-          meta: { title: "管理员", permission: "admins.read", endpoint: "/admin/admins" }
+          component: AdminManagementPage,
+          meta: { title: "管理员", permission: "admins.read" }
         },
         {
           path: "access/roles",
@@ -628,8 +511,8 @@ export const router = createRouter({
         {
           path: "access/invitations",
           name: "admin-access-invitations",
-          component: AccessManagementPage,
-          meta: { title: "管理员邀请", permission: "admins.read", endpoint: "/admin/admins/invitations" }
+          component: AdminManagementPage,
+          meta: { title: "管理员邀请", permission: "admins.read" }
         },
         {
           path: "audit/auth",
@@ -680,17 +563,11 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
   document.title = `${String(to.meta.title ?? "运营工作台")} · VAV`;
-  const access = useAccessStore();
   if (to.meta.public) {
-    if (to.meta.guestOnly) {
-      await access.bootstrap();
-      if (access.isAuthenticated) {
-        return { name: "admin-dashboard" };
-      }
-    }
     return true;
   }
 
+  const access = useAccessStore();
   await access.bootstrap();
   if (!access.isAuthenticated) {
     return { name: "admin-login", query: { returnTo: to.fullPath } };
@@ -703,3 +580,21 @@ router.beforeEach(async (to) => {
   }
   return true;
 });
+
+export const adminModuleRoutes = modules;
+
+export {
+  adminPlatformSectionPermissions,
+  dataGovernanceSectionPermissions,
+  designSystemSectionPermissions,
+  experienceSectionPermissions,
+  interactionSectionPermissions,
+  membershipSectionPermissions,
+  processSectionPermissions,
+  qualitySectionPermissions,
+  recommendationSectionPermissions,
+  relationshipSectionPermissions,
+  safetySectionPermissions,
+  skillSectionPermissions,
+  systemSectionPermissions
+};
