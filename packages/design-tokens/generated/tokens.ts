@@ -9,7 +9,7 @@ export const tokens = {
       "neutral200": "#ebe6dc",
       "neutral300": "#ded8ce",
       "neutral400": "#b9b2a5",
-      "neutral600": "#66736f",
+      "neutral600": "#626f6b",
       "neutral700": "#4c5a56",
       "neutral900": "#24322f",
       "rose100": "#f6e9ec",

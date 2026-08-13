@@ -19,14 +19,14 @@
   --vav-color-interactive-active: #ebe6dc;
   --vav-color-interactive-hover: #f4f1ea;
   --vav-color-interactive-selected: #f6e9ec;
-  --vav-color-muted: #66736f;
+  --vav-color-muted: #626f6b;
   --vav-color-neutral000: #ffffff;
   --vav-color-neutral050: #fffdf9;
   --vav-color-neutral100: #f4f1ea;
   --vav-color-neutral200: #ebe6dc;
   --vav-color-neutral300: #ded8ce;
   --vav-color-neutral400: #b9b2a5;
-  --vav-color-neutral600: #66736f;
+  --vav-color-neutral600: #626f6b;
   --vav-color-neutral700: #4c5a56;
   --vav-color-neutral900: #24322f;
   --vav-color-on-action: #ffffff;
@@ -53,7 +53,7 @@
   --vav-color-surface-sunken: #ebe6dc;
   --vav-color-surface-warning: #f8eeda;
   --vav-color-text: #24322f;
-  --vav-color-text-muted: #66736f;
+  --vav-color-text-muted: #626f6b;
   --vav-color-text-subtle: #b9b2a5;
   --vav-color-warning: #8a5b17;
   --vav-component-avatar-radius: 999px;
