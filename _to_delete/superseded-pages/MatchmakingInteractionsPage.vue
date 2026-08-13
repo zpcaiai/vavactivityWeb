@@ -384,7 +384,7 @@ onMounted(load);
 .panel textarea { min-height: 7rem; }
 .list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .75rem; }
 .alert { padding: .75rem 1rem; border-radius: .5rem; }
-.error { background: #fdecea; color: #8a1c12; }
-.notice { background: #eaf6ec; color: #1c5a2a; }
+.error { background: var(--vav-color-surface-danger); color: var(--vav-color-danger); }
+.notice { background: var(--vav-color-surface-success); color: var(--vav-color-success); }
 button { padding: .45rem .9rem; border: 1px solid rgba(0,0,0,.2); border-radius: .5rem; background: white; cursor: pointer; }
 </style>

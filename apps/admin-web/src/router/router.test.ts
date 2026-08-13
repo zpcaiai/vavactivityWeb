@@ -36,19 +36,47 @@ describe("admin routes", () => {
     }
   });
 
-  it("does not advertise detail routes that have no detail view", () => {
-    for (const path of [
-      "/admin/catalog/skus/example",
-      "/admin/catalog/inventory/example",
-      "/admin/catalog/promotions/example",
-      "/admin/notifications/templates/example",
-      "/admin/notifications/deliveries/example",
-      "/admin/notifications/campaigns/example",
-      "/admin/matchmaking/profiles/example",
-      "/admin/matchmaking/reviews/example",
-      "/admin/privacy/requests/example"
-    ]) {
-      expect(router.resolve(path).name, path).toBe("admin-not-found");
+  it("protects implemented detail routes with their read permissions", () => {
+    const expected = new Map([
+      ["/admin/catalog/skus/example", ["admin-catalog-sku-edit", "catalog.skus.read"]],
+      [
+        "/admin/catalog/inventory/example",
+        ["admin-catalog-inventory-detail", "catalog.inventory.read"]
+      ],
+      [
+        "/admin/catalog/promotions/example",
+        ["admin-catalog-promotion-edit", "catalog.promotions.read"]
+      ],
+      [
+        "/admin/notifications/templates/example",
+        ["admin-notifications-template-detail", "notifications.templates.read"]
+      ],
+      [
+        "/admin/notifications/deliveries/example",
+        ["admin-notifications-delivery-detail", "notifications.deliveries.read"]
+      ],
+      [
+        "/admin/notifications/campaigns/example",
+        ["admin-notifications-campaign-detail", "notifications.campaigns.read"]
+      ],
+      [
+        "/admin/matchmaking/profiles/example",
+        ["admin-matchmaking-profile-detail", "matchmaking.profiles.read"]
+      ],
+      [
+        "/admin/matchmaking/reviews/example",
+        ["admin-matchmaking-review-detail", "matchmaking.reviews.read"]
+      ],
+      [
+        "/admin/privacy/requests/example",
+        ["admin-privacy-request-detail", "privacy.requests.read"]
+      ]
+    ]);
+
+    for (const [path, [name, permission]] of expected) {
+      const route = router.resolve(path);
+      expect(route.name, path).toBe(name);
+      expect(route.meta.permission, path).toBe(permission);
     }
   });
 });

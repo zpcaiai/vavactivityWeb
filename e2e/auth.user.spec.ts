@@ -16,8 +16,9 @@ test("a user registers, verifies email, signs in and sees the current session", 
   await page.getByRole("button", { name: "建立 VAV 账户" }).click();
   await expect(page.getByRole("status").first()).toContainText("注册成功，请验证邮箱");
 
-  const verificationLink = await verificationLinkFor(request, email);
-  await page.goto(verificationLink);
+  const verificationLink = new URL(await verificationLinkFor(request, email));
+  const webOrigin = new URL(page.url()).origin;
+  await page.goto(`${webOrigin}${verificationLink.pathname}${verificationLink.search}`);
   await expect(page.getByRole("status")).toContainText("邮箱已验证");
 
   await page.goto("/zh-CN/auth/login");
@@ -31,8 +32,8 @@ test("a user registers, verifies email, signs in and sees the current session", 
   await expect(page.getByText("Web browser")).toBeVisible();
   await expect(page.getByText("当前设备")).toBeVisible();
 
-  await expect(page.getByRole("button", { name: "安全退出" })).toBeVisible();
-  await page.getByRole("button", { name: "安全退出" }).click();
-  await expect(page).toHaveURL(/\/zh-CN\/$/);
-  await expect(page.getByRole("link", { name: "开始认识" })).toBeVisible();
+  await page.getByRole("button", { name: email }).click();
+  await page.getByRole("menuitem", { name: "退出登录" }).click();
+  await expect(page).toHaveURL(/\/zh-CN\/auth\/login$/);
+  await expect(page.getByRole("button", { name: "欢迎回来" })).toBeVisible();
 });

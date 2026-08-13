@@ -406,12 +406,12 @@ watch(() => route.fullPath, () => { notice.value = ""; });
 <style scoped>
 .privacy-center { max-width: 1080px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
 .privacy-tabs, .request-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin: 1.5rem 0; }
-.privacy-tabs a { padding: .65rem 1rem; border: 1px solid #c9b7a8; border-radius: 999px; }
-.privacy-tabs a.router-link-active { background: #3f3028; color: white; }
-.privacy-card { background: #fffaf5; border: 1px solid #e4d8ce; border-radius: 1rem; padding: 1.5rem; }
+.privacy-tabs a { padding: .65rem 1rem; border: 1px solid var(--vav-color-border); border-radius: 999px; }
+.privacy-tabs a.router-link-active { background: var(--vav-color-text); color: white; }
+.privacy-card { background: var(--vav-color-surface-raised); border: 1px solid var(--vav-color-border); border-radius: 1rem; padding: 1.5rem; }
 .privacy-card label { display: grid; gap: .35rem; margin: 1rem 0; }
-.privacy-card input, .privacy-card textarea, .privacy-card select { padding: .7rem; border: 1px solid #b9aaa0; border-radius: .4rem; }
-.consent-row, .memory-row { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid #e4d8ce; padding: 1rem 0; }
-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; } th, td { text-align: left; padding: .7rem; border-bottom: 1px solid #e4d8ce; }
-.danger-button { color: #8a1f1f; }
+.privacy-card input, .privacy-card textarea, .privacy-card select { padding: .7rem; border: 1px solid var(--vav-color-text-subtle); border-radius: .4rem; }
+.consent-row, .memory-row { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--vav-color-border); padding: 1rem 0; }
+table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; } th, td { text-align: left; padding: .7rem; border-bottom: 1px solid var(--vav-color-border); }
+.danger-button { color: var(--vav-color-danger); }
 </style>

@@ -32,7 +32,7 @@ describe("PublicLayout authenticated navigation", () => {
     mocks.getNavigation.mockResolvedValue([]);
   });
 
-  it("shows logout after login and returns to the locale home", async () => {
+  it("shows the authenticated member-space destination", async () => {
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -59,17 +59,12 @@ describe("PublicLayout authenticated navigation", () => {
     });
     await flushPromises();
 
-    const logout = wrapper.get("button.logout-link");
-    expect(logout.text()).toBe("安全退出");
-    await logout.trigger("click");
-    await flushPromises();
-
-    expect(mocks.logout).toHaveBeenCalledOnce();
-    expect(mocks.clearSession).not.toHaveBeenCalled();
-    expect(router.currentRoute.value.fullPath).toBe("/zh-CN/");
+    const memberSpace = wrapper.get(".site-header__cta");
+    expect(memberSpace.text()).toContain("会员空间");
+    expect(memberSpace.attributes("href")).toBe("/zh-CN/account/home");
   });
 
-  it("renders the configured about slot as the themed activities destination", async () => {
+  it("renders content-managed navigation at its configured route", async () => {
     mocks.getNavigation.mockResolvedValueOnce([
       {
         id: "navigation-about",
@@ -108,10 +103,10 @@ describe("PublicLayout authenticated navigation", () => {
     });
     await flushPromises();
 
-    const activitiesLink = wrapper
+    const aboutLink = wrapper
       .findAll("a")
-      .find((link) => link.text() === "主题活动");
-    expect(activitiesLink?.attributes("href")).toBe("/zh-CN/activities");
-    expect(wrapper.get(".main-nav").text()).not.toContain("关于 VAV");
+      .find((link) => link.text() === "关于 VAV");
+    expect(aboutLink?.attributes("href")).toBe("/zh-CN/about");
+    expect(wrapper.get(".site-nav").text()).toContain("关于 VAV");
   });
 });

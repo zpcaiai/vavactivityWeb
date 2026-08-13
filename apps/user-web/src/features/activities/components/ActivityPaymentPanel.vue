@@ -150,9 +150,9 @@ async function pay() {
   gap: 1.25rem;
   margin-top: 1.25rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: 1px solid color-mix(in srgb, var(--color-accent, #e8849a) 58%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vav-color-accent) 58%, transparent);
   border-radius: 1.25rem;
-  background: color-mix(in srgb, var(--color-surface, #101b22) 94%, white 6%);
+  background: color-mix(in srgb, var(--vav-color-surface-raised) 94%, white 6%);
 }
 
 .activity-payment-panel h3,
