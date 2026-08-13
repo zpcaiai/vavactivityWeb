@@ -178,6 +178,8 @@
       "entitlements": "權益",
       "membership": "會員與用量",
       "profile": "個人資料",
+      "follows": "關注",
+      "profileMedia": "檔案照片與影片",
       "notificationPreferences": "通知偏好",
       "privacy": "隱私與數據",
       "safety": "安全中心",
@@ -858,5 +860,117 @@
     "submitted": "第 {version} 版已提交審核，該版本不可再修改。",
     "paused": "檔案已暫停，已退出推荐池。",
     "reactivated": "檔案已重新启用。"
+  },
+  "social": {
+    "eyebrow": "同場參與者",
+    "preview": {
+      "title": "參與者預覽",
+      "description": "只顯示同意出現在這裡的參與者。",
+      "loadingMessage": "正在讀取參與者。",
+      "emptyTitle": "還沒有可顯示的參與者",
+      "emptyMessage": "還沒有人同意公開出現在參與者列表裡。",
+      "additional": "還有 {count} 位同意公開的參與者。"
+    },
+    "consent": {
+      "heading": "是否出現在參與者列表",
+      "explanation": "預設不出現。只有你明確同意後，其他參與者才會看到你。",
+      "state": {
+        "not_asked": "未選擇（不會出現）",
+        "granted": "已同意出現",
+        "declined": "已拒絕",
+        "withdrawn": "已撤回"
+      },
+      "grant": "同意出現",
+      "decline": "不出現",
+      "withdraw": "撤回同意",
+      "saved": {
+        "granted": "你現在會出現在參與者列表裡。",
+        "declined": "你不會出現在參與者列表裡。",
+        "withdrawn": "已撤回，你不再出現在列表裡。"
+      },
+      "introLabel": "一句話介紹",
+      "introPlaceholder": "選填",
+      "introHint": "最多 {max} 個字元，會和頭像一起顯示。",
+      "saveIntro": "儲存介紹",
+      "introSaved": "介紹已儲存。"
+    },
+    "follow": "關注",
+    "unfollow": "取消關注",
+    "wantToMeet": {
+      "action": "想認識",
+      "done": "已表達",
+      "recorded": "已記錄。這只針對這場活動，與關注和喜歡都不同。"
+    },
+    "follows": {
+      "title": "關注",
+      "description": "關注是單向的,和互選、喜歡都不是一回事。",
+      "loadingMessage": "正在讀取關注列表。",
+      "followingHeading": "我關注的人",
+      "followersHeading": "關注我的人",
+      "followingEmpty": "還沒有關注任何人。",
+      "followersEmpty": "還沒有人關注你。",
+      "since": "自 {date}",
+      "mutual": "互相關注",
+      "followBack": "回關",
+      "notificationHeading": "關注提醒",
+      "notifyOnRegistration": "我關注的人報名活動時通知我",
+      "notifyHint": "只在對方同意公開出現在參與者列表時才會通知。",
+      "preferenceLoadFailed": "關注提醒設定載入失敗"
+    }
+  },
+  "profileMedia": {
+    "eyebrow": "婚戀檔案",
+    "title": "照片與影片",
+    "description": "私密儲存，連結不可猜測。審核通過後才會對外可見。",
+    "loadingMessage": "正在讀取你的素材。",
+    "completeness": {
+      "heading": "完成度"
+    },
+    "published": "已發布",
+    "notPublished": "未發布",
+    "photos": {
+      "heading": "照片",
+      "empty": "還沒有上傳照片。"
+    },
+    "video": {
+      "heading": "影片",
+      "empty": "還沒有上傳影片。"
+    },
+    "photoAlt": "檔案照片",
+    "remove": "刪除",
+    "pending": "有 {count} 個檔案正在上傳。",
+    "moderation": {
+      "pending": "待審核",
+      "approved": "已通過",
+      "rejected": "未通過"
+    },
+    "tags": {
+      "heading": "標籤與自我介紹",
+      "mbtiLabel": "MBTI",
+      "introLabel": "自我介紹",
+      "cityLabel": "城市"
+    },
+    "tagsSaved": "已儲存。",
+    "share": {
+      "heading": "分享名片",
+      "explanation": "逐項授權。未打開的項目不會出現在名片上，也不會顯示為空白。",
+      "enabled": "啟用分享名片",
+      "share_photos": "包含照片",
+      "share_video": "包含影片",
+      "share_mbti": "包含 MBTI",
+      "share_intro": "包含自我介紹",
+      "share_city": "包含城市",
+      "disabledHint": "分享名片未啟用，逐項設定暫時不生效。"
+    },
+    "addPhoto": "新增照片",
+    "addVideo": "新增影片",
+    "replacePhoto": "替換這張照片",
+    "replaceVideo": "替換這段影片",
+    "uploadLimits": "最多 3 張照片(單張 10MB 以內)和 1 段影片(100MB、3–30 秒以內)。",
+    "uploadProgress": "上傳中 {percent}%",
+    "uploadDone": "上傳完成,等待審核。",
+    "replaceDone": "替換檔案已上傳，新檔案正在等待審核。",
+    "uploadFailed": "上傳失敗",
+    "previewUnavailable": "預覽暫時不可用,檔案本身未受影響。"
   }
 }

@@ -178,6 +178,8 @@
       "entitlements": "Entitlements",
       "membership": "Membership and usage",
       "profile": "Profile",
+      "follows": "Follows",
+      "profileMedia": "Profile media",
       "notificationPreferences": "Notification preferences",
       "privacy": "Privacy and data",
       "safety": "Safety center",
@@ -858,5 +860,117 @@
     "submitted": "Version {version} submitted for review and is now frozen.",
     "paused": "Profile paused and removed from the recommendation pool.",
     "reactivated": "Profile resumed."
+  },
+  "social": {
+    "eyebrow": "Fellow attendees",
+    "preview": {
+      "title": "Attendee preview",
+      "description": "Only attendees who agreed to appear are listed.",
+      "loadingMessage": "Loading attendees.",
+      "emptyTitle": "No attendees to show",
+      "emptyMessage": "Nobody has agreed to appear in the attendee list yet.",
+      "additional": "And {count} more attendees who agreed to appear."
+    },
+    "consent": {
+      "heading": "Appear in the attendee list",
+      "explanation": "You are hidden by default. Others see you only after you explicitly agree.",
+      "state": {
+        "not_asked": "Not chosen — hidden",
+        "granted": "Visible",
+        "declined": "Declined",
+        "withdrawn": "Withdrawn"
+      },
+      "grant": "Agree to appear",
+      "decline": "Stay hidden",
+      "withdraw": "Withdraw",
+      "saved": {
+        "granted": "You will now appear in the attendee list.",
+        "declined": "You will not appear in the attendee list.",
+        "withdrawn": "Withdrawn — you no longer appear."
+      },
+      "introLabel": "One-line intro",
+      "introPlaceholder": "Optional",
+      "introHint": "Up to {max} characters, shown next to your avatar.",
+      "saveIntro": "Save intro",
+      "introSaved": "Intro saved."
+    },
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "wantToMeet": {
+      "action": "Want to meet",
+      "done": "Recorded",
+      "recorded": "Recorded. This applies to this event only and is not a follow or a like."
+    },
+    "follows": {
+      "title": "Follows",
+      "description": "Following is one-way, and is not a match or a like.",
+      "loadingMessage": "Loading your follows.",
+      "followingHeading": "Following",
+      "followersHeading": "Followers",
+      "followingEmpty": "You are not following anyone yet.",
+      "followersEmpty": "Nobody follows you yet.",
+      "since": "Since {date}",
+      "mutual": "Mutual",
+      "followBack": "Follow back",
+      "notificationHeading": "Follow notifications",
+      "notifyOnRegistration": "Tell me when someone I follow registers for an event",
+      "notifyHint": "Only sent when that member agreed to appear in the attendee list.",
+      "preferenceLoadFailed": "Follow notification settings could not be loaded"
+    }
+  },
+  "profileMedia": {
+    "eyebrow": "Profile",
+    "title": "Photos and video",
+    "description": "Stored privately behind unguessable links, and visible to others only after review.",
+    "loadingMessage": "Loading your media.",
+    "completeness": {
+      "heading": "Completeness"
+    },
+    "published": "Published",
+    "notPublished": "Not published",
+    "photos": {
+      "heading": "Photos",
+      "empty": "No photos yet."
+    },
+    "video": {
+      "heading": "Video",
+      "empty": "No video yet."
+    },
+    "photoAlt": "Profile photo",
+    "remove": "Remove",
+    "pending": "{count} file(s) still uploading.",
+    "moderation": {
+      "pending": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "tags": {
+      "heading": "Tags and intro",
+      "mbtiLabel": "MBTI",
+      "introLabel": "Intro",
+      "cityLabel": "City"
+    },
+    "tagsSaved": "Saved.",
+    "share": {
+      "heading": "Share card",
+      "explanation": "Consent is per field. A field you leave off is omitted entirely, not shown as blank.",
+      "enabled": "Enable the share card",
+      "share_photos": "Include photos",
+      "share_video": "Include video",
+      "share_mbti": "Include MBTI",
+      "share_intro": "Include intro",
+      "share_city": "Include city",
+      "disabledHint": "The share card is off, so the per-field switches have no effect."
+    },
+    "addPhoto": "Add a photo",
+    "addVideo": "Add a video",
+    "replacePhoto": "Replace this photo",
+    "replaceVideo": "Replace this video",
+    "uploadLimits": "Up to 3 photos (10 MB each) and 1 video (100 MB, 3–30 seconds).",
+    "uploadProgress": "Uploading {percent}%",
+    "uploadDone": "Uploaded. Awaiting review.",
+    "replaceDone": "Replacement uploaded. The new file is awaiting review.",
+    "uploadFailed": "Upload failed",
+    "previewUnavailable": "Preview unavailable right now; the file itself is unaffected."
   }
 }

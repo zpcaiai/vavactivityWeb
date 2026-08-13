@@ -71,6 +71,7 @@ export const appIa: IaGroup[] = [
     path: "account/activities",
     items: [
       { key: "activities", labelKey: "ia.items.myActivities", path: "account/activities" },
+      { key: "follows", labelKey: "ia.items.follows", path: "account/follows" },
       { key: "courses", labelKey: "ia.items.myCourses", path: "account/courses" },
       { key: "counseling", labelKey: "ia.items.myCounseling", path: "account/counseling" },
       { key: "ai", labelKey: "ia.items.aiAssistant", path: "ai-assistant" }
@@ -95,6 +96,7 @@ export const appIa: IaGroup[] = [
     path: "account/profile",
     items: [
       { key: "profile", labelKey: "ia.items.profile", path: "account/profile" },
+      { key: "profileMedia", labelKey: "ia.items.profileMedia", path: "account/profile-media", verifiedOnly: true },
       { key: "notificationPreferences", labelKey: "ia.items.notificationPreferences", path: "account/notification-preferences" },
       { key: "privacy", labelKey: "ia.items.privacy", path: "account/privacy", critical: true },
       { key: "safety", labelKey: "ia.items.safety", path: "account/safety", critical: true },
