@@ -153,6 +153,28 @@ export const systemSectionPermissions: Record<string, string> = {
   capacity: "system.capacity.read"
 };
 
+/**
+ * Split-frontend copy of the backend usability section contract. This map is a
+ * frontend routing/permission contract; backend parity is verified in the
+ * backend repository, where the router source is actually present.
+ */
+export const usabilitySectionPermissions: Record<string, string> = {
+  dashboard: "usability.dashboard.read",
+  scenarios: "uat.scenarios.read",
+  runs: "uat.runs.read",
+  "synthetic-data": "usability.synthetic.read",
+  demo: "usability.demo.read",
+  compatibility: "usability.compatibility.read",
+  localization: "usability.localization.read",
+  drafts: "usability.drafts.read",
+  notifications: "usability.notifications.read",
+  imports: "usability.imports.read",
+  studies: "usability.studies.read",
+  support: "usability.support.read",
+  certifications: "usability.certifications.read",
+  release: "usability.certifications.read"
+};
+
 export const skillSectionPermissions: Record<string, string> = {
   dashboard: "skills.analytics.read",
   catalog: "skills.registry.read",
@@ -550,6 +572,14 @@ export const adminGroups: AdminGroup[] = [
         landing: "dashboard",
         permission: "skills.analytics.read",
         sections: sectionsOf(skillSectionPermissions)
+      },
+      {
+        key: "usability",
+        labelKey: "menu.usability",
+        base: "/admin/usability",
+        landing: "dashboard",
+        permission: "usability.dashboard.read",
+        sections: sectionsOf(usabilitySectionPermissions)
       }
     ]
   }
