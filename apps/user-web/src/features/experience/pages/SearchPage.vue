@@ -7,19 +7,24 @@ import { UserPageLayout } from "@vav/ui-user";
 
 import { experienceApi, type ExperienceRow } from "@/features/experience/api";
 import { useExperienceRoutes } from "@/features/experience/composables/useExperienceRoutes";
+import { resolveSearchDestination } from "@/features/experience/search-presentation";
 import { useAuthStore } from "@/stores/auth";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
-const { pathFor, titleOf, descriptionOf } = useExperienceRoutes();
+const { titleOf, descriptionOf } = useExperienceRoutes();
 
 const query = ref(String(route.query.q ?? ""));
 const rows = ref<ExperienceRow[]>([]);
 const busy = ref(false);
 const searched = ref(false);
 const error = ref("");
+
+function destinationFor(row: ExperienceRow) {
+  return resolveSearchDestination(row, locale.value, Boolean(auth.user));
+}
 
 async function submit() {
   const value = query.value.trim();
@@ -62,6 +67,7 @@ onMounted(() => {
         <input
           id="experience-query"
           v-model="query"
+          type="search"
           maxlength="200"
           autocomplete="off"
           :placeholder="t('search.placeholder')"
@@ -103,7 +109,7 @@ onMounted(() => {
           {{ descriptionOf(row) }}
         </p>
         <template #footer>
-          <RouterLink :to="pathFor(row)">
+          <RouterLink :to="destinationFor(row)">
             {{ t("search.open") }}
           </RouterLink>
         </template>
