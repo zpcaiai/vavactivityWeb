@@ -2,6 +2,8 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { commerceApi, type Order } from "@/features/commerce/api";
+import ActivityPaymentPanel from "../components/ActivityPaymentPanel.vue";
 import {
   activityApi,
   type ActivityRegistration,
@@ -14,6 +16,11 @@ const error = ref("");
 const credential = ref("");
 const waitlist = ref<ActivityWaitlistEntry[]>([]);
 const busy = ref("");
+const ordersById = ref(new Map<string, Order>());
+
+function orderFor(orderId: string): Order {
+  return ordersById.value.get(orderId)!;
+}
 
 async function load() {
   try {
@@ -23,6 +30,12 @@ async function load() {
     ]);
     rows.value = registrationResult.items;
     waitlist.value = waitlistResult.items;
+    try {
+      const orders = await commerceApi.orders();
+      ordersById.value = new Map(orders.items.map((order) => [order.id, order]));
+    } catch (cause) {
+      error.value = cause instanceof Error ? cause.message : t("activities.paymentOrderUnavailable");
+    }
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : "报名记录加载失败";
   }
@@ -87,10 +100,15 @@ onMounted(() => void load());
       </div>
       <RouterLink
         v-if="row.order_id"
-        to="account/orders"
+        :to="{ name: 'account-orders' }"
       >
         {{ t("activities.orders") }}
       </RouterLink>
+      <ActivityPaymentPanel
+        v-if="row.order_id && ordersById.get(row.order_id)"
+        :order="orderFor(row.order_id)"
+        :registration-id="row.id"
+      />
       <button
         v-if="row.status === 'confirmed'"
         type="button"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { localizeAdminLabel, localizeAdminValue } from "@vav/ui-admin";
+import { adminColumnMinWidth, localizeAdminLabel, localizeAdminValue } from "@vav/ui-admin";
 import { resolveApiBaseUrl } from "@/config/api";
 
 import { useAdminAuthStore } from "@/stores/admin-auth";
@@ -75,7 +75,7 @@ watch([page, pageSize], () => void load());
         :key="key"
         :prop="key"
         :label="localizeAdminLabel(key)"
-        min-width="140"
+        :min-width="adminColumnMinWidth(key)"
       >
         <template #default="{ row }">
           {{ localizeAdminValue(row[key], key) }}
