@@ -178,6 +178,8 @@
       "entitlements": "权益",
       "membership": "会员与用量",
       "profile": "个人资料",
+      "follows": "关注",
+      "profileMedia": "档案照片与视频",
       "notificationPreferences": "通知偏好",
       "privacy": "隐私与数据",
       "safety": "安全中心",
@@ -858,5 +860,117 @@
     "submitted": "第 {version} 版已提交审核，该版本不可再修改。",
     "paused": "档案已暂停，已退出推荐池。",
     "reactivated": "档案已重新启用。"
+  },
+  "social": {
+    "eyebrow": "同场参与者",
+    "preview": {
+      "title": "参与者预览",
+      "description": "只显示同意出现在这里的参与者。",
+      "loadingMessage": "正在读取参与者。",
+      "emptyTitle": "还没有可显示的参与者",
+      "emptyMessage": "还没有人同意公开出现在参与者列表里。",
+      "additional": "还有 {count} 位同意公开的参与者。"
+    },
+    "consent": {
+      "heading": "是否出现在参与者列表",
+      "explanation": "默认不出现。只有你明确同意后，其他参与者才会看到你。",
+      "state": {
+        "not_asked": "未选择（不会出现）",
+        "granted": "已同意出现",
+        "declined": "已拒绝",
+        "withdrawn": "已撤回"
+      },
+      "grant": "同意出现",
+      "decline": "不出现",
+      "withdraw": "撤回同意",
+      "saved": {
+        "granted": "你现在会出现在参与者列表里。",
+        "declined": "你不会出现在参与者列表里。",
+        "withdrawn": "已撤回，你不再出现在列表里。"
+      },
+      "introLabel": "一句话介绍",
+      "introPlaceholder": "选填",
+      "introHint": "最多 {max} 个字符，会和头像一起显示。",
+      "saveIntro": "保存介绍",
+      "introSaved": "介绍已保存。"
+    },
+    "follow": "关注",
+    "unfollow": "取消关注",
+    "wantToMeet": {
+      "action": "想认识",
+      "done": "已表达",
+      "recorded": "已记录。这只针对这场活动，与关注和喜欢都不同。"
+    },
+    "follows": {
+      "title": "关注",
+      "description": "关注是单向的,和互选、喜欢都不是一回事。",
+      "loadingMessage": "正在读取关注列表。",
+      "followingHeading": "我关注的人",
+      "followersHeading": "关注我的人",
+      "followingEmpty": "还没有关注任何人。",
+      "followersEmpty": "还没有人关注你。",
+      "since": "自 {date}",
+      "mutual": "互相关注",
+      "followBack": "回关",
+      "notificationHeading": "关注提醒",
+      "notifyOnRegistration": "我关注的人报名活动时通知我",
+      "notifyHint": "只在对方同意公开出现在参与者列表时才会通知。",
+      "preferenceLoadFailed": "关注提醒设置加载失败"
+    }
+  },
+  "profileMedia": {
+    "eyebrow": "婚恋档案",
+    "title": "照片与视频",
+    "description": "私密存储，链接不可猜测。审核通过后才会对外可见。",
+    "loadingMessage": "正在读取你的素材。",
+    "completeness": {
+      "heading": "完成度"
+    },
+    "published": "已发布",
+    "notPublished": "未发布",
+    "photos": {
+      "heading": "照片",
+      "empty": "还没有上传照片。"
+    },
+    "video": {
+      "heading": "视频",
+      "empty": "还没有上传视频。"
+    },
+    "photoAlt": "档案照片",
+    "remove": "删除",
+    "pending": "有 {count} 个文件正在上传。",
+    "moderation": {
+      "pending": "待审核",
+      "approved": "已通过",
+      "rejected": "未通过"
+    },
+    "tags": {
+      "heading": "标签与自我介绍",
+      "mbtiLabel": "MBTI",
+      "introLabel": "自我介绍",
+      "cityLabel": "城市"
+    },
+    "tagsSaved": "已保存。",
+    "share": {
+      "heading": "分享名片",
+      "explanation": "逐项授权。未打开的项目不会出现在名片上，也不会显示为空白。",
+      "enabled": "启用分享名片",
+      "share_photos": "包含照片",
+      "share_video": "包含视频",
+      "share_mbti": "包含 MBTI",
+      "share_intro": "包含自我介绍",
+      "share_city": "包含城市",
+      "disabledHint": "分享名片未启用，逐项设置暂时不生效。"
+    },
+    "addPhoto": "添加照片",
+    "addVideo": "添加视频",
+    "replacePhoto": "替换这张照片",
+    "replaceVideo": "替换这段视频",
+    "uploadLimits": "最多 3 张照片(单张 10MB 以内)和 1 段视频(100MB、3–30 秒以内)。",
+    "uploadProgress": "上传中 {percent}%",
+    "uploadDone": "上传完成,等待审核。",
+    "replaceDone": "替换文件已上传，新文件正在等待审核。",
+    "uploadFailed": "上传失败",
+    "previewUnavailable": "预览暂时不可用,文件本身未受影响。"
   }
 }

@@ -63,6 +63,9 @@ import CourseCertificatesPage from "@/features/courses/pages/CourseCertificatesP
 import CounselingAppointmentsPage from "@/features/counseling/pages/CounselingAppointmentsPage.vue";
 import CommerceListPage from "@/features/commerce/pages/CommerceListPage.vue";
 import OrderDetailPage from "@/features/commerce/pages/OrderDetailPage.vue";
+import AttendeePreviewPage from "@/features/attendee-social/pages/AttendeePreviewPage.vue";
+import FollowsPage from "@/features/attendee-social/pages/FollowsPage.vue";
+import ProfileMediaPage from "@/features/profile-media/pages/ProfileMediaPage.vue";
 import RecommendationListPage from "@/features/recommendations/pages/RecommendationListPage.vue";
 import RecommendationDetailPage from "@/features/recommendations/pages/RecommendationDetailPage.vue";
 import RecommendationPreferencesPage from "@/features/recommendations/pages/RecommendationPreferencesPage.vue";
@@ -191,6 +194,13 @@ const appRoutes: RouteRecordRaw[] = [
   { path: "account/membership/history", name: "account-membership-history", component: MembershipHistoryPage, meta: authed },
 
   { path: "account/dating-profile", name: "account-dating-profile", component: ProfileOverviewPage, meta: verified },
+
+  // Attendee visibility is opt-in. Following is a separate, one-way relation
+  // and profile media remains behind verified-email access.
+  { path: "account/activities/:activityId/attendees", name: "activity-attendees", component: AttendeePreviewPage, meta: authed },
+  { path: "account/follows", name: "account-follows", component: FollowsPage, meta: authed },
+  { path: "account/profile-media", name: "account-profile-media", component: ProfileMediaPage, meta: verified },
+
   { path: "recommendations", name: "recommendations", component: RecommendationListPage, meta: { ...authed, requiresSingle: true } },
   { path: "recommendations/:recommendationItemId", name: "recommendation-detail", component: RecommendationDetailPage, meta: { ...authed, requiresSingle: true } },
   { path: "account/recommendation-preferences", name: "account-recommendation-preferences", component: RecommendationPreferencesPage, meta: authed },
