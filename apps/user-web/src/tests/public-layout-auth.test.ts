@@ -64,7 +64,7 @@ describe("PublicLayout authenticated navigation", () => {
     expect(memberSpace.attributes("href")).toBe("/zh-CN/account/home");
   });
 
-  it("renders content-managed navigation at its configured route", async () => {
+  it("keeps the service-first product navigation instead of the legacy CMS menu", async () => {
     mocks.getNavigation.mockResolvedValueOnce([
       {
         id: "navigation-about",
@@ -103,10 +103,29 @@ describe("PublicLayout authenticated navigation", () => {
     });
     await flushPromises();
 
-    const aboutLink = wrapper
-      .findAll("a")
-      .find((link) => link.text() === "关于 VAV");
-    expect(aboutLink?.attributes("href")).toBe("/zh-CN/about");
-    expect(wrapper.get(".site-nav").text()).toContain("关于 VAV");
+    const primaryLinks = wrapper.get(".site-nav").findAll("a");
+    expect(primaryLinks.slice(0, 4).map((link) => link.text())).toEqual([
+      "活动",
+      "课程",
+      "真人辅导",
+      "服务"
+    ]);
+    expect(primaryLinks.slice(0, 4).map((link) => link.attributes("href"))).toEqual([
+      "/zh-CN/activities",
+      "/zh-CN/courses",
+      "/zh-CN/counseling",
+      "/zh-CN/services"
+    ]);
+    expect(wrapper.get(".site-nav").text()).not.toContain("关于 VAV");
+    expect(wrapper.get(".site-nav").text()).not.toContain("合作联系");
+
+    const footerLinks = wrapper.get(".site-footer").findAll("a");
+    expect(
+      footerLinks.find((link) => link.text() === "关于 VAV")?.attributes("href")
+    ).toBe("/zh-CN/about");
+    expect(
+      footerLinks.find((link) => link.text() === "合作联系")?.attributes("href")
+    ).toBe("/zh-CN/contact");
+    expect(mocks.getNavigation).not.toHaveBeenCalled();
   });
 });

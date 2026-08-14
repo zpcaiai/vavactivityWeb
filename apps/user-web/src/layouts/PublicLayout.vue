@@ -1,66 +1,20 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { VSkipLink } from "@vav/ui-core";
 
 import GlobalCommandPalette from "@/features/experience/components/GlobalCommandPalette.vue";
 import NotificationBell from "@/features/notifications/components/NotificationBell.vue";
-import { getNavigation, type PublicNavigationItem } from "@/features/public-site/api/content";
 import { useAppNavigation } from "@/composables/useAppNavigation";
 import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
 const { t } = useI18n();
 const auth = useAuthStore();
-const { publicLinks, locale, localePath } = useAppNavigation();
+const { publicLinks, localePath } = useAppNavigation();
 
 const menuOpen = ref(false);
-const configuredLinks = ref<PublicNavigationItem[]>([]);
-
-const routePaths: Record<string, string> = {
-  home: "",
-  about: "about",
-  services: "services",
-  contact: "contact",
-  articles: "articles",
-  stories: "stories",
-  activities: "activities",
-  courses: "courses",
-  counseling: "counseling",
-  membership: "membership",
-  ai: "ai-assistant"
-};
-
-/**
- * Content-managed navigation wins when the CMS provides it; the IA module is
- * the fallback so the header is never empty and never drifts from the routes
- * that actually exist.
- */
-interface HeaderLink {
-  key: string;
-  label: string;
-  to: string;
-  external?: string;
-  newTab?: boolean;
-}
-
-const links = computed<HeaderLink[]>(() => {
-  const configured = configuredLinks.value.filter(
-    (item) => !item.required_auth || Boolean(auth.user)
-  );
-  if (!configured.length) return publicLinks.value;
-  return configured.map((item) => ({
-    key: String(item.id),
-    label: item.label,
-    to:
-      item.link_type === "content"
-        ? localePath(item.target_slug ?? "")
-        : localePath(routePaths[item.route_name ?? ""] ?? ""),
-    external: item.link_type === "external" ? item.external_url ?? "#" : undefined,
-    newTab: item.open_in_new_tab
-  }));
-});
 
 const footerGroups = computed(() => [
   {
@@ -104,16 +58,6 @@ const footerGroups = computed(() => [
   }
 ]);
 
-async function loadNavigation() {
-  try {
-    configuredLinks.value = await getNavigation("main_navigation", locale.value);
-  } catch {
-    configuredLinks.value = [];
-  }
-}
-
-onMounted(() => void loadNavigation());
-watch(locale, () => void loadNavigation());
 watch(
   () => route.fullPath,
   async () => {
@@ -165,18 +109,10 @@ watch(
         :aria-label="t('nav.primary')"
       >
         <template
-          v-for="link in links"
+          v-for="link in publicLinks"
           :key="link.key"
         >
-          <a
-            v-if="link.external"
-            :href="link.external"
-            :target="link.newTab ? '_blank' : undefined"
-            :rel="link.newTab ? 'noopener noreferrer' : undefined"
-            @click="menuOpen = false"
-          >{{ link.label }}</a>
           <RouterLink
-            v-else
             :to="link.to"
             @click="menuOpen = false"
           >

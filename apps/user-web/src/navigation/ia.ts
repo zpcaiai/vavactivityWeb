@@ -119,10 +119,10 @@ export const publicIa: IaItem[] = [
   { key: "activities", labelKey: "ia.public.activities", path: "activities" },
   { key: "courses", labelKey: "ia.public.courses", path: "courses" },
   { key: "counseling", labelKey: "ia.public.counseling", path: "counseling" },
+  { key: "services", labelKey: "ia.public.services", path: "services" },
   { key: "membership", labelKey: "ia.public.membership", path: "membership" },
   { key: "stories", labelKey: "ia.public.stories", path: "stories" },
-  { key: "articles", labelKey: "ia.public.articles", path: "articles" },
-  { key: "about", labelKey: "ia.public.about", path: "about" }
+  { key: "articles", labelKey: "ia.public.articles", path: "articles" }
 ];
 
 export interface IaContext {
