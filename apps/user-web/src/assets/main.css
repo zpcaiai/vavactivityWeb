@@ -1480,6 +1480,50 @@ body::before {
   position: fixed;
 }
 
+/* Page-wide ambient backdrop.
+   `::before` already carries the grid texture, so this takes `::after`.
+   `z-index: -1` paints it above the body background but beneath all content.
+
+   Strength is the whole design question here. At full opacity a dusk
+   photograph behind `--vav-color-text` body copy on a `--vav-color-surface`
+   page is not a background, it is a legibility failure — so this is anchored
+   to the top of the viewport, masked out before the fold, and held at a
+   tenth. It reads as atmosphere near the header and disappears where
+   paragraphs begin. */
+body::after {
+  background-image: url("./images/vav-hero-couple.webp");
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  content: "";
+  inset: 0;
+  mask-image: linear-gradient(to bottom, black, rgb(0 0 0 / 45%) 22%, transparent 52%);
+  opacity: 0.1;
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
+}
+
+/* A decorative photograph is exactly the kind of thing high-contrast and
+   forced-colours modes exist to remove: those users have asked for maximum
+   separation between text and its background, and an image behind the page is
+   the opposite of that. The hero keeps its photo — it is the page's subject,
+   not decoration — but the ambient wash and the card art drop back to flat
+   brand colour. */
+[data-vav-theme="high-contrast"] body::after {
+  display: none;
+}
+
+[data-vav-theme="high-contrast"] .product-card-art {
+  background: linear-gradient(140deg, var(--vav-color-focus), var(--vav-color-action-primary-hover) 62%, var(--vav-color-accent));
+}
+
+@media (forced-colors: active) {
+  body::after {
+    display: none;
+  }
+}
+
 input,
 textarea,
 select {
@@ -1604,11 +1648,19 @@ textarea::placeholder {
 }
 
 .home-hero-image {
+  /* The two gradients above the photograph are the scrim that keeps the
+     headline legible: the first fades the image out across the copy column,
+     the second lifts the bottom edge. They were already here, ending in a
+     `none` placeholder — this fills it. */
   background-image:
     linear-gradient(90deg, var(--vav-color-surface-raised) 0%, var(--vav-color-surface-soft) 36%, transparent 67%),
     linear-gradient(0deg, var(--vav-color-surface-soft) 0%, transparent 45%),
-    none;
-  background-position: center;
+    url("./images/vav-hero-couple.webp");
+  /* The subjects sit right of centre in a 2.25:1 frame while the hero is a
+     tall panel, so a centred crop would cut them. Anchoring right keeps both
+     faces in frame at every viewport. */
+  background-position: center, center, right center;
+  background-repeat: no-repeat;
   background-size: cover;
   inset: 0;
   position: absolute;
@@ -1635,7 +1687,12 @@ textarea::placeholder {
 }
 
 .home-hero h1 {
-  color: var(--vav-color-surface-raised);
+  /* Was `--vav-color-surface-raised` (pure white) over a near-white scrim,
+     which measured 1.1:1 against its own background — the headline was
+     effectively invisible, and had been before this photograph was added. Its
+     two siblings in the same copy block, `.eyebrow` and `.hero-intro`, both
+     use ink; the white was the outlier, not the scrim. */
+  color: var(--vav-color-text);
   font-family: var(--vav-font-sans);
   font-size: clamp(3.3rem, 5.2vw, 6.15rem);
   font-weight: 350;
@@ -1880,8 +1937,31 @@ textarea::placeholder {
   background: linear-gradient(145deg, var(--vav-color-surface), var(--vav-color-surface) 66%, var(--vav-color-surface-soft));
   border: 1px solid var(--vav-color-border);
   border-radius: 1.75rem;
+  /* The base rule pairs `--vav-color-ink` with `--vav-color-on-action`: a dark
+     panel with white text. This override lightens the panel but inherited the
+     white, leaving the whole section's heading and body at 1.1:1 — invisible.
+     Whichever rule wins the background has to win the foreground with it. */
+  color: var(--vav-color-text);
   margin: 1rem 0 0;
   overflow: hidden;
+}
+
+/* The card surface was a 2%-white film designed to lift off a dark panel. On
+   the light panel it is indistinguishable from the background, so the cards
+   had no edge at all. */
+.journey-section .journey-grid article {
+  background: var(--vav-color-surface-raised);
+  border: 1px solid var(--vav-color-border);
+}
+
+/* Two more foregrounds written for the dark panel, and hardcoded as literal
+   white rather than tokens, so they could not follow the surface when it was
+   lightened. Both were invisible. Scoped to this section rather than replaced
+   at their original declarations, so any future dark-panel reuse of
+   `.section-heading` keeps its intended treatment. */
+.journey-section .section-heading > p:last-child,
+.journey-section .journey-grid p {
+  color: var(--vav-color-text-muted, rgb(36 50 47 / 78%));
 }
 
 .journey-grid article {
@@ -1918,7 +1998,14 @@ textarea::placeholder {
 }
 
 .product-card-art {
-  background: linear-gradient(140deg, var(--vav-color-focus), var(--vav-color-action-primary-hover) 62%, var(--vav-color-accent));
+  /* The brand gradient stays over the photograph rather than beside it. The
+     card renders white text, so the overlay is what guarantees contrast, and
+     it stops the same couple reading as the subject of every course and
+     service card. Token hexes are restated with alpha because a `var()` colour
+     cannot be made translucent in place. */
+  background:
+    linear-gradient(140deg, rgb(36 83 91 / 86%), rgb(113 59 73 / 72%) 62%, rgb(201 152 91 / 76%)),
+    url("./images/vav-hero-couple.webp") right 38% / cover no-repeat;
 }
 
 .catalog-heading h1,
@@ -1998,36 +2085,69 @@ textarea::placeholder {
     display: none;
   }
 
+  /* Flow layout, not offsets. See `hero_flow` rationale: below this width
+     the hero is one column, so absolute placement bought nothing and cost a
+     collision between the AI card and the primary button. `padding-top`
+     clears the fixed site header, which is `position: fixed` at this
+     breakpoint and so does not reserve space. */
   .home-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
     min-height: 930px;
+    padding: 9rem 2rem 2rem;
   }
 
   .home-hero-image {
+    /* Below 980px the copy spans the full width, so the desktop side-by-side
+       scrim cannot work: fading the photo out horizontally would either cover
+       it completely or leave text sitting on the picture. The layout becomes
+       vertical instead — copy on top over an opaque wash, photograph revealed
+       underneath it.
+
+       This rule restates `background-image` in full, which is why the desktop
+       `url()` has to be repeated here. The previous version ended in `none`,
+       and that is what made the photograph invisible on every phone and
+       tablet while looking correct on a desktop. */
     background-image:
-      linear-gradient(90deg, var(--vav-color-surface-raised) 0%, var(--vav-color-surface-soft) 68%, var(--vav-color-surface-soft)),
-      linear-gradient(0deg, var(--vav-color-surface-raised) 0%, transparent 62%),
-      none;
-    background-position: 64% center;
+      linear-gradient(180deg, var(--vav-color-surface-raised) 0%, var(--vav-color-surface-raised) 42%, rgb(255 255 255 / 55%) 58%, transparent 74%),
+      url("./images/vav-hero-couple.webp");
+    background-position: center top, 68% center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
+  .home-hero-copy,
+  .ai-prompt-card,
+  .needs-panel {
+    bottom: auto;
+    left: auto;
+    position: static;
+    right: auto;
+    top: auto;
+    width: auto;
+  }
+
+  /* Source order is copy, member proof, needs panel, AI card, but the absolute
+     layout painted the AI card *above* the panel. Flow layout would otherwise
+     silently reverse those two, so the intended reading order is restated
+     explicitly rather than left to the DOM. */
   .home-hero-copy {
-    left: 2rem;
     max-width: 38rem;
-    right: 2rem;
-    top: 9rem;
+    order: 1;
   }
 
+  /* `margin-top: auto` here pushes the card and the panel together to the foot
+     of the hero, which is what the old `bottom: 22rem` / `bottom: 2rem` pair
+     was expressing — but as a relationship rather than as two numbers that
+     have to be kept in step by hand. */
   .ai-prompt-card {
-    bottom: 22rem;
-    left: 2rem;
-    width: calc(100% - 4rem);
+    margin-top: auto;
+    order: 2;
   }
 
   .needs-panel {
-    bottom: 2rem;
-    left: 2rem;
-    right: 2rem;
-    width: auto;
+    order: 3;
   }
 }
 
@@ -2038,22 +2158,24 @@ textarea::placeholder {
 
   .home-hero {
     border-radius: 1.25rem;
+    gap: 1.25rem;
     min-height: 980px;
+    padding: 7.5rem 1.25rem 1.25rem;
   }
 
   .home-hero-image {
-    background-position: 67% top;
+    /* The headline wraps to more lines on a phone, so the wash has to hold
+       longer before the photograph appears. */
+    background-image:
+      linear-gradient(180deg, var(--vav-color-surface-raised) 0%, var(--vav-color-surface-raised) 46%, rgb(255 255 255 / 55%) 62%, transparent 78%),
+      url("./images/vav-hero-couple.webp");
+    background-position: center top, 70% center;
   }
 
   .brand > small {
     display: none;
   }
 
-  .home-hero-copy {
-    left: 1.25rem;
-    right: 1.25rem;
-    top: 7.5rem;
-  }
 
   .home-hero h1 {
     font-size: clamp(2.75rem, 13vw, 4rem);
@@ -2074,10 +2196,7 @@ textarea::placeholder {
   }
 
   .ai-prompt-card {
-    bottom: 22.5rem;
-    left: 1rem;
     padding: 0.85rem;
-    width: calc(100% - 2rem);
   }
 
   .ai-orb {
@@ -2087,12 +2206,6 @@ textarea::placeholder {
 
   .ai-prompt-copy > small {
     display: none;
-  }
-
-  .needs-panel {
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
   }
 
   .needs-grid a {

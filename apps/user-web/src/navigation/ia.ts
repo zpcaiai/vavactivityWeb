@@ -44,6 +44,8 @@ export const appIa: IaGroup[] = [
     path: "account/home",
     items: [
       { key: "home", labelKey: "ia.items.home", path: "account/home", exact: true },
+      { key: "memberDashboard", labelKey: "ia.items.memberDashboard", path: "account/dashboard" },
+      { key: "surveyTasks", labelKey: "ia.items.surveyTasks", path: "account/survey-tasks", critical: true },
       { key: "tasks", labelKey: "ia.items.tasks", path: "account/tasks" },
       { key: "journeys", labelKey: "ia.items.journeys", path: "account/journeys" },
       { key: "notifications", labelKey: "ia.items.notifications", path: "account/notifications" }
@@ -62,6 +64,8 @@ export const appIa: IaGroup[] = [
       { key: "invitations", labelKey: "ia.items.invitations", path: "account/matchmaking/invitations", verifiedOnly: true },
       { key: "likes", labelKey: "ia.items.likes", path: "account/matchmaking/likes", verifiedOnly: true },
       { key: "relationships", labelKey: "ia.items.relationships", path: "account/relationships", verifiedOnly: true }
+      ,{ key: "matchmakingEntitlement", labelKey: "ia.items.matchmakingEntitlement", path: "account/matchmaking/entitlement", singlesOnly: true },
+      { key: "resultLetters", labelKey: "ia.items.resultLetters", path: "account/result-letters" }
     ]
   },
   {
@@ -71,6 +75,8 @@ export const appIa: IaGroup[] = [
     path: "account/activities",
     items: [
       { key: "activities", labelKey: "ia.items.myActivities", path: "account/activities" },
+      { key: "discovery", labelKey: "ia.items.discovery", path: "account/discovery" },
+      { key: "assessments", labelKey: "ia.items.assessments", path: "account/assessments" },
       { key: "follows", labelKey: "ia.items.follows", path: "account/follows" },
       { key: "courses", labelKey: "ia.items.myCourses", path: "account/courses" },
       { key: "counseling", labelKey: "ia.items.myCounseling", path: "account/counseling" },
@@ -96,6 +102,7 @@ export const appIa: IaGroup[] = [
     path: "account/profile",
     items: [
       { key: "profile", labelKey: "ia.items.profile", path: "account/profile" },
+      { key: "couple", labelKey: "ia.items.couple", path: "account/couple" },
       { key: "profileMedia", labelKey: "ia.items.profileMedia", path: "account/profile-media", verifiedOnly: true },
       { key: "notificationPreferences", labelKey: "ia.items.notificationPreferences", path: "account/notification-preferences" },
       { key: "privacy", labelKey: "ia.items.privacy", path: "account/privacy", critical: true },
