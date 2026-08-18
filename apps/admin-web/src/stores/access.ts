@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { explainApiConnectionError, resolveApiBaseUrl } from "@/config/api";
+import { explainApiConnectionError, resolveApiBaseUrl, waitForApi } from "@/config/api";
 
 export interface AdminUser {
   id: string;
@@ -136,15 +136,27 @@ export const useAccessStore = defineStore("access", () => {
     if (init.body) {
       headers.set("Content-Type", "application/json");
     }
+    const send = () => fetch(requestUrl, {
+      ...init,
+      credentials: "include",
+      headers
+    });
     let response: Response;
     try {
-      response = await fetch(requestUrl, {
-        ...init,
-        credentials: "include",
-        headers
-      });
+      response = await send();
     } catch {
-      throw new Error(explainApiConnectionError("管理员认证", baseUrl));
+      // See the user-web store: probe `/health/live` first so the message can
+      // tell "waking / unreachable / CORS" apart, and retry at most once,
+      // only after the API has answered readably.
+      const probe = await waitForApi(baseUrl);
+      if (probe !== "reachable") {
+        throw new Error(explainApiConnectionError("管理员认证", baseUrl, probe));
+      }
+      try {
+        response = await send();
+      } catch {
+        throw new Error(explainApiConnectionError("管理员认证", baseUrl, "answered"));
+      }
     }
 
     const text = await response.text();

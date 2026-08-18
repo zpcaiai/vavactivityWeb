@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { explainApiConnectionError, resolveApiBaseUrl } from "@/config/api";
+import { explainApiConnectionError, resolveApiBaseUrl, waitForApi } from "@/config/api";
 
 export interface CurrentUser {
   id: string;
@@ -71,15 +71,30 @@ export const useAuthStore = defineStore("auth", () => {
     if (init.body) {
       headers.set("Content-Type", "application/json");
     }
+    const send = () => fetch(`${baseUrl}${path}`, {
+      ...init,
+      credentials: "include",
+      headers
+    });
     let response: Response;
     try {
-      response = await fetch(`${baseUrl}${path}`, {
-        ...init,
-        credentials: "include",
-        headers
-      });
+      response = await send();
     } catch {
-      throw new Error(explainApiConnectionError("用户认证", baseUrl));
+      // A thrown `fetch` says nothing about *why*, so ask `/health/live`
+      // before reporting anything. Only once the API answers readably is the
+      // request retried — never blindly, and never more than once, because a
+      // request that failed at the transport layer may still have reached the
+      // server, and a login that is retried into a live backend costs one
+      // spare refresh-token row.
+      const probe = await waitForApi(baseUrl);
+      if (probe !== "reachable") {
+        throw new Error(explainApiConnectionError("用户认证", baseUrl, probe));
+      }
+      try {
+        response = await send();
+      } catch {
+        throw new Error(explainApiConnectionError("用户认证", baseUrl, "answered"));
+      }
     }
     const body = (await response.json()) as T & {
       error?: { code: string; message: string };
