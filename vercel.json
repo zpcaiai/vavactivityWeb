@@ -3,13 +3,37 @@
   "buildCommand": "node scripts/vercel-build.mjs",
   "outputDirectory": "dist/public",
   "rewrites": [
-    { "source": "/admin/(.*)", "destination": "/admin/index.html" },
-    { "source": "/zh-CN",     "destination": "/index.html" },
-    { "source": "/zh-CN/(.*)", "destination": "/index.html" },
-    { "source": "/zh-TW",     "destination": "/index.html" },
-    { "source": "/zh-TW/(.*)", "destination": "/index.html" },
-    { "source": "/en",        "destination": "/index.html" },
-    { "source": "/en/(.*)",   "destination": "/index.html" },
-    { "source": "/",          "destination": "/index.html" }
+    {
+      "source": "/admin/((?!assets/).*)",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/zh-CN",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/zh-CN/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/zh-TW",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/zh-TW/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
   ]
 }

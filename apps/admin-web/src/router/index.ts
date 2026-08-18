@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { clearStaleChunkMarker, recoverFromStaleChunk } from "./stale-chunk";
 
 import {
   adminPlatformSectionPermissions,
@@ -607,3 +608,17 @@ export {
   systemSectionPermissions,
   usabilitySectionPermissions
 };
+
+// A deploy replaces every content-hashed chunk, so a client that is one deploy
+// behind cannot resolve the lazy route it is navigating to. `onError` is the
+// only place vue-router surfaces that failure, and without this the app simply
+// stops navigating.
+router.onError((error, to) => {
+  recoverFromStaleChunk(error, to.fullPath);
+});
+
+// Reaching a route means the current bundle is intact, so the one-shot retry
+// budget is released for the rest of the session.
+router.afterEach(() => {
+  clearStaleChunkMarker();
+});
