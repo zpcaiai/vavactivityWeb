@@ -14,6 +14,7 @@
     "test": "pnpm --recursive --if-present test && node --test tests/repository-split.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:external-uat": "playwright test --config playwright.external-uat.config.ts",
+    "test:e2e:uat": "playwright test --config playwright.uat.config.ts",
     "typecheck": "pnpm --recursive --if-present typecheck",
     "generate:api": "pnpm --filter @vav/api-client generate",
     "check:design-tokens": "node scripts/check-design-tokens.mjs apps/user-web/src apps/admin-web/src packages",
