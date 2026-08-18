@@ -10,6 +10,19 @@ const route = useRoute();
 const locale = computed(() => String(route.params.locale ?? "zh-CN"));
 const kind = computed(() => String(route.meta.collectionType ?? "articles"));
 const title = computed(() => kind.value === "testimonials" ? "幸福见证" : "文章");
+/**
+ * The card eyebrow used to print `item.locale` — "ZH-CN" on every card, which
+ * says nothing to a reader. The publication date is the useful thing a
+ * collection card can carry there.
+ */
+function publishedOn(item: PublicContent): string {
+  if (!item.published_at) return "";
+  const date = new Date(item.published_at);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : date.toLocaleDateString(locale.value, { year: "numeric", month: "long", day: "numeric" });
+}
+
 const items = ref<PublicContent[]>([]);
 const loading = ref(true);
 const error = ref("");
@@ -72,7 +85,7 @@ watch([locale, kind], () => void load());
         class="content-card content-card-body content-card--compact"
       >
         <p class="eyebrow content-card-kicker">
-          {{ item.locale }}
+          {{ publishedOn(item) }}
         </p>
         <h2 class="content-card-title">
           {{ item.title }}
