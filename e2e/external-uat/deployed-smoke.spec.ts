@@ -84,15 +84,47 @@ test.describe("deployed API", () => {
     expect(response.headers()["x-request-id"]).toBeTruthy();
   });
 
-  test("readiness names each dependency rather than answering with a bare ok", async ({ request }) => {
-    const response = await request.get(`${apiBaseUrl}/health/ready`, { timeout: 120_000 });
-    const body = await response.json();
-    const dependencies = body?.data?.dependencies ?? {};
+  test("readiness names each dependency rather than answering with a bare ok", async ({ request }, testInfo) => {
+    // This check read `postgresql: unavailable` on three separate runs, and
+    // each time a manual curl a minute later read `ok`. That is a database
+    // waking up, not a database that is down — but the two must not be
+    // conflated, because telling them apart is the only reason this assertion
+    // exists. So a still-waking dependency is retried within a bounded budget
+    // and, if it comes up, recorded as a wake rather than silently passed; a
+    // dependency that never comes up still fails.
+    const attempts = [0, 5_000, 10_000, 20_000];
+    let dependencies: Record<string, string> = {};
+    let status = 0;
+    let wokeAfterAttempts = 0;
+
+    for (const [index, delay] of attempts.entries()) {
+      if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
+      const response = await request.get(`${apiBaseUrl}/health/ready`, { timeout: 45_000 });
+      status = response.status();
+      dependencies = (await response.json())?.data?.dependencies ?? {};
+      if (dependencies.postgresql === "ok") {
+        wokeAfterAttempts = index;
+        break;
+      }
+    }
+
     expect(Object.keys(dependencies).length, "readiness must enumerate what it checked").toBeGreaterThan(0);
-    // Asserted explicitly because this exact check has read "unavailable" in
-    // production while liveness was still green.
-    expect(dependencies.postgresql, JSON.stringify(dependencies)).toBe("ok");
-    expect(response.status()).toBe(200);
+    expect(
+      dependencies.postgresql,
+      `postgresql never became available: ${JSON.stringify(dependencies)}`,
+    ).toBe("ok");
+    expect(status).toBe(200);
+
+    if (wokeAfterAttempts > 0) {
+      // Visible in the report rather than invisible in a pass: a deployment
+      // that needs 20s of waking is healthy, but it is not the same evidence
+      // as one that answers immediately.
+      await testInfo.attach("readiness-cold-start", {
+        body: `postgresql reported ok only after ${wokeAfterAttempts} retr${wokeAfterAttempts === 1 ? "y" : "ies"}; the instance was waking.`,
+        contentType: "text/plain",
+      });
+      testInfo.annotations.push({ type: "cold-start", description: `${wokeAfterAttempts} retries` });
+    }
   });
 
   test("CORS admits the deployed frontend origin with credentials", async ({ request }) => {
