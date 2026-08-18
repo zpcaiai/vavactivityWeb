@@ -62,6 +62,16 @@ test.beforeAll(() => {
   }
 });
 
+// The config's per-test timeout is 60s, but a suspended instance can take
+// longer than that to answer at all — and the request timeouts below, plus the
+// navigation retry budget further down, are deliberately larger than 60s.
+// Without raising the test timeout to match, the test is killed mid-request:
+// the failure arrives as an empty AggregateError, and Playwright tears down the
+// worker so every remaining test reports "did not run". The cold-start
+// tolerance this suite is built around cannot work inside a shorter budget
+// than the waits it performs.
+test.describe.configure({ timeout: 240_000 });
+
 test.describe("deployed API", () => {
   test("liveness answers and identifies the application", async ({ request }) => {
     const response = await request.get(`${apiBaseUrl}/health/live`, { timeout: 120_000 });
