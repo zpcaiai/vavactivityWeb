@@ -21,6 +21,13 @@ export default defineConfig({
     note: "Desktop Chrome and Pixel 7 emulation are executable UAT evidence; neither proves physical-device or production UAT."
   },
   use: {
+    // Playwright does not read HTTPS_PROXY for browser launches, so a runner
+    // behind a proxy silently fails at the transport layer and looks like a
+    // broken deployment. Passing it explicitly is the difference between a
+    // diagnosable run and a misleading one.
+    proxy: process.env.E2E_PROXY_SERVER
+      ? { server: process.env.E2E_PROXY_SERVER, bypass: process.env.E2E_PROXY_BYPASS }
+      : undefined,
     trace: "on",
     screenshot: "on",
     navigationTimeout: 30_000,

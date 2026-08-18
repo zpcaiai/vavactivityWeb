@@ -19,6 +19,12 @@ import { expect, test, type Page } from "@playwright/test";
  * reachable and coherent; it does not make the release UAT_READY, which still
  * needs a person to run the scenarios in references/UAT_CHECKLIST.md.
  *
+ * A proxy note, learned the hard way: Chromium does not use HTTPS_PROXY, and a
+ * system proxy that curl handles fine can still close the browser's
+ * connections. If every page test fails with ERR_CONNECTION_CLOSED while the
+ * API tests pass, that is the browser's network path, not the deployment —
+ * set E2E_PROXY_SERVER (`direct://` to force no proxy at all).
+ *
  *   E2E_USER_WEB_URL=https://…  \
  *   E2E_ADMIN_WEB_URL=https://…/admin \
  *   E2E_API_BASE_URL=https://…/api/v1 \
@@ -60,6 +66,8 @@ test.describe("deployed API", () => {
   test("liveness answers and identifies the application", async ({ request }) => {
     const response = await request.get(`${apiBaseUrl}/health/live`, { timeout: 120_000 });
     expect(response.status(), "a suspended instance answers with the platform's error page").toBe(200);
+    // Liveness passing while readiness fails is the exact split this suite
+    // exists to make visible, so the two are asserted separately on purpose.
     const body = await response.json();
     expect(body?.data?.status).toBe("ok");
     // The application, not a proxy, produced this.
@@ -103,11 +111,55 @@ test.describe("deployed API", () => {
   });
 });
 
+/**
+ * Transport-level failures, which mean the runner could not reach the host at
+ * all. These are not deployment defects and must not be reported as if they
+ * were: the first real run of this suite failed six tests with
+ * ERR_CONNECTION_CLOSED while the API tests against a different host passed in
+ * the same run, which is a local network or proxy symptom, not a broken site.
+ */
+const UNREACHABLE = /net::(ERR_CONNECTION_|ERR_NAME_NOT_RESOLVED|ERR_TIMED_OUT|ERR_PROXY|ERR_TUNNEL|ERR_SSL|ERR_CERT)/;
+
+class EnvironmentUnreachable extends Error {}
+
+/**
+ * Navigate, tolerating a cold start but not a broken page.
+ *
+ * A suspended free-tier instance drops the first connection while it wakes.
+ * Failing on that would make this suite noisy enough to be ignored, which is
+ * worse than not having it — so the navigation is retried within a bounded
+ * budget, and only a persistent failure counts.
+ */
 async function assertRenders(page: Page, url: string) {
-  const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 120_000 });
-  expect(response?.status(), `${url} did not return a page`).toBeLessThan(400);
-  await expect(page.locator("body")).not.toContainText("Internal Server Error");
-  await expect(page.locator("body")).not.toContainText("Application error");
+  const delaysMs = [0, 5_000, 15_000];
+  let lastError: unknown;
+
+  for (const delay of delaysMs) {
+    if (delay) await page.waitForTimeout(delay);
+    try {
+      const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+      expect(response?.status(), `${url} did not return a page`).toBeLessThan(400);
+      await expect(page.locator("body")).not.toContainText("Internal Server Error");
+      await expect(page.locator("body")).not.toContainText("Application error");
+      return;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      // Only retry what a cold start actually looks like. A page that loaded
+      // and then failed an assertion is a real finding and must not be
+      // retried into a pass.
+      if (!UNREACHABLE.test(message)) throw error;
+      lastError = error;
+    }
+  }
+
+  const detail = lastError instanceof Error ? lastError.message.split("\n")[0] : String(lastError);
+  throw new EnvironmentUnreachable(
+    `Could not reach ${url} after ${delaysMs.length} attempts: ${detail}\n` +
+      "This is a reachability failure, not evidence that the deployment is broken. " +
+      "Check it from the same machine with curl, and if this runner needs a proxy, " +
+      "set E2E_PROXY_SERVER — Playwright does not pick up HTTPS_PROXY for browser " +
+      "launches on its own.",
+  );
 }
 
 test.describe("deployed frontends", () => {
@@ -135,7 +187,13 @@ test.describe("deployed frontends", () => {
     await page.waitForLoadState("networkidle");
     expect(missingAssets, "an asset resolved to the SPA shell instead of the file").toEqual([]);
     expect(moduleFailures, "a stale client cannot load this deployment's chunks").toEqual([]);
-    await expect(page.locator("main, #app")).toBeVisible();
+    // `main, #app` matched both #app and #main-content and tripped strict mode.
+    // The comma locator was never exercised until a page actually loaded, so
+    // the bug hid behind connection failures. #app is the Vue mount point and
+    // is unambiguous; the text assertion is what proves it mounted rather than
+    // rendering an empty shell.
+    await expect(page.locator("#app")).toBeVisible();
+    expect((await page.locator("body").innerText()).trim().length).toBeGreaterThan(20);
   });
 
   test("the admin app serves its own entry and reaches the login route", async ({ page }) => {
@@ -152,7 +210,9 @@ test.describe("deployed frontends", () => {
     await assertRenders(page, `${adminWebUrl.replace(/\/+$/, "")}/login`);
     await page.waitForLoadState("networkidle");
     expect(missingAssets, "a missing admin chunk was masked by the SPA rewrite").toEqual([]);
-    await expect(page.locator("form, main")).toBeVisible();
+    // Same strict-mode trap as above: scoped to one element on purpose.
+    await expect(page.locator("#app")).toBeVisible();
+    expect(await page.locator("form").count(), "the login route rendered no form").toBeGreaterThan(0);
   });
 
   test("a member-only route redirects instead of rendering", async ({ page }) => {
