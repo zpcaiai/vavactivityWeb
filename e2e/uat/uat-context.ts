@@ -148,8 +148,21 @@ export interface Session {
  * the assertions run against. Browser-level login is exercised separately in
  * the cases that are about the browser.
  */
+/** Admin and staff tokens are minted for the admin JWT audience, so they only
+ *  decode on the /admin/* twins of the identity routes
+ *  (identity/dependencies.py:70, security.py:159). Calling /auth/me with an
+ *  admin token is a 401 about the audience, not about the account. */
+export function isAdminAudience(role: Actor["role"]): boolean {
+  return role === "admin" || role === "staff";
+}
+
+/** The audience-correct prefix for identity routes. */
+export function identityPrefix(role: Actor["role"]): string {
+  return isAdminAudience(role) ? "/admin" : "";
+}
+
 export async function login(request: APIRequestContext, actor: Actor): Promise<Session> {
-  const path = actor.role === "admin" || actor.role === "staff" ? "/admin/auth/login" : "/auth/login";
+  const path = `${identityPrefix(actor.role)}/auth/login`;
   const response = await request.post(`${apiBaseUrl}${path}`, {
     data: { email: actor.email, password: actor.password, device_name: `UAT ${runMarker}` },
     timeout: 60_000,
@@ -171,6 +184,31 @@ export async function login(request: APIRequestContext, actor: Actor): Promise<S
     permissions: body?.data?.user?.permissions ?? [],
     authHeaders: () => ({ authorization: `Bearer ${accessToken}` }),
   };
+}
+
+/**
+ * One session per actor per run, reused everywhere.
+ *
+ * Not an optimisation. `_login` rate-limits to 5 attempts per 900 seconds per
+ * IP *and* per email (identity/router.py:207), and the limiter falls back to an
+ * in-process window when Redis is absent, so it is always on. A suite that
+ * logged in once per test — as this one used to, eight times in the publishing
+ * file alone — starts returning 429 partway through and reports it as a login
+ * failure. Cached sessions keep a full run inside one bucket.
+ *
+ * The one case that must NOT use this is the logout test, which revokes the
+ * session it logs out: sharing the cache there would sign the whole run out
+ * halfway through.
+ */
+const sessions = new Map<Actor["role"], Promise<Session>>();
+
+export function sessionFor(request: APIRequestContext, role: Actor["role"]): Promise<Session> {
+  let existing = sessions.get(role);
+  if (!existing) {
+    existing = login(request, actorFor(role));
+    sessions.set(role, existing);
+  }
+  return existing;
 }
 
 export interface EvidenceRecord {

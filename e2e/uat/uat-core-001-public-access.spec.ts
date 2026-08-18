@@ -55,6 +55,13 @@ test("the public event list is served and every entry is published", async ({ pa
     Record<string, unknown>
   >;
 
+  // Kept as a regression tripwire, not presented as the leak check: the query
+  // behind /activities already restricts to visibility="public" and the five
+  // published-ish statuses (router.py:118), so on today's code this filter is
+  // empty by construction and cannot fail. It would start earning its keep the
+  // day someone widens that WHERE clause. The assertion that actually probes
+  // for a leak is the UAT_DRAFT_ACTIVITY_SLUG case below, which asks for a
+  // specific non-public activity by name.
   const unpublished = items.filter((item) => {
     const status = String(item.status ?? "");
     return status === "draft" || status === "in_review" || status === "archived";
@@ -69,7 +76,10 @@ test("the public event list is served and every entry is published", async ({ pa
     preconditions: ["at least one published activity exists, or the list is legitimately empty"],
     steps: ["GET /activities as an anonymous caller", "open the activity list page"],
     expected: "the list is served and contains no draft, in-review or archived activity",
-    actual: `${items.length} activities served; ${unpublished.length} were not public`,
+    actual:
+      `${items.length} activities served; ${unpublished.length} were not public ` +
+      "(note: the backend filters by status in SQL, so this is a regression tripwire rather than " +
+      "independent evidence — see UAT-CORE-001-draft-hidden for the real probe)",
     status: unpublished.length === 0 ? "PASS" : "FAIL",
   });
 

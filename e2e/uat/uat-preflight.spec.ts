@@ -1,13 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-import { apiBaseUrl, recordEvidence, requireTarget, userWebUrl, writesAllowed } from "./uat-context";
+import {
+  actorFor,
+  apiBaseUrl,
+  jsonOf,
+  identityPrefix,
+  sessionFor,
+  recordEvidence,
+  requireTarget,
+  userWebUrl,
+  writesAllowed,
+} from "./uat-context";
 
 /**
  * Preflight from references/UAT_CHECKLIST.md.
  *
- * Everything here is machine-checkable except the last two items, which are
- * reported as BLOCKED rather than skipped. A skipped check reads as absent; a
- * BLOCKED one says a person still owes an answer, which is the truth.
+ * Everything here is machine-checkable except the four items in the last
+ * block, which are reported as BLOCKED rather than skipped. A skipped check
+ * reads as absent; a BLOCKED one says a person still owes an answer, which is
+ * the truth.
+ *
+ * PREFLIGHT-identities used to sit in that block and no longer does: it turned
+ * out to be observable from outside the deployment, so it is executed. Being
+ * strict about what genuinely cannot be checked only means something if the
+ * list stays honest in the other direction too.
  */
 
 test.describe.configure({ timeout: 240_000 });
@@ -117,6 +133,97 @@ test("write-mutating cases are gated, and the gate is reported either way", asyn
   });
 });
 
+/**
+ * PREFLIGHT-identities, executed rather than attested.
+ *
+ * This was on the human-owed list in the first version of this suite, which
+ * was a misjudgement: "the test identities and their roles are what we think
+ * they are" is observable from outside the deployment — log in and read
+ * /auth/me. The other four items on that list genuinely are not.
+ *
+ * The assertion is deliberately about separation rather than about a fixed
+ * permission list. Naming exact permissions would make this file a second,
+ * silently-drifting copy of the permission matrix; what a UAT run needs to
+ * establish is that the accounts it is about to use are actually distinct
+ * principals with the authority their role implies, and that the member
+ * account is not quietly an administrator.
+ */
+test("the test identities are distinct principals with the roles they claim", async ({ request }, testInfo) => {
+  requireTarget({ writes: false });
+
+  const roles = ["member", "admin"] as const;
+  const seen: Array<{ role: string; email: string; userId: string; permissionCount: number }> = [];
+  const missing: string[] = [];
+
+  for (const role of roles) {
+    let actor;
+    try {
+      actor = actorFor(role);
+    } catch {
+      missing.push(role);
+      continue;
+    }
+    void actor;
+    const session = await sessionFor(request, role);
+    // Audience matters: an admin token does not decode on /auth/me.
+    const me = await request.get(`${apiBaseUrl}${identityPrefix(role)}/auth/me`, {
+      headers: session.authHeaders(),
+      timeout: 60_000,
+      failOnStatusCode: false,
+    });
+    const data = ((await jsonOf(me)) as { data?: Record<string, unknown> })?.data ?? {};
+    const permissions = (data.permissions ?? []) as string[];
+    seen.push({
+      role,
+      // The account is named so a wrong-account run is legible afterwards.
+      email: String(data.email ?? actorFor(role).email),
+      userId: String(data.id ?? ""),
+      permissionCount: permissions.length,
+    });
+
+    expect(
+      me.status(),
+      `${identityPrefix(role)}/auth/me failed for the ${role} account with HTTP ${me.status()}`,
+    ).toBe(200);
+    expect(String(data.id ?? ""), `/auth/me returned no id for the ${role} account`).toBeTruthy();
+
+    if (role === "admin") {
+      expect(
+        permissions.length,
+        "the admin account holds no permissions; admin-side cases would fail for the wrong reason",
+      ).toBeGreaterThan(0);
+    }
+    if (role === "member") {
+      // The member account being an administrator would make every
+      // authorization assertion in this suite meaningless — a 403 that never
+      // happens looks exactly like a 403 that is correctly enforced.
+      const administrative = permissions.filter((permission) => permission.startsWith("activities."));
+      expect(
+        administrative,
+        `the member account carries administrative permissions (${administrative.join(", ")}); ` +
+          "use an ordinary member account or the access-control cases prove nothing",
+      ).toHaveLength(0);
+    }
+  }
+
+  const distinct = new Set(seen.map((entry) => entry.userId)).size === seen.length;
+
+  await recordEvidence(testInfo, {
+    caseId: "PREFLIGHT-identities",
+    actor: "each configured actor in turn",
+    preconditions: ["UAT_MEMBER_* and UAT_ADMIN_* name accounts that exist on the target"],
+    steps: ["log in as each actor", "GET /auth/me", "compare identity and authority"],
+    expected: "each actor is a distinct principal, and the member holds no administrative permissions",
+    actual: seen
+      .map((entry) => `${entry.role}=${entry.email} id=${entry.userId.slice(0, 8)} perms=${entry.permissionCount}`)
+      .join("; ") + (missing.length ? ` (not configured: ${missing.join(", ")})` : ""),
+    status: missing.length ? "BLOCKED" : distinct ? "PASS" : "FAIL",
+  });
+
+  expect(missing, `these actors are not configured: ${missing.join(", ")}`).toHaveLength(0);
+  expect(distinct, "two actors resolved to the same user; role separation is not being tested").toBe(true);
+});
+
 test.describe("items a person still owes", () => {
   // Reported, never skipped. The checklist asks for migration reruns, seed
   // repeatability, monitoring and an isolated restore target; none of those can
@@ -125,7 +232,6 @@ test.describe("items a person still owes", () => {
   const humanItems = [
     ["PREFLIGHT-migrations", "migration from clean state and rerun succeed"],
     ["PREFLIGHT-seeds", "synthetic seeds are repeatable"],
-    ["PREFLIGHT-identities", "test identities and roles are verified"],
     ["PREFLIGHT-monitoring", "monitoring and logs are available and sanitized"],
     ["PREFLIGHT-backup", "a backup exists and the restore target is isolated"],
   ] as const;

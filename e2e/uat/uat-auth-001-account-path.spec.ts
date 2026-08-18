@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type APIRequestContext } from "@playwright/test";
 
 import {
   actorFor,
@@ -7,6 +7,7 @@ import {
   login,
   recordEvidence,
   requireTarget,
+  sessionFor,
   runMarker,
   userWebUrl,
   writesAllowed,
@@ -21,6 +22,15 @@ import {
  * gated accordingly — and is honest about the fact that it cannot complete
  * without an inbox.
  */
+
+/**
+ * Read a cookie the API set on this request context. Playwright exposes them
+ * through storageState rather than on the response, which is easy to miss.
+ */
+async function csrfCookie(request: APIRequestContext, name: string): Promise<string> {
+  const state = await request.storageState();
+  return state.cookies.find((cookie) => cookie.name === name)?.value ?? "";
+}
 
 test.describe.configure({ timeout: 240_000 });
 
@@ -103,7 +113,7 @@ test("a protected page does not render member data to an anonymous visitor", asy
 test.describe("with the member's own credentials", () => {
   test("the member can log in and read their own account", async ({ request }, testInfo) => {
     const member = actorFor("member");
-    const session = await login(request, member);
+    const session = await sessionFor(request, "member");
 
     const me = await request.get(`${apiBaseUrl}/auth/me`, {
       headers: session.authHeaders(),
@@ -129,10 +139,24 @@ test.describe("with the member's own credentials", () => {
 
   test("logging out ends the session for the token that was issued", async ({ request }, testInfo) => {
     const member = actorFor("member");
+    // Deliberately NOT the cached session: logging out revokes the session
+    // record (identity/router.py:459), and every later case in this run is
+    // holding that same bearer token.
     const session = await login(request, member);
 
+    // Logout is CSRF-protected (identity/dependencies.py:97): it requires an
+    // allowed Origin plus a matching vav_user_csrf cookie and x-csrf-token
+    // header. Playwright's request context keeps the cookies the login set, so
+    // the header is the only part that has to be supplied by hand — and
+    // sending only the bearer token, as this case used to, produced a 403
+    // CSRF_VALIDATION_FAILED that looked exactly like a broken logout.
+    const csrfToken = await csrfCookie(request, "vav_user_csrf");
     const logout = await request.post(`${apiBaseUrl}/auth/logout`, {
-      headers: session.authHeaders(),
+      headers: {
+        ...session.authHeaders(),
+        ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        origin: userWebUrl,
+      },
       timeout: 60_000,
       failOnStatusCode: false,
     });
@@ -149,13 +173,22 @@ test.describe("with the member's own credentials", () => {
       caseId: "UAT-AUTH-001-logout",
       actor: `member <${member.email}>`,
       preconditions: ["an active session obtained in this test"],
-      steps: ["POST /auth/logout", "GET /auth/me with the same bearer token"],
+      steps: [
+        "POST /auth/logout with the CSRF cookie/header pair and an allowed Origin",
+        "GET /auth/me with the same bearer token",
+      ],
       expected: "logout succeeds and the token no longer authenticates",
-      actual: `logout HTTP ${logout.status()}, subsequent /auth/me HTTP ${after.status()}`,
+      actual: `logout HTTP ${logout.status()}${
+        csrfToken ? "" : " (no CSRF cookie was present)"
+      }, subsequent /auth/me HTTP ${after.status()}`,
       status: logout.ok() && !after.ok() ? "PASS" : "FAIL",
     });
 
-    expect(logout.status(), "logout failed").toBeLessThan(400);
+    expect(
+      logout.status(),
+      `logout failed with HTTP ${logout.status()}. A 403 here is usually CSRF or Origin, not a ` +
+        `broken logout: this run sent origin=${userWebUrl}, which must be in auth_allowed_origins.`,
+    ).toBeLessThan(400);
     expect(after.ok(), "the access token still authenticated after logout").toBe(false);
   });
 });
@@ -166,11 +199,16 @@ test("registering a new synthetic account", async ({ request }, testInfo) => {
 
   const email = `uat+${runMarker.toLowerCase()}@example.com`;
   const response = await request.post(`${apiBaseUrl}/auth/register`, {
+    // RegisterRequest, identity/schemas.py:10 — terms_version and
+    // privacy_version are required, not optional metadata. Omitting them made
+    // this a 422 that would have been read as "registration is broken".
     data: {
       email,
       password: `Uat!${runMarker}#pass`,
       preferred_locale: "zh-CN",
       timezone: "Asia/Shanghai",
+      terms_version: process.env.UAT_TERMS_VERSION ?? "1.0",
+      privacy_version: process.env.UAT_PRIVACY_VERSION ?? "1.0",
     },
     timeout: 60_000,
     failOnStatusCode: false,
@@ -192,7 +230,12 @@ test("registering a new synthetic account", async ({ request }, testInfo) => {
     defects: [],
   });
 
-  expect(response.status(), "registration was not accepted").toBe(202);
+  expect(
+    response.status(),
+    `registration was not accepted: HTTP ${response.status()} ${JSON.stringify(body).slice(0, 300)}. ` +
+      "If this is 422 on terms_version/privacy_version, set UAT_TERMS_VERSION and UAT_PRIVACY_VERSION " +
+      "to the versions this deployment actually publishes.",
+  ).toBe(202);
   expect(
     process.env.UAT_MAIL_API_URL,
     `Account ${email} was created but cannot be verified: the deployment exposes no test inbox. ` +

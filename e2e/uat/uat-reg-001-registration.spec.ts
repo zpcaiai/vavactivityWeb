@@ -1,12 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 import {
-  actorFor,
   apiBaseUrl,
   jsonOf,
-  login,
   recordEvidence,
   requireTarget,
+  sessionFor,
   runMarker,
   userWebUrl,
   writesAllowed,
@@ -24,6 +23,12 @@ import {
  * before and after, not on the second response's status code, which could
  * legitimately be either 201-with-the-same-record or 409.
  *
+ * Note the endpoint takes no idempotency key (there is no such field on
+ * RegistrationCreateRequest, and the backend's own lint rule
+ * RULE-MISSING-IDEMPOTENCY exists precisely to flag command APIs like this
+ * one). So this case measures whatever duplicate protection the service
+ * actually implements, rather than asserting a mechanism that is not there.
+ *
  * Needs UAT_ACTIVITY_SLUG: an open activity on the target with a free ticket
  * and capacity to spare. Guessing one from the public list would work by
  * accident and fail confusingly the day the list changes.
@@ -34,6 +39,7 @@ test.describe.configure({ mode: "serial", timeout: 240_000 });
 const activitySlug = process.env.UAT_ACTIVITY_SLUG ?? "";
 
 let activityId = "";
+let ticketTypeId = "";
 let registrationId = "";
 
 test.beforeAll(() => {
@@ -71,7 +77,7 @@ test("the target activity is open for registration", async ({ request }, testInf
 });
 
 test("the member registers and receives a clear result", async ({ request }, testInfo) => {
-  const member = await login(request, actorFor("member"));
+  const member = await sessionFor(request, "member");
 
   const ticketTypes = await request.get(`${apiBaseUrl}/activities/${activityId}/ticket-types`, {
     timeout: 60_000,
@@ -82,9 +88,14 @@ test("the member registers and receives a clear result", async ({ request }, tes
   const ticket = tickets[0];
   expect(ticket, `activity ${activitySlug} exposes no ticket type to register against`).toBeTruthy();
 
+  ticketTypeId = String(ticket!.id);
+  // RegistrationCreateRequest, modules/activities/schemas.py:156. There is no
+  // idempotency_key on this endpoint — an earlier version of this file sent
+  // one and described the retry below as "the same idempotency key", which
+  // was simply untrue: the field was silently dropped.
   const response = await request.post(`${apiBaseUrl}/activities/${activityId}/registrations`, {
     headers: member.authHeaders(),
-    data: { ticket_type_id: ticket!.id, idempotency_key: `${runMarker}-reg-1` },
+    data: { ticket_type_id: ticketTypeId, locale: "zh-CN", form_response: {}, accepted_consents: [] },
     timeout: 60_000,
     failOnStatusCode: false,
   });
@@ -114,7 +125,7 @@ test("the member registers and receives a clear result", async ({ request }, tes
 });
 
 test("the registration appears in My Events", async ({ request, page }, testInfo) => {
-  const member = await login(request, actorFor("member"));
+  const member = await sessionFor(request, "member");
 
   const list = await request.get(`${apiBaseUrl}/account/activity-registrations`, {
     headers: member.authHeaders(),
@@ -146,7 +157,7 @@ test("the registration appears in My Events", async ({ request, page }, testInfo
 });
 
 test("retrying the request does not register the member twice", async ({ request }, testInfo) => {
-  const member = await login(request, actorFor("member"));
+  const member = await sessionFor(request, "member");
 
   const before = await request.get(`${apiBaseUrl}/account/activity-registrations`, {
     headers: member.authHeaders(),
@@ -159,9 +170,12 @@ test("retrying the request does not register the member twice", async ({ request
   };
   const countBefore = await countFor(before);
 
+  // Byte-for-byte the same request as before. ticket_type_id is a required
+  // UUID, so sending null would have been rejected at validation and would
+  // have proven nothing about duplicate protection.
   const retry = await request.post(`${apiBaseUrl}/activities/${activityId}/registrations`, {
     headers: member.authHeaders(),
-    data: { ticket_type_id: null, idempotency_key: `${runMarker}-reg-1` },
+    data: { ticket_type_id: ticketTypeId, locale: "zh-CN", form_response: {}, accepted_consents: [] },
     timeout: 60_000,
     failOnStatusCode: false,
   });
@@ -176,7 +190,7 @@ test("retrying the request does not register the member twice", async ({ request
     caseId: "UAT-REG-001-retry",
     actor: "member",
     preconditions: [`member already registered for ${activityId}`],
-    steps: ["repeat the registration request with the same idempotency key", "count registrations again"],
+    steps: ["repeat the identical registration request", "count registrations again"],
     expected: "the member holds exactly one registration for this activity, whatever the retry answered",
     actual: `retry HTTP ${retry.status()}; registrations for this activity ${countBefore} -> ${countAfter}`,
     status: countAfter === countBefore ? "PASS" : "FAIL",
@@ -188,13 +202,15 @@ test("retrying the request does not register the member twice", async ({ request
 });
 
 test("the member cancels and the state changes accordingly", async ({ request }, testInfo) => {
-  const member = await login(request, actorFor("member"));
+  const member = await sessionFor(request, "member");
 
   const cancel = await request.post(
     `${apiBaseUrl}/account/activity-registrations/${registrationId}/cancel`,
     {
       headers: member.authHeaders(),
-      data: { reason: `UAT ${runMarker}` },
+      // ReasonRequest requires reason_code as well as reason
+      // (activities/schemas.py:214); sending only `reason` is a 422.
+      data: { reason_code: "uat_cancel", reason: `Automated UAT cancellation for ${runMarker}.` },
       timeout: 60_000,
       failOnStatusCode: false,
     },
@@ -224,7 +240,7 @@ test("the member cancels and the state changes accordingly", async ({ request },
 });
 
 test("the member is notified of the cancellation", async ({ request }, testInfo) => {
-  const member = await login(request, actorFor("member"));
+  const member = await sessionFor(request, "member");
   const response = await request.get(`${apiBaseUrl}/account/notifications`, {
     headers: member.authHeaders(),
     timeout: 60_000,
