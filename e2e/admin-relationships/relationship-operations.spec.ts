@@ -23,7 +23,7 @@ test("operations view is redacted and cannot make member decisions", async ({ pa
   await signIn(page);
   await page.goto(`${adminBaseUrl}/admin/relationships/journeys`);
   await expect(
-    page.getByRole("main").getByRole("heading", { name: "关系运营中心" })
+    page.getByRole("main").getByRole("heading", { name: "关系运营中心" }).last()
   ).toBeVisible();
   await expect(page.getByText(/不能代替成员确认阶段/)).toBeVisible();
   await expect(page.getByRole("button", { name: /确认阶段|恢复已结束|同意恢复/ })).toHaveCount(0);

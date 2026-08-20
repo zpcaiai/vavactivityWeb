@@ -36,7 +36,9 @@ test("an adult member creates a dating profile with strict privacy defaults", as
     page.getByRole("heading", { name: "婚恋档案", exact: true })
   ).toBeVisible();
   await page.getByRole("button", { name: "创建婚恋档案" }).click();
-  await expect(page.getByRole("status")).toContainText("默认使用严格隐私模式");
+  await expect(
+    page.getByRole("status").filter({ hasText: "婚恋档案已创建" })
+  ).toContainText("默认使用严格隐私模式");
   await expect(page.getByText("联系方式在任何场景下都不会自动公开")).toBeVisible();
   await expect(page.getByText(/编号 VAV-/)).toBeVisible();
 });
@@ -84,7 +86,10 @@ test("submission is blocked while required fields are missing", async ({ page })
   await registerMember(page, email);
   await page.goto("/zh-CN/account/dating-profile");
   await page.getByRole("button", { name: "创建婚恋档案" }).click();
-  await page.getByRole("link", { name: "提交审核", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "建档步骤" })
+    .getByRole("link", { name: "提交审核", exact: true })
+    .click();
   await expect(page.getByText("还有必填项未完成")).toBeVisible();
   await expect(page.getByRole("button", { name: "提交审核" }).last()).toBeDisabled();
 });

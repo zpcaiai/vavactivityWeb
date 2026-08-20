@@ -33,7 +33,9 @@ test("an authorized operator sees redacted production status and every governed 
     "capacity"
   ]) {
     await page.goto(`${adminBaseUrl}/admin/system/${section}`);
-    await expect(page.getByRole("main").getByRole("heading", { name: "系统运维中心" })).toBeVisible();
+    await expect(
+      page.getByRole("main").getByRole("heading", { name: "系统运维中心" }).last()
+    ).toBeVisible();
     await expect(page.getByText(/仅展示脱敏运行信息/u)).toBeVisible();
     await expect(page.locator("main")).not.toContainText(/password|secret_value|private_key/iu);
   }

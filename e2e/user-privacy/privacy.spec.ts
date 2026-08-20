@@ -22,7 +22,7 @@ test("a user governs profile privacy consent export and AI memory", async ({ pag
   await expect(page).toHaveURL(/\/zh-CN\/account\/security$/);
 
   await page.goto("/zh-CN/account/profile");
-  await expect(page.getByRole("heading", { name: "隐私与数据中心" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "个人资料", exact: true })).toBeVisible();
   await expect(page.getByText("联系方式独立加密保存")).toBeVisible();
   await page.getByLabel("显示名称").fill("Privacy E2E User");
   await page.getByRole("button", { name: "保存档案" }).click();

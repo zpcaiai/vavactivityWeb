@@ -19,7 +19,7 @@ test("authorized operators can reach every least-privilege queue", async ({ page
   for (const section of ["reports", "cases", "moderation", "harassment", "fraud", "restrictions", "appeals", "rules", "red-team", "audit"]) {
     await page.goto(`${adminBaseUrl}/admin/trust-safety/${section}`);
     await expect(
-      page.getByRole("main").getByRole("heading", { name: "信任与安全中心" })
+      page.getByRole("main").getByRole("heading", { name: "信任与安全中心" }).last()
     ).toBeVisible();
     await expect(page.getByText(/自动信号只能冻结、限速或升级复核/)).toBeVisible();
   }
