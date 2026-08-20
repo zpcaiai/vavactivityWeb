@@ -31,6 +31,6 @@ test("a verified user can hold a slot and create a private counseling appointmen
   await page.getByLabel("本次希望讨论的目标").fill("练习清晰沟通和尊重边界");
   await page.getByRole("button", { name: "确认预约" }).click();
   await expect(page).toHaveURL(/\/account\/counseling\//);
-  await expect(page.getByText("状态：confirmed")).toBeVisible();
+  await expect(page.getByText("confirmed", { exact: true })).toBeVisible();
   await expect(page.getByText("录音与转写默认关闭")).toBeVisible();
 });

@@ -39,7 +39,7 @@ test("an editor creates structured content, marks translation ready and publishe
 
   await page.getByRole("button", { name: "提交审核" }).click();
   await page.getByRole("button", { name: "发布", exact: true }).click();
-  await expect(page.getByText(new RegExp(`${slug} · published`))).toBeVisible();
+  await expect(page.getByText(new RegExp(`${slug} · 已发布`))).toBeVisible();
 
   const response = await request.get(
     `http://localhost:8000/api/v1/public/content/pages/${slug}?locale=zh-CN`

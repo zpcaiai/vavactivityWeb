@@ -16,7 +16,7 @@ test("a verified user reads, archives and configures persisted notifications", a
   await page.getByLabel("密码").fill(password);
   await page.getByLabel("我已阅读并同意服务条款与隐私说明").check();
   await page.getByRole("button", { name: "建立 VAV 账户" }).click();
-  await expect(page.getByRole("status")).toContainText("请查收验证邮件");
+  await expect(page.getByRole("status")).toContainText("注册成功，请验证邮箱");
   verifyUserFixture(email);
   seedUserNotificationFixture(email);
 

@@ -26,7 +26,7 @@ test("an authorized operator inspects AI registries, safety referrals and evalua
 
   await page.getByRole("tab", { name: "安全转介" }).click();
   await expect(page.getByText(/AIR-/).first()).toBeVisible();
-  await page.getByRole("tab", { name: "Prompt 发布" }).click();
+  await page.getByRole("tab", { name: "提示词发布" }).click();
   await expect(page.getByText("hanna-core")).toBeVisible();
   await page.getByRole("tab", { name: "受控工具" }).click();
   await expect(page.getByText("create_counseling_referral")).toBeVisible();

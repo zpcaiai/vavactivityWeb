@@ -31,7 +31,7 @@ test("an operator publishes a free SKU and it becomes visible in the public cata
   await page.getByText(code).click();
   await expect(page).toHaveURL(/\/admin\/catalog\/products\/[0-9a-f-]+$/);
 
-  await page.getByRole("button", { name: /zh-CN · draft/ }).click();
+  await page.getByRole("button", { name: "简体中文 · 草稿" }).click();
   const localizationDialog = page.getByRole("dialog", { name: "商品多语言内容" });
   await localizationDialog
     .locator("label")
@@ -40,7 +40,7 @@ test("an operator publishes a free SKU and it becomes visible in the public cata
     .click();
   await page.getByRole("option", { name: "已就绪" }).click();
   await localizationDialog.getByRole("button", { name: "保存翻译" }).click();
-  await expect(page.getByRole("button", { name: /zh-CN · ready/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "简体中文 · 就绪" })).toBeVisible();
 
   await page.getByRole("button", { name: "新建 SKU" }).click();
   const skuDialog = page.getByRole("dialog", { name: "新建 SKU" });
@@ -54,7 +54,7 @@ test("an operator publishes a free SKU and it becomes visible in the public cata
   await page.getByRole("button", { name: "启用", exact: true }).click();
   await page.getByRole("button", { name: "提交审核" }).click();
   await page.getByRole("button", { name: "上架" }).click();
-  await expect(page.getByText(`${code} · active`)).toBeVisible();
+  await expect(page.getByText(`${code} · 启用`)).toBeVisible();
 
   await page.goto("http://localhost:5173/zh-CN/services");
   await expect(page.getByRole("heading", { name: publicName })).toBeVisible();
