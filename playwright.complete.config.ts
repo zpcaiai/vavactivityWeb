@@ -5,7 +5,7 @@ export default defineConfig({
   globalSetup: "./e2e/global-setup.ts",
   fullyParallel: false,
   workers: 1,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? Number(process.env.PLAYWRIGHT_RETRIES ?? 2) : 0,
   reporter: process.env.CI ? [["line"], ["html", { open: "never" }]] : "line",
   timeout: 60_000,
   expect: { timeout: 12_000 },

@@ -32,5 +32,5 @@ test("an authorized operator inspects AI registries, safety referrals and evalua
   await expect(page.getByText("create_counseling_referral")).toBeVisible();
   await expect(page.getByText("不允许创建任意代码 Tool")).toBeVisible();
   await page.getByRole("tab", { name: "评测与审计" }).click();
-  await expect(page.getByText("passed").first()).toBeVisible();
+  await expect(page.getByText("通过").first()).toBeVisible();
 });

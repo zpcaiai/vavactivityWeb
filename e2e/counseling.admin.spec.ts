@@ -21,8 +21,6 @@ test("an authorized operator can use the counseling operations center", async ({
   await page.goto("http://localhost:5174/admin/counseling");
   await expect(page.getByRole("heading", { name: "辅导中心", level: 2 })).toBeVisible();
   await expect(page.getByText("录音与转写默认关闭")).toBeVisible();
-  await page.getByRole("tab", { name: "导师排班", exact: true }).click();
-  await expect(page.getByText("counseling-e2e-mentor")).toBeVisible();
   await page.getByRole("tab", { name: "导师与服务", exact: true }).click();
   await expect(page.getByText("counseling-e2e-mentor")).toBeVisible();
   await expect(page.getByText("counseling-e2e-growth-session")).toBeVisible();

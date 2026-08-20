@@ -35,7 +35,7 @@ test("photo guidance states EXIF removal and that no biometric template is built
   page
 }) => {
   await memberWithProfile(page, "dating-photos");
-  await page.getByRole("button", { name: "照片", exact: true }).click();
+  await page.getByRole("link", { name: "照片", exact: true }).click();
   await expect(page.getByText("自动清除 EXIF")).toBeVisible();
   await expect(page.getByText("平台不进行人脸识别，也不建立生物特征模板。")).toBeVisible();
 });
@@ -44,7 +44,7 @@ test("hard partner criteria are labelled as exclusions and are never auto-relaxe
   page
 }) => {
   await memberWithProfile(page, "dating-preferences");
-  await page.getByRole("button", { name: "择偶条件", exact: true }).click();
+  await page.getByRole("link", { name: "择偶条件", exact: true }).click();
   await expect(page.getByText("会直接排除不符合的候选人")).toBeVisible();
   await expect(page.getByText("也不会从你的叙述文字中推断隐藏偏好")).toBeVisible();
   await expect(
@@ -54,22 +54,23 @@ test("hard partner criteria are labelled as exclusions and are never auto-relaxe
 
 test("field privacy is described as a backend decision", async ({ page }) => {
   await memberWithProfile(page, "dating-privacy");
-  await page.getByRole("button", { name: "隐私设置", exact: true }).click();
+  await page.getByRole("link", { name: "隐私", exact: true }).click();
   await expect(page.getByText("由后端在每次查询时判定")).toBeVisible();
   await expect(page.getByText("联系方式在任何场景都不会自动公开")).toBeVisible();
 });
 
 test("preview shows a different field set per viewing context", async ({ page }) => {
   await memberWithProfile(page, "dating-preview");
-  await page.getByRole("button", { name: "档案预览", exact: true }).click();
+  await page.getByRole("link", { name: "预览", exact: true }).click();
   await page.getByLabel("查看场景").selectOption("recommendation_card");
-  await expect(page.getByText(/联系方式：\s*不可见/)).toBeVisible();
+  await expect(page.getByText("联系方式不可见")).toBeVisible();
   await page.getByLabel("查看场景").selectOption("mutual_match");
-  await expect(page.getByText(/联系方式：\s*不可见/)).toBeVisible();
+  await expect(page.getByText("联系方式不可见")).toBeVisible();
 });
 
 test("narratives warn against contact details", async ({ page }) => {
   await memberWithProfile(page, "dating-narratives");
+  await page.getByRole("link", { name: "填写资料", exact: true }).click();
   await page.getByRole("button", { name: "自我介绍", exact: true }).click();
   await expect(
     page.getByText("请勿在文字中填写电话、邮箱、微信或站外链接，这类内容会被拒绝。")

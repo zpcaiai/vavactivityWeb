@@ -51,6 +51,7 @@ jobs:
         working-directory: web
         env:
           PLAYWRIGHT_CHANNEL: chromium
+          PLAYWRIGHT_RETRIES: "0"
       - if: always()
         run: docker compose logs --no-color > ../web/complete-e2e-compose.log
         working-directory: backend

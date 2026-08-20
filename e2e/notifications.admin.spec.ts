@@ -29,8 +29,8 @@ test("an authorized operator inspects governed notification operations", async (
   await expect(page.getByLabel("模板中心").getByText("激活后不可原地修改")).toBeVisible();
   await page.getByRole("tab", { name: "事件订阅" }).click();
   await expect(page.getByLabel("事件订阅").getByText("auth.password.changed")).toBeVisible();
-  await page.getByRole("tab", { name: "Campaign" }).click();
-  await expect(page.getByLabel("Campaign").getByText("创建者不能自行批准正式群发")).toBeVisible();
-  await page.getByRole("tab", { name: "Provider 与抑制" }).click();
-  await expect(page.getByLabel("Provider 与抑制").getByText("Provider Event")).toBeVisible();
+  await page.getByRole("tab", { name: "通知活动" }).click();
+  await expect(page.getByLabel("通知活动").getByText("创建者不能自行批准正式群发")).toBeVisible();
+  await page.getByRole("tab", { name: "服务商与抑制" }).click();
+  await expect(page.getByLabel("服务商与抑制").getByText("服务商事件")).toBeVisible();
 });
