@@ -72,6 +72,7 @@ pnpm test:e2e:uat            # = playwright test --config playwright.uat.config.
 | `UAT_ATTESTED` | 逗号分隔的 `PREFLIGHT-*` 用例 ID，见下 |
 | `UAT_ARTIFACT_DIR` | 产物目录，默认 `test-results/uat` |
 | `UAT_PROXY_SERVER` | 需要走代理时设置 |
+| `UAT_VIDEO=off` | 当前机器没有 Playwright ffmpeg 时关闭录像；trace 和截图仍保留 |
 | `UAT_MAIL_API_URL` | 目标有测试收件箱时填；不填则"注册后验证邮箱"一步记 `BLOCKED` |
 | `UAT_TERMS_VERSION` / `UAT_PRIVACY_VERSION` | 注册必填字段，默认 `1.0`；与部署实际发布的版本号不一致会 422 |
 

@@ -21,6 +21,16 @@ import { defineConfig, devices } from "@playwright/test";
  */
 
 const artifactDir = process.env.UAT_ARTIFACT_DIR ?? "test-results/uat";
+const rawProxy = process.env.UAT_PROXY_SERVER?.trim() ?? "";
+const bypassAllProxies = ["none", "direct", "direct://", "off"].includes(rawProxy.toLowerCase());
+const proxyServer = bypassAllProxies ? undefined : rawProxy || undefined;
+const video = process.env.UAT_VIDEO?.trim().toLowerCase() === "off" ? "off" : "retain-on-failure";
+if (proxyServer && !/^(https?|socks[45]?):\/\/[^/]+/i.test(proxyServer)) {
+  throw new Error(
+    `UAT_PROXY_SERVER must be a proxy URL such as http://127.0.0.1:7890, or "none" ` +
+      `to ignore the system proxy. Received: ${proxyServer}`,
+  );
+}
 
 export default defineConfig({
   testDir: "./e2e/uat",
@@ -49,10 +59,16 @@ export default defineConfig({
   use: {
     trace: "on",
     screenshot: "on",
-    video: "retain-on-failure",
+    video,
     navigationTimeout: 120_000,
     actionTimeout: 20_000,
-    proxy: process.env.UAT_PROXY_SERVER ? { server: process.env.UAT_PROXY_SERVER } : undefined,
+    proxy: proxyServer ? { server: proxyServer } : undefined,
+    launchOptions: bypassAllProxies ? { args: ["--no-proxy-server"] } : undefined,
   },
-  projects: [{ name: "desktop-chrome", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "desktop-chrome",
+      use: { ...devices["Desktop Chrome"], channel: process.env.PLAYWRIGHT_CHANNEL ?? "chrome" },
+    },
+  ],
 });

@@ -92,6 +92,7 @@ test("a protected page does not render member data to an anonymous visitor", asy
   await page.waitForLoadState("networkidle");
   const body = (await page.locator("body").innerText()).trim();
   const url = page.url();
+  const pathname = new URL(url).pathname;
 
   await recordEvidence(testInfo, {
     caseId: "UAT-AUTH-001-protected-route",
@@ -103,10 +104,13 @@ test("a protected page does not render member data to an anonymous visitor", asy
     // withhold member data, and pinning the redirect target would break on a
     // legitimate change to the login flow.
     actual: `landed on ${url}`,
-    status: url.includes("/account/activities") ? "FAIL" : "PASS",
+    status: pathname.includes("/account/activities") ? "FAIL" : "PASS",
   });
 
-  expect(url, "a member route rendered for an anonymous visitor").not.toContain("/account/activities");
+  // The login page intentionally retains the original route in `returnTo`.
+  // Inspecting the whole URL would mistake that query parameter for the page
+  // that actually rendered, so the guard assertion is about the pathname.
+  expect(pathname, "a member route rendered for an anonymous visitor").not.toContain("/account/activities");
   expect(body, "the page leaked a member-only heading").not.toContain("我的活动");
 });
 
