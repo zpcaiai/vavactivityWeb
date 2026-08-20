@@ -31,8 +31,8 @@ test("a user governs profile privacy consent export and AI memory", async ({ pag
   ).toContainText("资料已保存并生成新版本");
 
   await page.goto("/zh-CN/account/privacy");
-  await expect(page.getByLabel("隐私模式")).toHaveValue("strict");
-  await expect(page.getByLabel("允许平台用户搜索")).toBeDisabled();
+  await expect(page.getByRole("radio", { name: /^严格/u })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "允许平台用户搜索到我" })).toBeDisabled();
 
   await page.goto("/zh-CN/account/consents");
   await expect(page.getByText("external_model_training (zh-CN)")).toBeVisible();
@@ -45,5 +45,5 @@ test("a user governs profile privacy consent export and AI memory", async ({ pag
 
   await page.goto("/zh-CN/account/ai-memory");
   await expect(page.getByText("长期记忆默认关闭")).toBeVisible();
-  await expect(page.getByLabel("启用长期记忆（须先授予独立同意）")).not.toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "启用长期记忆" })).not.toBeChecked();
 });
